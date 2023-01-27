@@ -1,0 +1,19 @@
+---
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  blogs: CollectionEntry<"diary">[],
+};
+const { blogs } = Astro.props;
+---
+{blogs.sort((a, b) => b.data.date - a.data.date).map(async (blog, i) => {
+  // const { Content } = await blog.render();
+  return (
+    <section class="my-4">
+      <h2><a href={"/diary/" + blog.slug} class="font-bold hover:underline">{blog.data.title}</a></h2>
+      <time class="italic">{blog.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", })} </time>
+      <p>{blog.data.description}</p>
+      {/* <Content /> */}
+    </section>
+  );
+})}

@@ -1,0 +1,26 @@
+---
+import { getCollection } from "astro:content";
+import DiaryNav from "../../components/DiaryNav.astro";
+import Nav from "../../components/Nav.astro";
+import Layout from "../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const blogs = await getCollection("diary");
+  return blogs.map(blog => ({
+    params: { slug: blog.slug }, props: { blog },
+  }));
+};
+
+const { blog } = Astro.props;
+const { Content } = await blog.render();
+---
+
+<Layout title={blog.data.title}>
+  <DiaryNav />
+  <main class="w-narrow mx-auto">
+    <h1>{blog.data.title}</h1>
+    <time>{blog.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", })} </time>
+    <hr class="my-4 border-zinc-300" />
+    <Content />
+  </main>
+</Layout>

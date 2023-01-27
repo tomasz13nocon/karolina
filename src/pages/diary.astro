@@ -1,0 +1,18 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import { getCollection } from 'astro:content';
+import DiaryNav from '../components/DiaryNav.astro';
+import BlogList from '../components/BlogList.astro';
+
+const blogs = await getCollection("diary");
+const bodies = await Promise.all(blogs.map(async blog => await blog.render()));
+---
+
+<Layout title="">
+  <DiaryNav />
+  <main class="w-narrow">
+    <h1 class="text-center">Diary</h1>
+    <BlogList {blogs} />
+  </main>
+</Layout>

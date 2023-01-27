@@ -1,0 +1,59 @@
+---
+export interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet">
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+    <meta name="description" content="Karolina Nocoń photography portfolio" />
+  </head>
+  <body class="bg-gray-50 mx-auto mb-8">
+    <slot />
+  </body>
+</html>
+<style is:global>
+body {
+  font-family: Montserrat, sans-serif;
+}
+main {
+  max-width: 100ch;
+  margin: auto;
+};
+h1, h2, h3, h4, h5, h6 {
+  font-weight: bold;
+}
+h1 {
+  font-size: 2.4em;
+}
+h2 {
+  font-size: 1.5em;
+}
+h3 {
+  font-size: 1.17em;
+}
+h4 {
+  font-size: 1em;
+}
+h5 {
+  font-size: .83em;
+}
+h6 {
+  font-size: .67em;
+}
+p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+};
+</style>

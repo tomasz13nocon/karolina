@@ -1,0 +1,24 @@
+---
+import { getCollection } from "astro:content";
+import BlogList from "../../../components/BlogList.astro";
+import DiaryNav from "../../../components/DiaryNav.astro";
+import Layout from "../../../layouts/Layout.astro";
+
+export async function getStaticPaths() {
+  const blogs = await getCollection("diary");
+  const years = [...new Set(blogs.map(blog => blog.data.date.getFullYear()))];
+  return years.map(year => ({
+    params: { slug: year }, props: { year },
+  }));
+};
+const { year } = Astro.props;
+let blogs = await getCollection("diary");
+blogs = blogs.filter(blog => blog.data.date.getFullYear() === year);
+---
+<Layout title=`${year} posts`>
+  <DiaryNav />
+  <main>
+    <h1 class="text-center">{year} posts</h1>
+    <BlogList {blogs} />
+  </main>
+</Layout>

@@ -1,0 +1,71 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Nav from '../components/Nav.astro';
+import ImageViewer from '../components/ImageViewer.astro';
+
+let imgs = await Astro.glob("../../public/img/photography/*");
+console.log(imgs[0]);
+---
+
+<Layout title="">
+  <Nav />
+  <main class="mt-4">
+    <h1 class="text-center mb-8">Photography</h1>
+    <div class="gap-2 relative masonry">
+      {imgs.map(img => (<div class="overflow-clip absolute"><img loading="lazy" class="img transition-transform cursor-pointer hover:scale-110 duration-300" src={img.default} /></div>))}
+    </div>
+  </main>
+  <ImageViewer />
+</Layout>
+
+
+<script>
+import MiniMasonry from "minimasonry";
+
+let masonry = new MiniMasonry({
+    container: ".masonry",
+});
+
+let imageViewer = document.getElementById("image-viewer");
+let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
+let prev = document.getElementById("image-prev");
+let next = document.getElementById("image-next");
+
+function setupImgs(i: number) {
+  imageViewer!.getElementsByTagName("img")[0].src = imgs[i].src;
+  if (i !== 0) {
+    prev!.dataset.imageIndex = `${i - 1}`;
+    prev!.style.display = "block";
+  }
+  else {
+    prev!.style.display = "none";
+  }
+  if (i !== imgs.length - 1) {
+    next!.dataset.imageIndex = `${i + 1}`;
+    next!.style.display = "block";
+  }
+  else {
+    next!.style.display = "none";
+  }
+}
+
+for (let i = 0; i < imgs.length; i++) {
+  imgs[i].addEventListener("click", e => {
+    if (imageViewer) {
+      imageViewer.style.display = "grid";
+      setupImgs(i);
+    }
+  });
+};
+document.getElementById("image-viewer-close")?.addEventListener("click", e => {
+  if (imageViewer) {
+    imageViewer.style.display = "none";
+  }
+})
+
+function handleSwitch(this: HTMLElement) {
+  setupImgs(parseInt(this.dataset.imageIndex ?? "0"));
+};
+if (prev) prev.addEventListener("click", handleSwitch);
+if (next) next.addEventListener("click", handleSwitch);
+</script>
