@@ -20,13 +20,6 @@ let imgs = await Astro.glob("../img/photography/*");
 let pics: MyPicture[] = [];
 console.log(process.cwd());
 for (let i = 0; i < imgs.length; i++) {
-  pics[i] = await getPicture({
-    src: imgs[i].default,
-    alt: "photo",
-    widths: [ 370, 100 ],
-    formats: ["webp", "avif"],
-  });
-
   let { data: bufferData, info: { width, height } } =
     await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
     // await sharp(imgs[i].default.src)
@@ -37,6 +30,13 @@ for (let i = 0; i < imgs.length; i++) {
   // let ar = width / height;
   // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
   // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
+
+  pics[i] = await getPicture({
+    src: imgs[i].default,
+    alt: "photo",
+    widths: [ 370, 100 ],
+    formats: ["webp", "avif"],
+  });
   pics[i].blurhash = encode(new Uint8ClampedArray(bufferData), width, height, 6, 6);
 }
 
