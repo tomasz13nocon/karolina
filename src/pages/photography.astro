@@ -18,18 +18,7 @@ interface MyPicture extends GetPictureResult {
 }
 let imgs = await Astro.glob("../img/photography/*");
 let pics: MyPicture[] = [];
-console.log(process.cwd());
 for (let i = 0; i < imgs.length; i++) {
-  let { data: bufferData, info: { width, height } } =
-    await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
-    // await sharp(imgs[i].default.src)
-    .resize(100)
-    .raw()
-    .ensureAlpha()
-    .toBuffer({ resolveWithObject: true });
-  // let ar = width / height;
-  // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
-  // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
 
   pics[i] = await getPicture({
     src: imgs[i].default,
@@ -37,8 +26,25 @@ for (let i = 0; i < imgs.length; i++) {
     widths: [ 370, 100 ],
     formats: ["webp", "avif"],
   });
-  pics[i].blurhash = encode(new Uint8ClampedArray(bufferData), width, height, 6, 6);
 }
+
+console.log(process.cwd());
+// console.log(imgs.reduce((acc, img) => acc + img.default.src + " , ", ""));
+let files = await fs.readdir("./src/img/photography/");
+for (let [i, file] of files.entries()) {
+  console.log(file);
+  let { data: bufferData, info: { width, height } } =
+    // await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
+    await sharp("./src/img/photography/" + file)
+    .resize(100)
+    .raw()
+    .ensureAlpha()
+    .toBuffer({ resolveWithObject: true });
+  // let ar = width / height;
+  // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
+  // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
+  pics[i].blurhash = encode(new Uint8ClampedArray(bufferData), width, height, 6, 6);
+};
 
 // Statically generate masonry layout
 // let imgs = await Astro.glob("../img/photography/*");
