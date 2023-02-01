@@ -27,8 +27,8 @@ for (let i = 0; i < imgs.length; i++) {
   });
 
   let { data: bufferData, info: { width, height } } =
-    await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
-    // await sharp(buffer)
+    // await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
+    await sharp(imgs[i].default.src)
     .resize(100)
     .raw()
     .ensureAlpha()
