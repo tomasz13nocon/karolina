@@ -36,7 +36,7 @@ for (let [i, file] of files.entries()) {
   let { data: bufferData, info: { width, height } } =
     // await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
     await sharp("./src/img/photography/" + file)
-    .resize(100)
+    .resize(64)
     .raw()
     .ensureAlpha()
     .toBuffer({ resolveWithObject: true });
@@ -78,7 +78,7 @@ for (let [i, file] of files.entries()) {
     <!-- </div> -->
     <div id="masonry-container" class="">
       {imgs.map((img, i) => (
-        <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[3000px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
+        <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[13000px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
           <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span>
 
           <Picture
@@ -97,10 +97,10 @@ for (let [i, file] of files.entries()) {
             height={Math.floor(340 / img.default.width * img.default.height)}
           />
 
-          <canvas class="blur-canvas absolute top-0 left-0 -z-10"
-            width={340}
-            height={Math.floor(340 / img.default.width * img.default.height)}
-          />
+            <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full"
+              width={32}
+              height={32}
+            />
 
           {/* <picture> */}
           {/*   {pics[i].sources.map(source => ( */}
@@ -202,10 +202,10 @@ for (let imgContainer of imgContainers) {
 }
 
 for (let i = 0; i < imgs.length; i++) {
-  const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, imgs[i].width, imgs[i].height);
+  const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, 32, 32);
   const canvas = imgContainers[i].getElementsByTagName("canvas")[0];
   const ctx = canvas.getContext('2d');
-  const imageData = ctx.createImageData(imgs[i].width, imgs[i].height);
+  const imageData = ctx.createImageData(32, 32);
   imageData.data.set(pixels);
   ctx.putImageData(imageData, 0, 0);
   // imgs[i].parentElement.parentElement.append(canvas);
