@@ -1,7 +1,8 @@
 ---
+import { Picture } from '@astrojs/image/components';
 import { Icon } from 'astro-icon';
 ---
-<div id="image-viewer" class="text-white w-screen h-screen max-w-full max-h-full bg-black/75 backdrop-blur-lg transition-[backdrop] fixed top-0 left-0 hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center">
+<div id="image-viewer" class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/75 backdrop-blur-lg transition-[backdrop] fixed top-0 left-0 hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center">
   <div id="image-viewer-close" class="col-start-3 cursor-pointer hover:bg-black/20 transition-colors w-12 h-12 flex items-center justify-center">
     <Icon name="ph:x" width="2.5em" height="2.5em" />
   </div>
@@ -12,6 +13,11 @@ import { Icon } from 'astro-icon';
   </div>
   <div class="self-center row-start-1 row-end-3 col-start-2 max-h-full">
     <img src="" alt="" class="mx-auto select-none">
+    <!-- <Picture -->
+    <!--   alt="photo" -->
+    <!--   widths={[370, 100]} -->
+    <!--   sizes="(min-width: 1000px) 370px" -->
+    <!-- /> -->
   </div>
   <div id="image-next" class="h-full w-12 col-start-3 cursor-pointer hover:bg-black/20 transition-colors">
     <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" />

@@ -2,37 +2,160 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import ImageViewer from '../components/ImageViewer.astro';
+import ImgColumn from '../components/ImgColumn.astro';
+import { Image, Picture } from '@astrojs/image/components';
+import sharp from 'sharp';
+import type { ImageMetadata } from '@astrojs/image/dist/vite-plugin-astro-image';
+import { getPicture } from '@astrojs/image';
+import type { GetPictureResult } from '@astrojs/image/dist/lib/get-picture';
+import { encode } from "blurhash";
+import * as fs from 'node:fs/promises'
 
-let imgs = await Astro.glob("../../public/img/photography/thumb/*");
-console.log(imgs[0]);
+// let buffer = await fs.readFile("./src/img/298828696_3150955578490539_4154127865200831914_n.jpg");
+// console.log(buffer);
+interface MyPicture extends GetPictureResult {
+  blurhash?: string;
+}
+let imgs = await Astro.glob("../img/photography/*");
+let pics: MyPicture[] = [];
+for (let i = 0; i < imgs.length; i++) {
+  pics[i] = await getPicture({
+    src: imgs[i].default,
+    alt: "photo",
+    widths: [ 370, 100 ],
+    formats: ["webp", "avif"],
+  });
+
+  let { data: bufferData, info: { width, height } } =
+    await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
+    // await sharp(buffer)
+    .resize(100)
+    .raw()
+    .ensureAlpha()
+    .toBuffer({ resolveWithObject: true });
+  // let ar = width / height;
+  // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
+  // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
+  pics[i].blurhash = encode(new Uint8ClampedArray(bufferData), width, height, 6, 6);
+}
+
+// Statically generate masonry layout
+// let imgs = await Astro.glob("../img/photography/*");
+// interface ImageData extends ImageMetadata {
+//   i: number;
+// }
+// const columns = 3;
+// const gap = 8;
+// const columnWidth = 340;
+// let heights: number[] = Array.from(new Array(columns), () => 0);
+// let imgColumns: ImageData[][] = Array.from(new Array(columns), () => []);
+//
+// let i = 0;
+// for (let img of imgs) {
+//   i++;
+//   let indexOfLowest = heights.findIndex(v => v === Math.min(...heights));
+//   heights[indexOfLowest] += (img.default.height / (img.default.width / columnWidth)) + gap;
+//   imgColumns[indexOfLowest].push({ i: i, ...img.default });
+// };
 ---
 
 <Layout title="">
   <Nav />
+  <!-- <Picture class="img transition-transform cursor-pointer hover:scale-110 duration-300" src={img} alt="photo" widths={[340]} sizes="(min-width: 1000px) 340px" /> -->
+  <!-- <Picture class="img transition-transform cursor-pointer hover:scale-110 duration-300" src={imgs[0].default} alt="photo" widths={[340]} sizes="(min-width: 1000px) 340px" /> -->
   <main class="mt-4">
+    <!-- <Image src={imgs[0].default} alt="" /> -->
     <h1 class="text-center mb-8">Photography</h1>
-    <div class="gap-2 relative masonry">
-      {imgs.map(img => (<div class="overflow-clip absolute"><img loading="lazy" class="img transition-transform cursor-pointer hover:scale-110 duration-300" src={img.default} /></div>))}
+    <!-- <div class="flex flex-wrap mx-auto gap-2"> -->
+    <!--   {imgs.map(img => (<div class="overflow-clip w-fit"><Picture loading="lazy" class="img transition-transform cursor-pointer hover:scale-110 duration-300" src={img.default} alt="photo" widths={[340]} sizes="(min-width: 1000px) 340px" /></div>))} -->
+    <!-- </div> -->
+    <div id="masonry-container" class="">
+      {imgs.map((img, i) => (
+        <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[3000px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
+          <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span>
+
+          <Picture
+            aria-role="button"
+            tabindex={img.i}
+            data-index={img.i}
+            data-full-size-src={img.default.src}
+            data-blurhash={pics[i].blurhash}
+            loading="lazy"
+            class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
+            src={img.default}
+            alt="photo"
+            widths={[370, 100]}
+            sizes="(min-width: 1000px) 370px"
+            width={340}
+            height={Math.floor(340 / img.default.width * img.default.height)}
+          />
+
+          <canvas class="blur-canvas absolute top-0 left-0 -z-10"
+            width={340}
+            height={Math.floor(340 / img.default.width * img.default.height)}
+          />
+
+          {/* <picture> */}
+          {/*   {pics[i].sources.map(source => ( */}
+          {/*     <source type={source.type} srcset={source.srcset} sizes={} /> */}
+          {/*   ))} */}
+          {/*   <img */}
+          {/*     aria-role="button" */}
+          {/*     data-index={i} */}
+          {/*     loading="lazy" */}
+          {/*     class="img transition-transform cursor-pointer group-hover:scale-110 duration-300" */}
+          {/*     data-src={pics[i].image.src} */}
+          {/*     alt={pics[i].image.alt} */}
+          {/*     sizes="(min-width: 1000px) 340px, (min-width: 500px) 100px" */}
+          {/*     width={340} */}
+          {/*     height={Math.floor(340 / img.default.width * img.default.height)} */}
+          {/*   /> */}
+          {/* </picture> */}
+
+          {/* <img aria-role="button" tabindex={img.i} loading="lazy" data-index={img.i} class="img transition-transform cursor-pointer group-hover:scale-110 duration-300" src={img.default.src} alt="photo" width={340} height={Math.floor(340 / img.default.width * img.default.height)} /> */}
+        </div>
+      ))}
     </div>
+    <!-- <div class="flex justify-center gap-2"> -->
+    <!--   {imgColumns.map(imgs => ( -->
+    <!--     <div class={`flex flex-col gap-2`}> -->
+    <!--       {imgs.map(img => ( -->
+    <!--         <div class="relative overflow-clip w-fit group"> -->
+    <!--           <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{img.i}</span> -->
+    <!--           <Picture aria-role="button" tabindex={img.i} loading="lazy" data-index={img.i} class="img transition-transform cursor-pointer group-hover:scale-110 duration-300" src={img} alt="photo" widths={[340]} sizes="(min-width: 1000px) 340px" /> -->
+    <!--         </div> -->
+    <!--       ))} -->
+    <!--     </div> -->
+    <!--   ))} -->
+    <!-- </div> -->
   </main>
   <ImageViewer />
 </Layout>
 
 
 <script>
-import MiniMasonry from "minimasonry";
+import MagicGrid from "magic-grid"
+import { decodeBlurHash } from 'fast-blurhash';
 
-let masonry = new MiniMasonry({
-    container: ".masonry",
+let magicGrid = new MagicGrid({
+  container: "#masonry-container", // Required. Can be a class, id, or an HTMLElement.
+  static: true, // Required for static content.
+  animate: true, // Optional.
+  gutter: 8,
 });
+magicGrid.listen();
 
 let imageViewer = document.getElementById("image-viewer");
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
+let imgContainers = document.getElementsByClassName("img-container");
 let prev = document.getElementById("image-prev");
 let next = document.getElementById("image-next");
 
 function setupImgs(i: number) {
-  imageViewer!.getElementsByTagName("img")[0].src = imgs[i].src;
+  if (!imgs[i].dataset.fullSizeSrc) {
+    throw new Error("Expected full-size-src to be non empty");
+  }
+  imageViewer!.getElementsByTagName("img")[0].src = imgs[i].dataset.fullSizeSrc!;
   if (i !== 0) {
     prev!.dataset.imageIndex = `${i - 1}`;
     prev!.style.display = "block";
@@ -49,7 +172,37 @@ function setupImgs(i: number) {
   }
 }
 
+// Lazy loading. Done non-trivially because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
+let observer = new IntersectionObserver((entries, observer) => {
+  for (let entry of entries) {
+    if (entry.isIntersecting) {
+      let img = entry.target.getElementsByTagName("img")[0];
+      // if (!(img instanceof HTMLImageElement)) {
+      //   throw new Error("Expected intersection target to be an img element");
+      // }
+      // if (img.dataset.src == null) {
+      //   throw new Error("Expected data-src to be set");
+      // }
+      // img.src = img.dataset.src!;
+      img.classList.remove("hidden");
+      observer.unobserve(img);
+      continue;
+    }
+  }
+});
+for (let imgContainer of imgContainers) {
+  observer.observe(imgContainer);
+}
+
 for (let i = 0; i < imgs.length; i++) {
+  const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, imgs[i].width, imgs[i].height);
+  const canvas = imgContainers[i].getElementsByTagName("canvas")[0];
+  const ctx = canvas.getContext('2d');
+  const imageData = ctx.createImageData(imgs[i].width, imgs[i].height);
+  imageData.data.set(pixels);
+  ctx.putImageData(imageData, 0, 0);
+  // imgs[i].parentElement.parentElement.append(canvas);
+
   imgs[i].addEventListener("click", e => {
     if (imageViewer) {
       imageViewer.style.display = "grid";
@@ -57,6 +210,7 @@ for (let i = 0; i < imgs.length; i++) {
     }
   });
 };
+
 document.getElementById("image-viewer-close")?.addEventListener("click", e => {
   if (imageViewer) {
     imageViewer.style.display = "none";
@@ -68,4 +222,11 @@ function handleSwitch(this: HTMLElement) {
 };
 if (prev) prev.addEventListener("click", handleSwitch);
 if (next) next.addEventListener("click", handleSwitch);
+
 </script>
+
+<style>
+.text-shadow {
+  text-shadow: 0 0 4px black;
+};
+</style>
