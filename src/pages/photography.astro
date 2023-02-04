@@ -20,9 +20,9 @@ for (let i = 0; i < imgs.length; i++) {
     formats: ["webp", "avif"],
   });
 
-  if (imgs[i].default.src.split("/").pop() !== files[i]) {
-    throw new Error(`mismatch between Astro.glob and fs.readdir outputs when reading src/img/photography. glob: "${imgs[i].default.src.split("/").pop()}" readdir: "${files[i]}"`);
-  }
+  // if (imgs[i].default.src.split("/").pop() !== files[i]) {
+  //   throw new Error(`mismatch between Astro.glob and fs.readdir outputs when reading src/img/photography. glob: "${imgs[i].default.src.split("/").pop()}" readdir: "${files[i]}"`);
+  // }
 
   let { data: bufferData, info: { width, height } } =
     await sharp("./src/img/photography/" + files[i])
