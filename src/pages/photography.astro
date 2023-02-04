@@ -36,14 +36,14 @@ for (let [i, file] of files.entries()) {
   let { data: bufferData, info: { width, height } } =
     // await sharp("./src/img/photography/" + imgs[i].default.src.split("/").pop())
     await sharp("./src/img/photography/" + file)
-    .resize(64)
+    .resize(10) // TODO:prod 100
     .raw()
     .ensureAlpha()
     .toBuffer({ resolveWithObject: true });
   // let ar = width / height;
   // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
   // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
-  pics[i].blurhash = encode(new Uint8ClampedArray(bufferData), width, height, 6, 6);
+  pics[i].blurhash = encode(new Uint8ClampedArray(bufferData), width, height, 3, 3); // TODO:prod 4,4 or more
 };
 
 // Statically generate masonry layout
@@ -76,9 +76,9 @@ for (let [i, file] of files.entries()) {
     <!-- <div class="flex flex-wrap mx-auto gap-2"> -->
     <!--   {imgs.map(img => (<div class="overflow-clip w-fit"><Picture loading="lazy" class="img transition-transform cursor-pointer hover:scale-110 duration-300" src={img.default} alt="photo" widths={[340]} sizes="(min-width: 1000px) 340px" /></div>))} -->
     <!-- </div> -->
-    <div id="masonry-container" class="">
+    <div id="masonry-container" class="w-full">
       {imgs.map((img, i) => (
-        <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[13000px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
+        <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[99999px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
           <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span>
 
           <Picture
@@ -98,8 +98,8 @@ for (let [i, file] of files.entries()) {
           />
 
             <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full"
-              width={32}
-              height={32}
+              width={24}
+              height={24}
             />
 
           {/* <picture> */}
@@ -202,10 +202,10 @@ for (let imgContainer of imgContainers) {
 }
 
 for (let i = 0; i < imgs.length; i++) {
-  const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, 32, 32);
   const canvas = imgContainers[i].getElementsByTagName("canvas")[0];
+  const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, canvas.width, canvas.height);
   const ctx = canvas.getContext('2d');
-  const imageData = ctx.createImageData(32, 32);
+  const imageData = ctx.createImageData(canvas.width, canvas.height);
   imageData.data.set(pixels);
   ctx.putImageData(imageData, 0, 0);
   // imgs[i].parentElement.parentElement.append(canvas);
