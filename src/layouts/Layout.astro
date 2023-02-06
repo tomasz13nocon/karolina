@@ -24,37 +24,45 @@ const { title } = Astro.props;
     <slot />
   </body>
 </html>
+
 <style is:global>
-body {
-  font-family: Montserrat, sans-serif;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: Montserrat, sans-serif;
+  }
+  main {
+    /* @apply w-wide; */
+    /* margin: auto; */
+    /* @apply px-4; */
+  }
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+  }
+  h1 {
+    font-size: 2.4em;
+  }
+  h2 {
+    font-size: 1.5em;
+  }
+  h3 {
+    font-size: 1.17em;
+  }
+  h4 {
+    font-size: 1em;
+  }
+  h5 {
+    font-size: .83em;
+  }
+  h6 {
+    font-size: .67em;
+  }
+  p {
+    /* margin-top: 1rem; */
+    /* margin-bottom: 1rem; */
+  }
 }
-main {
-  max-width: 100ch;
-  margin: auto;
-};
-h1, h2, h3, h4, h5, h6 {
-  font-weight: bold;
-}
-h1 {
-  font-size: 2.4em;
-}
-h2 {
-  font-size: 1.5em;
-}
-h3 {
-  font-size: 1.17em;
-}
-h4 {
-  font-size: 1em;
-}
-h5 {
-  font-size: .83em;
-}
-h6 {
-  font-size: .67em;
-}
-p {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-};
 </style>

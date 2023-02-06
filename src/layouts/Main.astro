@@ -1,0 +1,7 @@
+---
+const props = Astro.props;
+const c = props.class;
+---
+<main class={`px-4 mx-auto sm:w-narrow ${c}`}>
+  <slot />
+</main>

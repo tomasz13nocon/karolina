@@ -3,19 +3,20 @@ import Link from '../components/Link.astro';
 import Nav from '../components/Nav.astro';
 import Socials from '../components/Socials.astro';
 import Layout from '../layouts/Layout.astro';
+import Main from '../layouts/Main.astro';
 ---
 
 <Layout title="Karolina Nocoń - Photographer">
-  <main class="text-center flex flex-col gap-4 w-[48rem] mx-auto">
-    <h1 class="italic font-extralight text-6xl mt-16 mb-12 animate-[fadein_1s]">Karolina Nocoń</h1>
+  <Main class="text-center flex flex-col gap-4">
+    <h1 class="italic font-extralight text-6xl mt-16 mb-12 animate-[fadein_1s] leading-tight">Karolina Nocoń</h1>
     <img src="/img/2695939025795053519_40771053472.jpg" alt="Photo by Karolina Nocoń" class="shadow-image mb-10 animate-[fadein2_1s_0.5s_both]">
-    <ul class="uppercase">
-      <li class="my-2"><Link href="/about">About</Link></li>
-      <li class="my-2"><Link href="/photography">Photography</Link></li>
+    <ul class="uppercase flex flex-col gap-2">
+      <li><Link href="/about">About</Link></li>
+      <li><Link href="/photography">Photography</Link></li>
     </ul>
     <Socials />
     <Link href="/diary" class="uppercase">Diary</Link>
-  </main>
+  </Main>
 </Layout>
 
 <style>

@@ -8,7 +8,9 @@ module.exports = {
       },
       width: {
         // "narrow": "60ch",
+        // "narrower": "34rem",
         "narrow": "40rem",
+        "wide": "68rem",
       },
     },
   },

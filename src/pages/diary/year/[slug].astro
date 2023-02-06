@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import BlogList from "../../../components/BlogList.astro";
 import DiaryNav from "../../../components/DiaryNav.astro";
 import Layout from "../../../layouts/Layout.astro";
+import Main from "../../../layouts/Main.astro";
 
 export async function getStaticPaths() {
   const blogs = await getCollection("diary");
@@ -17,8 +18,8 @@ blogs = blogs.filter(blog => blog.data.date.getFullYear() === year);
 ---
 <Layout title=`${year} posts`>
   <DiaryNav />
-  <main>
+  <Main>
     <h1 class="text-center">{year} posts</h1>
     <BlogList {blogs} />
-  </main>
+  </Main>
 </Layout>

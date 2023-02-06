@@ -1,4 +1,5 @@
 ---
+import { Icon } from "astro-icon";
 import { getCollection } from "astro:content";
 import Link from "./Link.astro";
 
@@ -9,10 +10,35 @@ const years = [...new Set(blogs.map(blog => blog.data.date.getFullYear()))].reve
   <div>
     <Link href="/">Home</Link>
   </div>
-  <ul class="flex gap-4 justify-center">
+  <Icon name="ph:list" width="3em" class="sm:hidden" id="nav-hamburger" />
+  <ul class="gap-4 justify-center hidden sm:flex">
     {years.map(year => (
       <li><Link href={`/diary/year/${year}`}>{year}</Link></li>
     ))}
     <li><Link href="/diary">All</Link></li>
   </ul>
 </header>
+
+<!-- <div class="overflow-hidden absolut h-[100vh]"> -->
+  <div class="absolute sm:hidden right-0 translate-x-full" id="nav-menu">
+    <ul class="flex-col flex gap-4 justify-center">
+      {years.map(year => (
+        <li><Link href={`/diary/year/${year}`}>{year}</Link></li>
+      ))}
+      <li><Link href="/diary">All</Link></li>
+    </ul>
+  </div>
+<!-- </div> -->
+
+
+<script>
+document.getElementById("nav-hamburger")!.addEventListener("click", () => {
+  document.getElementById("nav-menu")!.classList.toggle("translate-x-full");
+});
+</script>
+
+<style>
+html, body {
+  overflow:hidden;
+}
+</style>

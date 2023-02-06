@@ -7,6 +7,7 @@ import sharp from 'sharp';
 import { getPicture } from '@astrojs/image';
 import { encode } from "blurhash";
 import * as fs from 'node:fs/promises'
+import Main from '../layouts/Main.astro';
 
 let imgs = await Astro.glob("../img/photography/*");
 let files = await fs.readdir("./src/img/photography/");
@@ -39,12 +40,12 @@ for (let i = 0; i < imgs.length; i++) {
 
 <Layout title="">
   <Nav />
-  <main class="mt-4 max-w-[1044px]">
+  <Main class="sm:w-auto xl:w-wide mt-4 overflow-hidden">
     <h1 class="text-center mb-8">Photography</h1>
-    <div id="masonry-container" class="mx-auto">
+    <div id="masonry-container" class="mx-auto w-full">
       {imgs.map((img, i) => (
         <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[99999px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
-          <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span>
+          {/* <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span> */}
 
           <Picture
             aria-role="button"
@@ -62,19 +63,20 @@ for (let i = 0; i < imgs.length; i++) {
             height={Math.floor(340 / img.default.width * img.default.height)}
           />
 
-          <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full"
+          <canvas class="blur-canvas absolute inset-0 -z-10 h-full"
             width={24}
             height={24}
           />
         </div>
       ))}
     </div>
-  </main>
+  </Main>
   <ImageViewer />
 </Layout>
 
 
 <script>
+console.log("QWE");
 import MagicGrid from "magic-grid"
 import { decodeBlurHash } from 'fast-blurhash';
 
