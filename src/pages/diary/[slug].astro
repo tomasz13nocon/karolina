@@ -1,7 +1,6 @@
 ---
 import { getCollection } from "astro:content";
 import DiaryNav from "../../components/DiaryNav.astro";
-import Nav from "../../components/Nav.astro";
 import Layout from "../../layouts/Layout.astro";
 import Main from "../../layouts/Main.astro";
 
@@ -19,16 +18,12 @@ const { Content } = await blog.render();
 <Layout title={blog.data.title}>
   <DiaryNav />
   <Main>
-    <h1>{blog.data.title}</h1>
-    <time>{blog.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", })} </time>
-    <hr class="my-4 border-zinc-300" />
-    <Content />
+    <article class="prose">
+      <h1>{blog.data.title}</h1>
+      <time>{blog.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", })} </time>
+      <hr class="my-4 border-zinc-300" />
+      <Content />
+    </article>
   </Main>
 </Layout>
 
-<style>
-p {
-  padding-top: 1rem;
-  padding-bottom: 1rem;
-}
-</style>

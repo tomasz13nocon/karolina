@@ -1,0 +1,15 @@
+---
+import Link from './Link.astro';
+
+interface Props {
+  years: number[];
+  col?: boolean;
+}
+const { years, col } = Astro.props;
+---
+<ul class={`gap-4 justify-center flex ${col ? "flex-col" : ""}`}>
+  {years.map(year => (
+    <li><Link href={`/diary/year/${year}`}>{year}</Link></li>
+  ))}
+  <li><Link href="/diary">All</Link></li>
+</ul>

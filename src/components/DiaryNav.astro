@@ -1,44 +1,35 @@
 ---
 import { Icon } from "astro-icon";
 import { getCollection } from "astro:content";
+import DiaryNavList from "./DiaryNavList.astro";
 import Link from "./Link.astro";
 
 const blogs = await getCollection("diary");
 const years = [...new Set(blogs.map(blog => blog.data.date.getFullYear()))].reverse();
 ---
-<header class="p-6 mb-6 bg-zinc-50/90 sticky top-0 grid grid-cols-[120px_1fr_120px] items-center backdrop-blur-sm border-b-[1px] border-zinc-400">
+<header class="py-3 px-6 sm:p-6 mb-6 bg-zinc-50/90 sticky top-0 grid grid-cols-[max-content_1fr_max-content] sm:grid-cols-[120px_1fr_120px] items-center backdrop-blur-sm border-b-[1px] border-zinc-400">
   <div>
     <Link href="/">Home</Link>
   </div>
+  <div class="sm:hidden"></div>
   <Icon name="ph:list" width="3em" class="sm:hidden" id="nav-hamburger" />
-  <ul class="gap-4 justify-center hidden sm:flex">
-    {years.map(year => (
-      <li><Link href={`/diary/year/${year}`}>{year}</Link></li>
-    ))}
-    <li><Link href="/diary">All</Link></li>
-  </ul>
+  <div class="hidden sm:block">
+    <DiaryNavList years={years} />
+  </div>
 </header>
 
-<!-- <div class="overflow-hidden absolut h-[100vh]"> -->
-  <div class="absolute sm:hidden right-0 translate-x-full" id="nav-menu">
-    <ul class="flex-col flex gap-4 justify-center">
-      {years.map(year => (
-        <li><Link href={`/diary/year/${year}`}>{year}</Link></li>
-      ))}
-      <li><Link href="/diary">All</Link></li>
-    </ul>
-  </div>
-<!-- </div> -->
+<!-- sidebar drawer -->
+<div class="fixed sm:hidden text-center top-0 right-0 transition-transform translate-x-full p-8 border-l-2 border-black h-full bg-zinc-50" id="nav-menu">
+  <Icon name="ph:x" width="3em" id="nav-close" class="pb-8" />
+  <DiaryNavList col years={years} />
+</div>
 
 
 <script>
-document.getElementById("nav-hamburger")!.addEventListener("click", () => {
+function toggleNav() {
   document.getElementById("nav-menu")!.classList.toggle("translate-x-full");
-});
+}
+document.getElementById("nav-hamburger")!.addEventListener("click", toggleNav);
+document.getElementById("nav-close")!.addEventListener("click", toggleNav);
 </script>
 
-<style>
-html, body {
-  overflow:hidden;
-}
-</style>
