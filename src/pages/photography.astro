@@ -26,22 +26,22 @@ for (let i = 0; i < imgs.length; i++) {
 
   let { data: bufferData, info: { width, height } } =
     await sharp("./src/img/photography/" + files[i])
-    .resize(100) // TODO:prod 100
+    .resize(20) // TODO:prod 100
     .raw()
     .ensureAlpha()
     .toBuffer({ resolveWithObject: true });
   // let ar = width / height;
   // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
   // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
-  blurhashes[i] = encode(new Uint8ClampedArray(bufferData), width, height, 5, 5); // TODO:prod 4,4 or more
+  blurhashes[i] = encode(new Uint8ClampedArray(bufferData), width, height, 3, 3); // TODO:prod 4,4 or more
 }
 ---
 
 <Layout title="">
   <Nav />
-  <main class="mt-4">
+  <main class="mt-4 max-w-[1044px]">
     <h1 class="text-center mb-8">Photography</h1>
-    <div id="masonry-container" class="w-[100ch]">
+    <div id="masonry-container" class="mx-auto">
       {imgs.map((img, i) => (
         <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[99999px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
           <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span>
@@ -84,7 +84,9 @@ let magicGrid = new MagicGrid({
   animate: true,
   gutter: 8,
 });
-magicGrid.listen();
+document.addEventListener("DOMContentLoaded", () => {
+  magicGrid.listen();
+});
 
 let imageViewer = document.getElementById("image-viewer");
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
