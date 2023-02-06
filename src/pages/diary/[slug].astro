@@ -19,8 +19,8 @@ const { Content } = await blog.render();
   <DiaryNav />
   <Main>
     <article class="prose">
-      <h1>{blog.data.title}</h1>
-      <time>{blog.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", })} </time>
+      <h1 class="mb-4">{blog.data.title}</h1>
+      <time class="italic">{blog.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", })} </time>
       <hr class="my-4 border-zinc-300" />
       <Content />
     </article>

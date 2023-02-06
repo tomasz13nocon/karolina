@@ -1,12 +1,16 @@
 ---
 const props = Astro.props;
 const classes = props.class ?? "";
-const active = Astro.url.pathname === props.href;
-console.log(props.href, Astro.url.pathname);
+const active = Astro.url.pathname === props.href || Astro.url.pathname + "/" === props.href;
 ---
 <a
   aria-current={active ? "page" : null}
-  class={`${active ? "after:translate-x-0 pointer-events-none" : ""} before:w-full before:block before:h-[2px] before:bg-zinc-300 before:absolute before:bottom-0 relative inline-block mx-auto after:block after:w-full after:h-[2px] after:bg-black after:-translate-x-[101%] after:transition-transform overflow-clip uppercase hover:after:translate-x-0 ${classes}`}
+  class={`
+overflow-clip uppercase hover:after:translate-x-0 relative inline-block mx-auto
+before:w-full before:block before:h-[2px] before:bg-zinc-300 before:absolute before:bottom-0
+after:block after:w-full after:h-[2px] after:bg-black after:-translate-x-[101%] after:transition-transform
+${active ? "after:translate-x-0 pointer-events-none" : ""}
+${classes}`}
   {...props}
 >
   <slot />
