@@ -53,6 +53,8 @@ for (let i = 0; i < imgs.length; i++) {
             data-index={img.i}
             data-full-size-src={img.default.src}
             data-blurhash={blurhashes[i]}
+            data-width={img.default.width}
+            data-height={img.default.height}
             loading="lazy"
             class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
             src={img.default}
@@ -63,7 +65,7 @@ for (let i = 0; i < imgs.length; i++) {
             height={Math.floor(340 / img.default.width * img.default.height)}
           />
 
-          <canvas class="blur-canvas absolute inset-0 -z-10 h-full"
+          <canvas class="blur-canvas absolute inset-0 -z-10 h-full w-full"
             width={24}
             height={24}
           />
@@ -108,9 +110,15 @@ function setupImgViewer(i: number) {
   if (!imgs[i].dataset.fullSizeSrc) {
     throw new Error("Expected full-size-src to be non empty");
   }
-  imageViewer!.getElementsByTagName("img")[0].src = "";
-  imageViewer!.getElementsByTagName("img")[0].src = imgs[i].dataset.fullSizeSrc!;
-  fillCanvas(i, imageViewer!.getElementsByTagName("canvas")[0]);
+  let img = imageViewer!.getElementsByTagName("img")[0];
+  let canvas = imageViewer!.getElementsByTagName("canvas")[0];
+  let wrapper = imageViewer!.getElementsByClassName("img-wrapper")[0] as HTMLElement;
+  wrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);// + "/" + imgs[i].dataset.height;
+  wrapper.style.maxWidth = imgs[i].dataset.width + "px";// + "/" + imgs[i].dataset.height;
+  img.src = "";
+  img.src = imgs[i].dataset.fullSizeSrc!;
+  fillCanvas(i, canvas);
+
   if (i !== 0) {
     prev!.dataset.imageIndex = `${i - 1}`;
     prev!.style.display = "block";

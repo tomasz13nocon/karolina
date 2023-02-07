@@ -12,11 +12,13 @@ import { Icon } from 'astro-icon';
     </div>
   </div>
   <div class="self-center row-start-1 row-end-3 col-start-2 max-h-full">
-    <img src="" alt="" class="mx-auto select-none max-h-[100vh]">
-    <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full"
-      width={24}
-      height={24}
-    />
+    <div class="mx-auto max-h-[100vh] relative img-wrapper">
+      <img src="" alt="" class="mx-auto select-none max-h-[100vh]">
+      <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full mx-auto"
+        width={24}
+        height={24}
+      />
+    </div>
     <!-- <Picture -->
     <!--   alt="photo" -->
     <!--   widths={[370, 100]} -->

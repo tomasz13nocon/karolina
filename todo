@@ -1,10 +1,14 @@
-mobile
+add esc to exit image viewer
 
-change blurhash on full size images?
+beta:
+blurhash fullscreen on image viewer
+dark mode
+full width photography
+
+
 add prefetch
 astro image integration everywhere?
 tags/categories/groups of photographs?
-
 
 iron out:
 responsive and optimized images
