@@ -4,6 +4,7 @@ const classes = props.class ?? "";
 const active = Astro.url.pathname === props.href || Astro.url.pathname + "/" === props.href;
 ---
 <a
+  data-test={Astro.url.pathname}
   aria-current={active ? "page" : null}
   class={`
 overflow-clip uppercase hover:after:translate-x-0 relative inline-block mx-auto
