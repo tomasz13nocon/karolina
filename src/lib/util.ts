@@ -1,0 +1,1 @@
+export const IMAGE_VIEWER_TRANSITION = 150;

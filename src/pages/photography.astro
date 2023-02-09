@@ -81,6 +81,8 @@ for (let i = 0; i < imgs.length; i++) {
 import MagicGrid from "magic-grid"
 import { decodeBlurHash } from 'fast-blurhash';
 
+import { IMAGE_VIEWER_TRANSITION } from "../lib/util";
+
 let magicGrid = new MagicGrid({
   container: "#masonry-container",
   static: true,
@@ -91,7 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
   magicGrid.listen();
 });
 
-let imageViewer = document.getElementById("image-viewer");
+let imageViewer = document.getElementById("image-viewer") as HTMLElement;
+if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
 let imgContainers = document.getElementsByClassName("img-container");
 let prev = document.getElementById("image-prev");
@@ -109,9 +112,9 @@ function setupImgViewer(i: number) {
   if (!imgs[i].dataset.fullSizeSrc) {
     throw new Error("Expected full-size-src to be non empty");
   }
-  let img = imageViewer!.getElementsByTagName("img")[0];
-  let canvas = imageViewer!.getElementsByTagName("canvas")[0];
-  let wrapper = imageViewer!.getElementsByClassName("img-wrapper")[0] as HTMLElement;
+  let img = imageViewer.getElementsByTagName("img")[0];
+  let canvas = imageViewer.getElementsByTagName("canvas")[0];
+  let wrapper = imageViewer.getElementsByClassName("img-wrapper")[0] as HTMLElement;
   wrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);// + "/" + imgs[i].dataset.height;
   wrapper.style.maxWidth = imgs[i].dataset.width + "px";// + "/" + imgs[i].dataset.height;
   img.src = "";
@@ -157,16 +160,22 @@ for (let i = 0; i < imgs.length; i++) {
   fillCanvas(i, imgContainers[i].getElementsByTagName("canvas")[0]);
 
   imgs[i].addEventListener("click", e => {
-    if (imageViewer) {
-      imageViewer.style.display = "grid";
-      setupImgViewer(i);
-    }
+    // imageViewer.style.display = "grid";
+    // imageViewer.classList.remove("opacity-100");
+    imageViewer.classList.remove("hidden");
+    setTimeout(() => imageViewer.classList.add("opacity-100"), 0);
+
+    setupImgViewer(i);
   });
 };
 
 document.getElementById("image-viewer-close")?.addEventListener("click", e => {
   if (imageViewer) {
-    imageViewer.style.display = "none";
+    // imageViewer.style.display = "none";
+    // imageViewer.classList.add("hidden");
+    // imageViewer.classList.remove("backdrop-blur-md");
+    imageViewer.classList.remove("opacity-100")
+    setTimeout(() => imageViewer.classList.add("hidden"), IMAGE_VIEWER_TRANSITION);
   }
 })
 
