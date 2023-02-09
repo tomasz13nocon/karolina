@@ -31,4 +31,11 @@ import { Icon } from 'astro-icon';
 </div>
 
 <script>
+let imageViewer = document.getElementById("image-viewer") as HTMLElement;
+console.log("adding listener");
+document.addEventListener("keydown", e => {
+  if (e.key === "Escape") {
+    imageViewer.style.display = "none";
+  }
+});
 </script>
