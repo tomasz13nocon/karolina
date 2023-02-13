@@ -16,7 +16,7 @@ const { year } = Astro.props;
 let blogs = await getCollection("diary");
 blogs = blogs.filter(blog => blog.data.date.getFullYear() === year);
 ---
-<Layout title=`${year} posts`>
+<Layout title={`Karolina Nocoń - Diary - ${year}`}>
   <DiaryNav />
   <Main>
     <h1 class="text-center">{year} posts</h1>

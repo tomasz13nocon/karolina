@@ -10,7 +10,7 @@ const blogs = await getCollection("diary");
 const bodies = await Promise.all(blogs.map(async blog => await blog.render()));
 ---
 
-<Layout title="">
+<Layout title="Karolina Nocoń - Diary">
   <DiaryNav />
   <Main>
     <h1 class="text-center">Diary</h1>

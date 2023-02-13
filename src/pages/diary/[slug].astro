@@ -15,7 +15,7 @@ const { blog } = Astro.props;
 const { Content } = await blog.render();
 ---
 
-<Layout title={blog.data.title}>
+<Layout title={blog.data.title + " - Karolina Nocoń - Diary"}>
   <DiaryNav />
   <Main>
     <article class="prose">

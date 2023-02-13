@@ -38,17 +38,16 @@ for (let i = 0; i < imgs.length; i++) {
 }
 ---
 
-<Layout title="">
+<Layout title="Karolina Nocoń - Photography">
   <Nav />
   <Main class="sm:w-auto xl:w-wide mt-4 overflow-hidden">
     <h1 class="text-center mb-8">Photography</h1>
     <div id="masonry-container" class="mx-auto w-full">
       {imgs.map((img, i) => (
-        <div class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[99999px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
+        <button class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[99999px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
           {/* <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span> */}
 
           <Picture
-            aria-role="button"
             tabindex={img.i}
             data-index={img.i}
             data-full-size-src={img.default.src}
@@ -59,7 +58,7 @@ for (let i = 0; i < imgs.length; i++) {
             class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
             src={img.default}
             alt="photo"
-            widths={[370, 100]}
+            widths={[370]}
             sizes="(min-width: 1000px) 370px"
             width={340}
             height={Math.floor(340 / img.default.width * img.default.height)}
@@ -69,7 +68,7 @@ for (let i = 0; i < imgs.length; i++) {
             width={24}
             height={24}
           />
-        </div>
+        </button>
       ))}
     </div>
   </Main>
@@ -80,9 +79,18 @@ for (let i = 0; i < imgs.length; i++) {
 <script>
 import MagicGrid from "magic-grid"
 import { decodeBlurHash } from 'fast-blurhash';
-
 import { IMAGE_VIEWER_TRANSITION } from "../lib/util";
 
+let imageViewer = document.getElementById("image-viewer") as HTMLElement;
+let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
+let imgContainers = document.getElementsByClassName("img-container");
+let prev = document.getElementById("image-prev");
+let next = document.getElementById("image-next");
+
+if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
+// if (imgs.length !== imgContainers.length) throw new Error("Expected every .img to be wrapped in .img-container");
+
+// Setup masonry grid
 let magicGrid = new MagicGrid({
   container: "#masonry-container",
   static: true,
@@ -92,13 +100,6 @@ let magicGrid = new MagicGrid({
 document.addEventListener("DOMContentLoaded", () => {
   magicGrid.listen();
 });
-
-let imageViewer = document.getElementById("image-viewer") as HTMLElement;
-if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
-let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
-let imgContainers = document.getElementsByClassName("img-container");
-let prev = document.getElementById("image-prev");
-let next = document.getElementById("image-next");
 
 function fillCanvas(i: number, canvas: HTMLCanvasElement) {
   const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, canvas.width, canvas.height);
@@ -137,7 +138,7 @@ function setupImgViewer(i: number) {
   }
 }
 
-// Lazy loading. Done non-trivially because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
+// Lazy loading. Done this way because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
 let observer = new IntersectionObserver((entries, observer) => {
   for (let entry of entries) {
     if (entry.isIntersecting) {
@@ -156,12 +157,11 @@ for (let imgContainer of imgContainers) {
   observer.observe(imgContainer);
 }
 
+// Setup blurhashes and click events
 for (let i = 0; i < imgs.length; i++) {
   fillCanvas(i, imgContainers[i].getElementsByTagName("canvas")[0]);
 
   imgs[i].addEventListener("click", e => {
-    // imageViewer.style.display = "grid";
-    // imageViewer.classList.remove("opacity-100");
     imageViewer.classList.remove("hidden");
     setTimeout(() => imageViewer.classList.add("opacity-100"), 0);
 
@@ -171,9 +171,6 @@ for (let i = 0; i < imgs.length; i++) {
 
 document.getElementById("image-viewer-close")?.addEventListener("click", e => {
   if (imageViewer) {
-    // imageViewer.style.display = "none";
-    // imageViewer.classList.add("hidden");
-    // imageViewer.classList.remove("backdrop-blur-md");
     imageViewer.classList.remove("opacity-100")
     setTimeout(() => imageViewer.classList.add("hidden"), IMAGE_VIEWER_TRANSITION);
   }

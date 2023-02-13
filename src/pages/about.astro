@@ -2,6 +2,8 @@
 import Layout from '../layouts/Layout.astro';
 import Nav from '../components/Nav.astro';
 import Main from '../layouts/Main.astro';
+import image from "../img/about.jpg";
+import { Image, Picture } from '@astrojs/image/components';
 ---
 
 <Layout title="About Karolina Nocoń">
@@ -16,7 +18,7 @@ import Main from '../layouts/Main.astro';
       <h2 class="-mt-2">Contact</h2>
       <address>karolinocon@gmail.com</address>
     </section>
-    <img src="/img/3002491233401717829_40771053472.webp" alt="Self portrait" width="500" class="mx-auto">
+    <Image src={image} alt="Self portrait" quality={75} width={500} format="avif" class="mx-auto" />
   </Main>
 </Layout>
 
