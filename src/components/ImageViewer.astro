@@ -2,10 +2,7 @@
 import { Icon } from 'astro-icon';
 import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION } from '../lib/util';
 ---
-<!-- `grid` and `hidden` are both needed, since we're removing and adding hidden class -->
 <div id="image-viewer" class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/25 backdrop-blur-2xl opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center" style={{transitionDuration: IMAGE_VIEWER_TRANSITION + "ms"}}>
-
-  <div class="w-12"></div>
 
   <button id="image-viewer-close" class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center">
     <Icon name="ph:x" width="2.5em" height="2.5em" class="drop-shadow-md" />

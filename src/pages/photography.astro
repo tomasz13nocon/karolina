@@ -167,17 +167,17 @@ function setupImgViewer(i: number) {
 
   if (i !== 0) {
     prev.dataset.imageIndex = `${i - 1}`;
-    prev.style.display = "block";
+    prev.style.visibility = "visible";
   }
   else {
-    prev.style.display = "none";
+    prev.style.visibility = "hidden";
   }
   if (i !== imgs.length - 1) {
     next.dataset.imageIndex = `${i + 1}`;
-    next.style.display = "block";
+    next.style.visibility = "visible";
   }
   else {
-    next.style.display = "none";
+    next.style.visibility = "hidden";
   }
 };
 
