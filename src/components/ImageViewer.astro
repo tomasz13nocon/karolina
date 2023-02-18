@@ -1,31 +1,30 @@
 ---
 import { Icon } from 'astro-icon';
-import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION } from '../lib/util';
+import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION, IMAGE_TRANSITION } from '../lib/util';
 ---
 <div id="image-viewer" class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/25 backdrop-blur-2xl opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center" style={{transitionDuration: IMAGE_VIEWER_TRANSITION + "ms"}}>
 
-  <button id="image-viewer-close" class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center">
+  <button id="image-viewer-close" class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center z-10">
     <Icon name="ph:x" width="2.5em" height="2.5em" class="drop-shadow-md" />
   </button>
 
-  <button id="image-prev" class="row-start-1 row-end-3 w-12  h-full cursor-pointer hover:bg-black/25 transition-colors">
+  <button id="image-prev" class="row-start-1 row-end-3 w-12  h-full cursor-pointer hover:bg-black/25 transition-colors z-10">
     <Icon name="ph:caret-left" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
   </button>
 
-  <div class="self-center row-start-1 row-end-3 col-start-2 max-h-full">
-    <div class="mx-auto max-h-[100vh] relative img-wrapper">
-      <img src="" alt="" class="mx-auto select-none max-h-[100vh]">
+  <div class="img-container self-center row-start-1 row-end-3 col-start-2 max-h-full ease-out-quart" style={{ transitionProperty: "opacity, transform", transitionDuration: IMAGE_TRANSITION + "ms" }}>
+    <div class="img-wrapper mx-auto max-h-screen">
+      <img src="" alt="" class="mx-auto select-none max-h-screen">
     </div>
-    <!-- <div class="absolute inset-0 -z-10 backdrop-blur-3xl"></div> -->
   </div>
 
-  <button id="image-next" class="pb-12 h-full w-12 col-start-3 cursor-pointer hover:bg-black/25 transition-colors">
+  <button id="image-next" class="pb-12 h-full w-12 col-start-3 cursor-pointer hover:bg-black/25 transition-colors z-10">
     <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
   </button>
 
 </div>
 
-    <img class="blur-img object-cover fixed inset-0 z-10 w-screen h-screen transition-opacity opacity-0 hidden" style={`transition-duration: ${BLUR_TRANSITION}ms`} />
+<img class="select-none blur-img object-cover fixed inset-0 z-10 w-screen h-screen transition-opacity opacity-0 hidden" style={`transition-duration: ${BLUR_TRANSITION}ms`} />
 
 <script>
 import { hideImageViewer } from "../lib/util";

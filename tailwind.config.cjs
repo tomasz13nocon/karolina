@@ -12,6 +12,14 @@ module.exports = {
         "narrow": "40rem",
         "wide": "68rem",
       },
+      transitionTimingFunction: {
+        'out-cubic': 'cubic-bezier(0.33, 1, 0.68, 1)',
+        'out-quart': 'cubic-bezier(0.25, 1, 0.5, 1)',
+        'out-quint': 'cubic-bezier(0.22, 1, 0.36, 1)',
+        'out-expo': 'cubic-bezier(0.16, 1, 0.3, 1)',
+        'out-circ': 'cubic-bezier(0, 0.55, 0.45, 1)',
+        'out-smooth': 'cubic-bezier(0.19, 1, 0.22, 1)',
+      },
     },
   },
   plugins: [

@@ -97,7 +97,8 @@ for (let i = 0; i < imgs.length; i++) {
 <script>
 import MagicGrid from "magic-grid"
 import { decodeBlurHash } from 'fast-blurhash';
-import { BLUR_TRANSITION, hideImageViewer, IMAGE_VIEWER_TRANSITION, hidingImageViewer } from "../lib/util";
+import { BLUR_TRANSITION, hideImageViewer, IMAGE_VIEWER_TRANSITION, hidingImageViewer
+, IMAGE_TRANSITION } from "../lib/util";
 
 let imageViewer = document.getElementById("image-viewer") as HTMLElement;
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
@@ -131,17 +132,35 @@ function fillCanvas(i: number, canvas: HTMLCanvasElement) {
   ctx.putImageData(imageData, 0, 0);
 }
 
-function setupImgViewer(i: number) {
+function setupImgViewer(i: number, direction?: -1 | 1) {
   if (!imgs[i].dataset.fullSizeSrc) {
     throw new Error("Expected full-size-src to be non empty");
   }
-  let img = imageViewer.getElementsByTagName("img")[0];
-  let canvas = imageViewer.getElementsByTagName("canvas")[0];
-  let wrapper = imageViewer.getElementsByClassName("img-wrapper")[0] as HTMLElement;
-  wrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);// + "/" + imgs[i].dataset.height;
-  wrapper.style.maxWidth = imgs[i].dataset.width + "px";// + "/" + imgs[i].dataset.height;
-  img.src = "";
-  img.src = imgs[i].dataset.fullSizeSrc!;
+  let conts = imageViewer.getElementsByClassName("img-container");
+  let cont = conts[conts.length - 1] as HTMLElement;
+  let newCont = cont.cloneNode(true) as HTMLElement;
+  let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
+  let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
+  newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);// + "/" + imgs[i].dataset.height;
+  newWrapper.style.maxWidth = imgs[i].dataset.width + "px";// + "/" + imgs[i].dataset.height;
+  newImg.src = imgs[i].dataset.fullSizeSrc!;
+  cont.insertAdjacentElement("afterend", newCont);
+  if (direction) {
+    newCont.style.transform = `translateX(${180 * direction}px)`;
+    newCont.style.opacity = "0";
+    requestAnimationFrame(() => {
+      newCont.style.transform = "translateX(0)";
+      newCont.style.opacity = "1";
+    });
+
+    cont.style.transform = `translateX(${-180 * direction}px)`;
+    cont.style.opacity = "0";
+
+    setTimeout(() => imageViewer.getElementsByClassName("img-container")[0].remove(), IMAGE_TRANSITION);
+  }
+  else {
+    cont.remove();
+  }
 
   let blurImg = document.getElementsByClassName("blur-img")[0] as HTMLImageElement;
   let newBlurImg = blurImg.cloneNode() as HTMLImageElement;
@@ -222,18 +241,14 @@ for (let i = 0; i < imgs.length; i++) {
 
 document.getElementById("image-viewer-close")!.addEventListener("click", hideImageViewer);
 
-function handleSwitch(this: HTMLElement) {
-  setupImgViewer(parseInt(this.dataset.imageIndex ?? "0"));
-}
 function keySwitch(e: KeyboardEvent) {
   if (!imageViewer.classList.contains("hidden")) {
-    if (e.key === "ArrowLeft") setupImgViewer(parseInt(prev.dataset.imageIndex!));
-    if (e.key === "ArrowRight") setupImgViewer(parseInt(next.dataset.imageIndex!));
+    if (e.key === "ArrowLeft") setupImgViewer(parseInt(prev.dataset.imageIndex!), -1);
+    if (e.key === "ArrowRight") setupImgViewer(parseInt(next.dataset.imageIndex!), 1);
   }
 }
-prev.addEventListener("click", handleSwitch);
-next.addEventListener("click", handleSwitch);
-document.addEventListener("keydown", keySwitch);
+prev.addEventListener("click", () => setupImgViewer(parseInt(prev.dataset.imageIndex ?? "0"), -1));
+next.addEventListener("click", () => setupImgViewer(parseInt(next.dataset.imageIndex ?? "0"), 1));
 document.addEventListener("keydown", keySwitch);
 
 </script>

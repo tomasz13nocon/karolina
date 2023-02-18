@@ -1,7 +1,8 @@
 import { atom } from 'nanostores';
 
-export const IMAGE_VIEWER_TRANSITION = 400;
+export const IMAGE_VIEWER_TRANSITION = 300;
 export const BLUR_TRANSITION = 400;
+export const IMAGE_TRANSITION = 400;
 
 export const hidingImageViewer = atom(false);
 
