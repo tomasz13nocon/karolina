@@ -19,7 +19,7 @@ blogs = blogs.filter(blog => blog.data.date.getFullYear() === year);
 <Layout title={`Karolina Nocoń - Diary - ${year}`}>
   <DiaryNav />
   <Main>
-    <h1 class="text-center">{year} posts</h1>
+    <h1 class="text-center">Diary - {year}</h1>
     <BlogList {blogs} />
   </Main>
 </Layout>

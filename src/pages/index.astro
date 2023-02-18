@@ -9,8 +9,8 @@ import image from "../img/home.jpg";
 
 <Layout title="Karolina Nocoń">
   <Main class="text-center flex flex-col gap-4">
-    <h1 class="italic font-extralight text-6xl mt-16 mb-12 animate-[fadein_1s] leading-tight">Karolina Nocoń</h1>
-    <Image src={image} width={640} quality={90} format="webp" alt="Photo by Karolina Nocoń" class="shadow-image mb-10 animate-[fadein2_1s_0.5s_both]" />
+    <h1 class="italic font-extralight text-6xl mt-16 mb-12 animate-[fadein_1s_paused] leading-tight" id="index-title">Karolina Nocoń</h1>
+    <Image src={image} width={640} quality={90} format="webp" alt="Photo by Karolina Nocoń" class="shadow-image mb-10 animate-[fadein2_1s_0.4s_both_paused]" id="index-image" />
     <ul class="uppercase flex flex-col gap-2">
       <li><Link href="/about">About</Link></li>
       <li><Link href="/photography">Photography</Link></li>
@@ -19,6 +19,25 @@ import image from "../img/home.jpg";
     <Link href="/diary" class="uppercase">Diary</Link>
   </Main>
 </Layout>
+
+<script>
+let img = document.getElementById("index-image") as HTMLImageElement;
+
+let heading = document.getElementById("index-title") as HTMLElement;
+await document.fonts.ready;
+heading.style.animationPlayState = "running";
+let t = performance.now();
+
+if (img.complete) {
+  img.style.animationPlayState = "running";
+}
+else {
+  img.addEventListener("load", () => {
+    img.style.animationDelay = (Math.max(0, 400 - (performance.now() - t))) + "ms";
+    img.style.animationPlayState = "running"
+  });
+}
+</script>
 
 <style>
 @keyframes fadein2 {
@@ -43,6 +62,7 @@ to {
   100 % {
     transform: scale(1);
     filter: blur(0);
+    opacity: 1;
   }
 }
 </style>
