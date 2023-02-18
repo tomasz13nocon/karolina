@@ -30,14 +30,14 @@ for (let i = 0; i < imgs.length; i++) {
 
   let { data: bufferData, info: { width, height } } =
     await sharp("./src/img/photography/" + files[i])
-    .resize(100) // TODO:prod 100
+    .resize(20) // TODO:prod 100
     .raw()
     .ensureAlpha()
     .toBuffer({ resolveWithObject: true });
   // let ar = width / height;
   // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
   // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
-  blurhashes[i] = encode(new Uint8ClampedArray(bufferData), width, height, 5, 5); // TODO:prod 4,4 or more
+  blurhashes[i] = encode(new Uint8ClampedArray(bufferData), width, height, 3, 3); // TODO:prod 4,4 or more
 }
 ---
 
@@ -47,7 +47,10 @@ for (let i = 0; i < imgs.length; i++) {
     <h1 class="text-center mb-8">Photography</h1>
     <div id="masonry-container" class="mx-auto w-full">
       {imgs.map((img, i) => (
-        <button class="img-container relative overflow-clip w-[340px] group inline-block translate-y-[9999px]" style={`height: ${340 / img.default.width * img.default.height}px`}>
+        <button
+          class="img-container relative overflow-clip w-[340px] group inline-block translate-x-[100vw]"
+          style={`height: ${340 / img.default.width * img.default.height}px;`}
+        >
           {/* <span class="absolute top-1/2 left-1/2 text-4xl -translate-x-1/2 -translate-y-1/2 z-10 text-white font-bold text-shadow">{i}</span> */}
 
           {/* <Picture */}
@@ -97,6 +100,7 @@ import { decodeBlurHash } from 'fast-blurhash';
 import { IMAGE_VIEWER_TRANSITION } from "../lib/util";
 
 let imageViewer = document.getElementById("image-viewer") as HTMLElement;
+console.log(imageViewer);
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
 let imgContainers = document.getElementsByClassName("img-container");
 let prev = document.getElementById("image-prev");
@@ -109,8 +113,10 @@ if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to ex
 let magicGrid = new MagicGrid({
   container: "#masonry-container",
   static: true,
-  animate: true,
+  animate: false,
   gutter: 8,
+  delay: 25,
+  duration: 500,
 });
 document.addEventListener("DOMContentLoaded", () => {
   magicGrid.listen();
@@ -155,6 +161,7 @@ function setupImgViewer(i: number) {
 
 // Lazy loading. Done this way because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
 let observer = new IntersectionObserver((entries, observer) => {
+  console.log("intersecting");
   for (let entry of entries) {
     if (entry.isIntersecting) {
       let img = entry.target.getElementsByTagName("img")[0];
