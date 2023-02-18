@@ -3,7 +3,7 @@ import { Icon } from 'astro-icon';
 import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION } from '../lib/util';
 ---
 <!-- `grid` and `hidden` are both needed, since we're removing and adding hidden class -->
-<div id="image-viewer" class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/70 backdrop-blur-md opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center" style={{transitionDuration: IMAGE_VIEWER_TRANSITION + "ms"}}>
+<div id="image-viewer" class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/25 backdrop-blur-2xl opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center" style={{transitionDuration: IMAGE_VIEWER_TRANSITION + "ms"}}>
 
   <button id="image-viewer-close" class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center">
     <Icon name="ph:x" width="2.5em" height="2.5em" class="drop-shadow-md" />
@@ -17,10 +17,7 @@ import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION } from '../lib/util';
     <div class="mx-auto max-h-[100vh] relative img-wrapper">
       <img src="" alt="" class="mx-auto select-none max-h-[100vh]">
     </div>
-    <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full mx-auto transition-opacity" style={`transition-duration: ${BLUR_TRANSITION}ms`}
-      width={24}
-      height={24}
-    />
+    <!-- <div class="absolute inset-0 -z-10 backdrop-blur-3xl"></div> -->
   </div>
 
   <button id="image-next" class="pb-12 h-full w-12 col-start-3 cursor-pointer hover:bg-black/25 transition-colors">
@@ -29,15 +26,14 @@ import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION } from '../lib/util';
 
 </div>
 
-<script>
-import { IMAGE_VIEWER_TRANSITION } from "../lib/util";
+    <img class="blur-img object-cover fixed inset-0 z-10 w-screen h-screen transition-opacity opacity-0 hidden" style={`transition-duration: ${BLUR_TRANSITION}ms`} />
 
-let imageViewer = document.getElementById("image-viewer") as HTMLElement;
+<script>
+import { hideImageViewer } from "../lib/util";
 
 document.addEventListener("keydown", e => {
   if (e.key === "Escape") {
-    imageViewer.classList.remove("opacity-100")
-    setTimeout(() => imageViewer.classList.add("hidden"), IMAGE_VIEWER_TRANSITION);
+    hideImageViewer();
   }
 });
 </script>

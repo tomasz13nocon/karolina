@@ -97,14 +97,14 @@ for (let i = 0; i < imgs.length; i++) {
 <script>
 import MagicGrid from "magic-grid"
 import { decodeBlurHash } from 'fast-blurhash';
-import { 
-BLUR_TRANSITION, IMAGE_VIEWER_TRANSITION } from "../lib/util";
+import { BLUR_TRANSITION, hideImageViewer, IMAGE_VIEWER_TRANSITION, hidingImageViewer } from "../lib/util";
 
 let imageViewer = document.getElementById("image-viewer") as HTMLElement;
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
 let imgContainers = document.getElementsByClassName("img-container");
 let prev = document.getElementById("image-prev") as HTMLElement;
 let next = document.getElementById("image-next") as HTMLElement;
+let fetchingImgs = 0;
 
 if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
 // if (imgs.length !== imgContainers.length) throw new Error("Expected every .img to be wrapped in .img-container");
@@ -143,13 +143,27 @@ function setupImgViewer(i: number) {
   img.src = "";
   img.src = imgs[i].dataset.fullSizeSrc!;
 
-  let newCanvas = canvas.cloneNode() as HTMLCanvasElement;
-  newCanvas.style.opacity = "0";
-  newCanvas.style.transitionProperty = "opacity";
-  fillCanvas(i, newCanvas);
-  requestAnimationFrame(() => newCanvas.style.opacity = "1");
-  canvas.parentNode!.appendChild(newCanvas);
-  setTimeout(() => imageViewer.getElementsByTagName("canvas")[0].remove(), BLUR_TRANSITION);
+  let blurImg = document.getElementsByClassName("blur-img")[0] as HTMLImageElement;
+  let newBlurImg = blurImg.cloneNode() as HTMLImageElement;
+  newBlurImg.style.opacity = "0";
+  newBlurImg.style.transitionProperty = "opacity";
+  // newBlurImg.classList.remove("hidden");
+  newBlurImg.src = imgs[i].src;
+  fetchingImgs++;
+  function show() {
+    if (!hidingImageViewer.get() && newBlurImg.matches(":last-child")) {
+      newBlurImg.style.opacity = "1"
+    }
+    setTimeout(() => {
+      if (--fetchingImgs === 0) {
+        let imgs = [...document.getElementsByClassName("blur-img")].slice(0, -1);
+        imgs.forEach(img => img.remove());
+      }
+    }, BLUR_TRANSITION);
+  };
+  if (newBlurImg.complete) requestAnimationFrame(() => show());
+  else newBlurImg.addEventListener("load", show);
+  blurImg.parentNode!.appendChild(newBlurImg);
 
   if (i !== 0) {
     prev.dataset.imageIndex = `${i - 1}`;
@@ -165,17 +179,13 @@ function setupImgViewer(i: number) {
   else {
     next.style.display = "none";
   }
-}
+};
 
 // Lazy loading. Done this way because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
 let observer = new IntersectionObserver((entries, observer) => {
   for (let entry of entries) {
     if (entry.isIntersecting) {
       let img = entry.target.getElementsByTagName("img")[0];
-      // if (img.dataset.src == null) {
-      //   throw new Error("Expected data-src to be set");
-      // }
-      // img.src = img.dataset.src!;
       img.classList.remove("hidden");
       observer.unobserve(img);
       continue;
@@ -191,21 +201,26 @@ for (let i = 0; i < imgs.length; i++) {
   fillCanvas(i, imgContainers[i].getElementsByTagName("canvas")[0]);
 
   imgs[i].addEventListener("click", e => {
+    let blurImgs = document.getElementsByClassName("blur-img") as HTMLCollectionOf<HTMLElement>;
+    for (let blurImg of blurImgs) {
+      blurImg.style.transitionProperty = "none";
+      blurImg.style.opacity = "0";
+      blurImg.classList.remove("hidden");
+    }
     imageViewer.classList.remove("hidden");
-    setTimeout(() => imageViewer.classList.add("opacity-100"), 0);
-
-    let canvas = imageViewer.getElementsByTagName("canvas")[0];
-    canvas.style.transitionProperty = "none";
-    canvas.style.opacity = "0";
+    requestAnimationFrame(() => {
+      imageViewer.style.opacity = "1";
+      // let blurImgs = document.getElementsByClassName("blur-img");
+      // for (let blurImg of blurImgs) {
+      //   blurImg.style.opacity = "1";
+      // }
+    });
 
     setupImgViewer(i);
   });
 };
 
-document.getElementById("image-viewer-close")?.addEventListener("click", e => {
-  imageViewer.classList.remove("opacity-100")
-  setTimeout(() => imageViewer.classList.add("hidden"), IMAGE_VIEWER_TRANSITION);
-})
+document.getElementById("image-viewer-close")!.addEventListener("click", hideImageViewer);
 
 function handleSwitch(this: HTMLElement) {
   setupImgViewer(parseInt(this.dataset.imageIndex ?? "0"));
