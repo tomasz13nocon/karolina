@@ -100,7 +100,6 @@ import { decodeBlurHash } from 'fast-blurhash';
 import { IMAGE_VIEWER_TRANSITION } from "../lib/util";
 
 let imageViewer = document.getElementById("image-viewer") as HTMLElement;
-console.log(imageViewer);
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
 let imgContainers = document.getElementsByClassName("img-container");
 let prev = document.getElementById("image-prev");
@@ -161,7 +160,6 @@ function setupImgViewer(i: number) {
 
 // Lazy loading. Done this way because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
 let observer = new IntersectionObserver((entries, observer) => {
-  console.log("intersecting");
   for (let entry of entries) {
     if (entry.isIntersecting) {
       let img = entry.target.getElementsByTagName("img")[0];

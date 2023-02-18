@@ -17,7 +17,6 @@
     "@types/sharp": "^0.31.1",
     "astro": "^2.0.2",
     "astro-icon": "^0.8.0",
-    "astro-spa": "github:RafidMuhymin/astro-spa",
     "blurhash": "^2.0.4",
     "fast-blurhash": "^1.1.2",
     "magic-grid": "github:tomasz13nocon/Magic-Grid",
