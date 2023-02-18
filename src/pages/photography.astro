@@ -43,7 +43,7 @@ for (let i = 0; i < imgs.length; i++) {
 
 <Layout title="Karolina Nocoń - Photography">
   <Nav />
-  <Main class="sm:w-auto xl:w-wide mt-4 overflow-hidden">
+  <Main class="sm:!w-auto xl:w-wide mt-4 overflow-hidden">
     <h1 class="text-center mb-8">Photography</h1>
     <div id="masonry-container" class="mx-auto w-full">
       {imgs.map((img, i) => (
@@ -97,13 +97,14 @@ for (let i = 0; i < imgs.length; i++) {
 <script>
 import MagicGrid from "magic-grid"
 import { decodeBlurHash } from 'fast-blurhash';
-import { IMAGE_VIEWER_TRANSITION } from "../lib/util";
+import { 
+BLUR_TRANSITION, IMAGE_VIEWER_TRANSITION } from "../lib/util";
 
 let imageViewer = document.getElementById("image-viewer") as HTMLElement;
 let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
 let imgContainers = document.getElementsByClassName("img-container");
-let prev = document.getElementById("image-prev");
-let next = document.getElementById("image-next");
+let prev = document.getElementById("image-prev") as HTMLElement;
+let next = document.getElementById("image-next") as HTMLElement;
 
 if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
 // if (imgs.length !== imgContainers.length) throw new Error("Expected every .img to be wrapped in .img-container");
@@ -116,6 +117,7 @@ let magicGrid = new MagicGrid({
   gutter: 8,
   delay: 25,
   duration: 500,
+  useMin: true,
 });
 document.addEventListener("DOMContentLoaded", () => {
   magicGrid.listen();
@@ -140,21 +142,28 @@ function setupImgViewer(i: number) {
   wrapper.style.maxWidth = imgs[i].dataset.width + "px";// + "/" + imgs[i].dataset.height;
   img.src = "";
   img.src = imgs[i].dataset.fullSizeSrc!;
-  fillCanvas(i, canvas);
+
+  let newCanvas = canvas.cloneNode() as HTMLCanvasElement;
+  newCanvas.style.opacity = "0";
+  newCanvas.style.transitionProperty = "opacity";
+  fillCanvas(i, newCanvas);
+  requestAnimationFrame(() => newCanvas.style.opacity = "1");
+  canvas.parentNode!.appendChild(newCanvas);
+  setTimeout(() => imageViewer.getElementsByTagName("canvas")[0].remove(), BLUR_TRANSITION);
 
   if (i !== 0) {
-    prev!.dataset.imageIndex = `${i - 1}`;
-    prev!.style.display = "block";
+    prev.dataset.imageIndex = `${i - 1}`;
+    prev.style.display = "block";
   }
   else {
-    prev!.style.display = "none";
+    prev.style.display = "none";
   }
   if (i !== imgs.length - 1) {
-    next!.dataset.imageIndex = `${i + 1}`;
-    next!.style.display = "block";
+    next.dataset.imageIndex = `${i + 1}`;
+    next.style.display = "block";
   }
   else {
-    next!.style.display = "none";
+    next.style.display = "none";
   }
 }
 
@@ -185,22 +194,32 @@ for (let i = 0; i < imgs.length; i++) {
     imageViewer.classList.remove("hidden");
     setTimeout(() => imageViewer.classList.add("opacity-100"), 0);
 
+    let canvas = imageViewer.getElementsByTagName("canvas")[0];
+    canvas.style.transitionProperty = "none";
+    canvas.style.opacity = "0";
+
     setupImgViewer(i);
   });
 };
 
 document.getElementById("image-viewer-close")?.addEventListener("click", e => {
-  if (imageViewer) {
-    imageViewer.classList.remove("opacity-100")
-    setTimeout(() => imageViewer.classList.add("hidden"), IMAGE_VIEWER_TRANSITION);
-  }
+  imageViewer.classList.remove("opacity-100")
+  setTimeout(() => imageViewer.classList.add("hidden"), IMAGE_VIEWER_TRANSITION);
 })
 
 function handleSwitch(this: HTMLElement) {
   setupImgViewer(parseInt(this.dataset.imageIndex ?? "0"));
-};
-if (prev) prev.addEventListener("click", handleSwitch);
-if (next) next.addEventListener("click", handleSwitch);
+}
+function keySwitch(e: KeyboardEvent) {
+  if (!imageViewer.classList.contains("hidden")) {
+    if (e.key === "ArrowLeft") setupImgViewer(parseInt(prev.dataset.imageIndex!));
+    if (e.key === "ArrowRight") setupImgViewer(parseInt(next.dataset.imageIndex!));
+  }
+}
+prev.addEventListener("click", handleSwitch);
+next.addEventListener("click", handleSwitch);
+document.addEventListener("keydown", keySwitch);
+document.addEventListener("keydown", keySwitch);
 
 </script>
 

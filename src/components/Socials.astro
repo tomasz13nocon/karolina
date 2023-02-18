@@ -1,7 +1,12 @@
 ---
 import { Icon } from "astro-icon";
+
+interface Props {
+  stat?: boolean;
+};
+const { stat } = Astro.props;
 ---
-<div class="mx-auto w-fit">
+<div class={`mx-auto w-fit ${stat ? "" : "absolute"} top-5 right-5`}>
   <a href="https://www.instagram.com/karolinocon/" target="_blank" aria-label="instagram">
     <!-- <Icon name="ph:instagram-logo-light" width="2.2em" height="2.2em" class="hover:text-zinc-700 ig-icon" /> -->
     <!-- <Icon name="ph:instagram-logo-thin" width="2.5em" height="2.5em" /> -->

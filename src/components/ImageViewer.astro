@@ -1,30 +1,30 @@
 ---
 import { Icon } from 'astro-icon';
-import { IMAGE_VIEWER_TRANSITION } from '../lib/util';
+import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION } from '../lib/util';
 ---
 <!-- `grid` and `hidden` are both needed, since we're removing and adding hidden class -->
-<div id="image-viewer" class={`z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/70 backdrop-blur-md opacity-0 transition-opacity duration-${IMAGE_VIEWER_TRANSITION} fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center`}>
+<div id="image-viewer" class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/70 backdrop-blur-md opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center" style={{transitionDuration: IMAGE_VIEWER_TRANSITION + "ms"}}>
 
   <button id="image-viewer-close" class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center">
-    <Icon name="ph:x" width="2.5em" height="2.5em" />
+    <Icon name="ph:x" width="2.5em" height="2.5em" class="drop-shadow-md" />
   </button>
 
   <button id="image-prev" class="row-start-1 row-end-3 w-12  h-full cursor-pointer hover:bg-black/25 transition-colors">
-    <Icon name="ph:caret-left" width="3em" height="3em" class="h-full" />
+    <Icon name="ph:caret-left" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
   </button>
 
   <div class="self-center row-start-1 row-end-3 col-start-2 max-h-full">
     <div class="mx-auto max-h-[100vh] relative img-wrapper">
       <img src="" alt="" class="mx-auto select-none max-h-[100vh]">
-      <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full mx-auto"
-        width={24}
-        height={24}
-      />
     </div>
+    <canvas class="blur-canvas absolute inset-0 -z-10 w-full h-full mx-auto transition-opacity" style={`transition-duration: ${BLUR_TRANSITION}ms`}
+      width={24}
+      height={24}
+    />
   </div>
 
   <button id="image-next" class="pb-12 h-full w-12 col-start-3 cursor-pointer hover:bg-black/25 transition-colors">
-    <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" />
+    <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
   </button>
 
 </div>
