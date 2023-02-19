@@ -149,18 +149,20 @@ function setupImgViewer(i: number, direction?: -1 | 1) {
   newImg.src = imgs[i].dataset.fullSizeSrc!;
   cont.insertAdjacentElement("afterend", newCont);
   if (direction) {
-    newCont.style.transform = `translateX(calc(${60 * direction}px + ${10 * direction}vw))`;
+    let translate = direction * (60 + (0.1 * window.innerWidth));
+    let objPos = translate * 0.5;
+    newCont.style.transform = `translateX(${translate}px)`;
     newCont.style.opacity = "0";
-    newImg.style.objectPosition = `calc(50% + ${-30 * direction}px + ${-5 * direction}vw)`;
+    newImg.style.objectPosition = `${-objPos}px`;
     requestAnimationFrame(() => {
       newCont.style.transform = "translateX(0)";
       newCont.style.opacity = "1";
       newImg.style.objectPosition = `50%`;
     });
 
-    cont.style.transform = `translateX(calc(${-60 * direction}px + ${-10 * direction}vw))`;
+    cont.style.transform = `translateX(${-translate}px)`;
     cont.style.opacity = "0";
-    img.style.objectPosition = `calc(50% + ${30 * direction}px + ${5 * direction}vw)`;
+    img.style.objectPosition = `${objPos}px`;
 
     setTimeout(() => imageViewer.getElementsByClassName("img-container")[0].remove(), IMAGE_TRANSITION);
   }
