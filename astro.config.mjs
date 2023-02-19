@@ -1,13 +1,8 @@
 import { defineConfig } from 'astro/config';
 import NetlifyCMS from 'astro-netlify-cms';
-
-// https://astro.build/config
 import tailwind from "@astrojs/tailwind";
-
-// https://astro.build/config
 import image from "@astrojs/image";
 
-// https://astro.build/config
 export default defineConfig({
   integrations: [
     tailwind(),
@@ -16,6 +11,7 @@ export default defineConfig({
     }),
     NetlifyCMS({
       config: {
+        media_folder: "/src/img/photography",
         backend: {
           name: "github",
           repo: "tomasz13nocon/karolina",
@@ -29,9 +25,19 @@ export default defineConfig({
             create: true,
             fields: [
               { name: 'title', widget: 'string', label: 'Post Title' },
+              { name: 'description', widget: 'string', label: 'Description', required: false },
               { name: 'body', widget: 'markdown', label: 'Post Body' },
             ],
-          }
+          },
+          {
+            name: "photography",
+            label: "Photography",
+            folder: "src/content/photography_dummy",
+            create: true,
+            fields: [
+              { name: "photo", widget: "image", media_folder: "/src/img/photography", label: "Photo" }
+            ]
+          },
         ],
       },
     }),
