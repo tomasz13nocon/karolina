@@ -171,20 +171,22 @@ function setupImgViewer(i: number, direction?: -1 | 1) {
     // img.animate([centerCont, direction === 1 ? leftCont : rightCont], { duration: IMAGE_TRANSITION, easing: easing});
 
     // JS TRANSITION
-    let translate = direction * (40 + (0.16 * window.innerWidth));
+    let translate = direction * (20 + (0.1 * window.innerWidth));
     let objPos = translate * 0.5;
+    newCont.style.transitionProperty = "none";
     newCont.style.transform = `translateX(${translate}px)`;
     newCont.style.opacity = "0";
-    newImg.style.objectPosition = `${-objPos}px`;
+    // newImg.style.objectPosition = `${-objPos}px`;
     requestAnimationFrame(() => {
+      newCont.style.transitionProperty = "transform, opacity";
       newCont.style.transform = "translateX(0)";
       newCont.style.opacity = "1";
-      newImg.style.objectPosition = `50%`;
+      // newImg.style.objectPosition = `50%`;
     });
 
     cont.style.transform = `translateX(${-translate}px)`;
     cont.style.opacity = "0";
-    img.style.objectPosition = `${objPos}px`;
+    // img.style.objectPosition = `${objPos}px`;
 
     setTimeout(() => imageViewer.getElementsByClassName("img-container")[0].remove(), IMAGE_TRANSITION);
   }
