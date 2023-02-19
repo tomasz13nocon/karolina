@@ -12,13 +12,14 @@ export default defineConfig({
   integrations: [
     tailwind(),
     image({
-      serviceEntryPoint: '@astrojs/image/sharp'
+      serviceEntryPoint: "@astrojs/image/sharp"
     }),
     NetlifyCMS({
       config: {
         backend: {
-          name: 'git-gateway',
-          branch: 'beta',
+          name: "github",
+          repo: "tomasz13nocon/karolina",
+          branch: "beta",
         },
         collections: [
           {
