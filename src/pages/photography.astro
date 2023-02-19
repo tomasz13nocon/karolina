@@ -146,10 +146,32 @@ function setupImgViewer(i: number, direction?: -1 | 1) {
   let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
   newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);// + "/" + imgs[i].dataset.height;
   newWrapper.style.maxWidth = imgs[i].dataset.width + "px";// + "/" + imgs[i].dataset.height;
+  newImg.src = "";
   newImg.src = imgs[i].dataset.fullSizeSrc!;
   cont.insertAdjacentElement("afterend", newCont);
   if (direction) {
-    let translate = direction * (60 + (0.1 * window.innerWidth));
+    // CSS ANIM
+    // newImg.style.animation = `slide-img ${IMAGE_TRANSITION}ms forwards cubic-bezier(0.25, 1, 0.5, 1)`;
+    // newCont.style.animation = `slide ${IMAGE_TRANSITION}ms forwards cubic-bezier(0.25, 1, 0.5, 1)`;
+    // img.style.animation = `slide-img ${IMAGE_TRANSITION}ms forwards reverse cubic-bezier(0.25, 1, 0.5, 1)`;
+    // cont.style.animation = `slide ${IMAGE_TRANSITION}ms forwards reverse cubic-bezier(0.25, 1, 0.5, 1)`;
+
+    // JS ANIM
+    // const easing = "cubic-bezier(0.25, 1, 0.5, 1)";
+    // let leftImg = { objectPosition: "100px" };
+    // let centerImg = { objectPosition: "0" };
+    // let rightImg = { objectPosition: "-100px" };
+    // newImg.animate([direction === 1 ? rightImg : leftImg, centerImg], { duration: IMAGE_TRANSITION, easing: easing});
+    // img.animate([centerImg, direction === 1 ? leftImg : rightImg], { duration: IMAGE_TRANSITION, easing: easing});
+    //
+    // let leftCont = { transform: "translateX(-200px)", opacity: 0 };
+    // let centerCont = { transform: "translateX(0)", opacity: 1 };
+    // let rightCont = { transform: "translateX(200px)", opacity: 0 };
+    // newCont.animate([direction === 1 ? rightCont : leftCont, centerCont], { duration: IMAGE_TRANSITION, easing: easing});
+    // img.animate([centerCont, direction === 1 ? leftCont : rightCont], { duration: IMAGE_TRANSITION, easing: easing});
+
+    // JS TRANSITION
+    let translate = direction * (40 + (0.16 * window.innerWidth));
     let objPos = translate * 0.5;
     newCont.style.transform = `translateX(${translate}px)`;
     newCont.style.opacity = "0";
