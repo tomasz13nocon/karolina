@@ -106,6 +106,7 @@ let imgContainers = document.getElementsByClassName("img-container");
 let prev = document.getElementById("image-prev") as HTMLElement;
 let next = document.getElementById("image-next") as HTMLElement;
 let fetchingImgs = 0;
+let currentIndex = 0;
 
 if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
 // if (imgs.length !== imgContainers.length) throw new Error("Expected every .img to be wrapped in .img-container");
@@ -136,8 +137,10 @@ function setupImgViewer(i: number, direction?: -1 | 1) {
   if (!imgs[i].dataset.fullSizeSrc) {
     throw new Error("Expected full-size-src to be non empty");
   }
+  currentIndex = i;
   let conts = imageViewer.getElementsByClassName("img-container");
   let cont = conts[conts.length - 1] as HTMLElement;
+  let img = cont.getElementsByTagName("img")[0] as HTMLImageElement;
   let newCont = cont.cloneNode(true) as HTMLElement;
   let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
   let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
@@ -146,15 +149,18 @@ function setupImgViewer(i: number, direction?: -1 | 1) {
   newImg.src = imgs[i].dataset.fullSizeSrc!;
   cont.insertAdjacentElement("afterend", newCont);
   if (direction) {
-    newCont.style.transform = `translateX(${180 * direction}px)`;
+    newCont.style.transform = `translateX(calc(${60 * direction}px + ${10 * direction}vw))`;
     newCont.style.opacity = "0";
+    newImg.style.objectPosition = `calc(50% + ${-30 * direction}px + ${-5 * direction}vw)`;
     requestAnimationFrame(() => {
       newCont.style.transform = "translateX(0)";
       newCont.style.opacity = "1";
+      newImg.style.objectPosition = `50%`;
     });
 
-    cont.style.transform = `translateX(${-180 * direction}px)`;
+    cont.style.transform = `translateX(calc(${-60 * direction}px + ${-10 * direction}vw))`;
     cont.style.opacity = "0";
+    img.style.objectPosition = `calc(50% + ${30 * direction}px + ${5 * direction}vw)`;
 
     setTimeout(() => imageViewer.getElementsByClassName("img-container")[0].remove(), IMAGE_TRANSITION);
   }
@@ -243,8 +249,8 @@ document.getElementById("image-viewer-close")!.addEventListener("click", hideIma
 
 function keySwitch(e: KeyboardEvent) {
   if (!imageViewer.classList.contains("hidden")) {
-    if (e.key === "ArrowLeft") setupImgViewer(parseInt(prev.dataset.imageIndex!), -1);
-    if (e.key === "ArrowRight") setupImgViewer(parseInt(next.dataset.imageIndex!), 1);
+    if (e.key === "ArrowLeft" && currentIndex > 0) setupImgViewer(parseInt(prev.dataset.imageIndex!), -1);
+    if (e.key === "ArrowRight" && currentIndex < imgs.length - 1) setupImgViewer(parseInt(next.dataset.imageIndex!), 1);
   }
 }
 prev.addEventListener("click", () => setupImgViewer(parseInt(prev.dataset.imageIndex ?? "0"), -1));
