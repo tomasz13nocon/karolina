@@ -8,18 +8,20 @@ import { Image, Picture } from '@astrojs/image/components';
 
 <Layout title="About Karolina Nocoń">
   <Nav />
-  <Main class="text-center flex flex-col gap-10 px-8">
-    <section class="flex flex-col gap-4">
-      <h1>About Karolina</h1>
-      <p class="text-left">Karolina Nocoń is a world class professional photographer!</p>
-      <p class="text-left">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Adipisci voluptas aut ipsam facilis at. Ea dolorum earum minus iusto ipsa illo dolore atque officia, veritatis architecto inventore? Optio, eum aut.
-      Assumenda nobis eveniet tenetur, qui recusandae vitae optio quis repellat sit ipsum illo, placeat magnam, possimus perferendis. Itaque quibusdam, adipisci ducimus nulla laborum unde quod architecto aliquid modi tempora dignissimos.</p>
-    </section>
-    <section>
-      <h2 class="-mt-2">Contact</h2>
-      <address>karolinocon@gmail.com</address>
-    </section>
-    <Image src={image} alt="Self portrait" quality={90} width={500} format="webp" class="mx-auto" />
+  <Main class="text-center px-8 xl:w-wide flex items-center gap-8 xl:gap-12 xl:mt-12 xl:flex-row flex-col">
+    <Image src={image} alt="Self portrait" quality={90} width={500} format="webp" class="order-1 xl:order-none" />
+    <article class="flex flex-col gap-10 content-center">
+      <section class="flex flex-col gap-4">
+        <h1>About Karolina</h1>
+        <p class="text-left">Karolina Nocoń is a world class professional photographer!</p>
+        <p class="text-left">Lorem ipsum dolor sit amet consectetur, adipisicing elit. Adipisci voluptas aut ipsam facilis at. Ea dolorum earum minus iusto ipsa illo dolore atque officia, veritatis architecto inventore? Optio, eum aut.
+          Assumenda nobis eveniet tenetur, qui recusandae vitae optio quis repellat sit ipsum illo, placeat magnam, possimus perferendis. Itaque quibusdam, adipisci ducimus nulla laborum unde quod architecto aliquid modi tempora dignissimos.</p>
+      </section>
+      <section>
+        <h2 class="-mt-2">Contact</h2>
+        <address>karolinocon@gmail.com</address>
+      </section>
+    </article>
   </Main>
 </Layout>
 
