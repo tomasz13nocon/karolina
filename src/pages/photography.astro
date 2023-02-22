@@ -21,7 +21,7 @@ for (let i = 0; i < imgs.length; i++) {
     alt: "photo",
     width: 370,
     format: "webp",
-    quality: 75,
+    quality: 90,
   }));
 
   // if (imgs[i].default.src.split("/").pop() !== files[i]) {
@@ -77,7 +77,7 @@ for (let i = 0; i < imgs.length; i++) {
             loading="lazy"
             class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
             src={processedImgs[i].src}
-            alt="photo"
+            alt="Photo by Karolina Nocoń"
             width={340}
             height={Math.floor(340 / img.default.width * img.default.height)}
           />

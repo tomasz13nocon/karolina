@@ -4,13 +4,15 @@ import Link from '../components/Link.astro';
 import Socials from '../components/Socials.astro';
 import Layout from '../layouts/Layout.astro';
 import Main from '../layouts/Main.astro';
-import image from "../img/home.jpg";
+// import image from "../img/home.jpg";
+import data from "../content/home.json";
+let image = await import(data.image);
 ---
 
 <Layout title="Karolina Nocoń">
   <Main class="text-center flex flex-col gap-4">
     <h1 class="italic font-extralight text-6xl mt-16 mb-12 animate-[fadein_1s_paused] leading-tight" id="index-title">Karolina Nocoń</h1>
-    <Image src={image} width={640} quality={90} format="webp" alt="Photo by Karolina Nocoń" class="shadow-image mb-10 animate-[fadein2_1s_0.4s_both_paused]" id="index-image" />
+    <Image src={image.default} width={640} quality={90} format="webp" alt="Photo by Karolina Nocoń" class="shadow-image mb-10 animate-[fadein2_1s_0.4s_both_paused]" id="index-image" />
     <ul class="uppercase flex flex-col gap-2">
       <li><Link href="/about">About</Link></li>
       <li><Link href="/photography">Photography</Link></li>

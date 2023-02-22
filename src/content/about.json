@@ -1,0 +1,10 @@
+{
+  "content": "Karolina Nocoń is a world class professional photographer!\n\nLorem ipsum dolor sit amet consectetur, adipisicing elit. Adipisci voluptas aut ipsam facilis at. Ea dolorum earum minus iusto ipsa illo dolore atque officia, veritatis architecto inventore? Optio, eum aut. Assumenda nobis eveniet tenetur, qui recusandae vitae optio quis repellat sit ipsum illo, placeat magnam, possimus perferendis. Itaque quibusdam, adipisci ducimus nulla laborum unde quod architecto aliquid modi tempora dignissimos.",
+  "title": "About Karolina",
+  "contact": [
+    {
+      "text": "karolinocon@gmail.com"
+    }
+  ],
+  "image": "/src/img/about.jpg"
+}
