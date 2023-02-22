@@ -11,7 +11,7 @@ export default defineConfig({
     }),
     NetlifyCMS({
       config: {
-        media_folder: "/src/img/photography",
+        media_folder: "/src/img",
         backend: {
           name: "github",
           repo: "tomasz13nocon/karolina",

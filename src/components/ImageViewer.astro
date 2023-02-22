@@ -34,4 +34,9 @@ document.addEventListener("keydown", e => {
     hideImageViewer();
   }
 });
+document.getElementById("image-viewer")!.addEventListener("click", (e) => {
+  if (!e.target!.matches("img, button, button *")) {
+    hideImageViewer();
+  }
+});
 </script>
