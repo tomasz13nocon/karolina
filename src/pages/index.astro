@@ -6,7 +6,8 @@ import Layout from '../layouts/Layout.astro';
 import Main from '../layouts/Main.astro';
 // import image from "../img/home.jpg";
 import data from "../content/home.json";
-let image = await import(data.image);
+const images = import.meta.glob("/src/img/*");
+const image = await images[data.image]();
 ---
 
 <Layout title="Karolina Nocoń">

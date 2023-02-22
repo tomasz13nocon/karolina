@@ -6,7 +6,8 @@ import Main from '../layouts/Main.astro';
 import { Image, Picture } from '@astrojs/image/components';
 import { Markdown } from '@astropub/md'
 import data from "../content/about.json";
-let image = await import(data.image);
+const images = import.meta.glob("/src/img/*");
+const image = await images[data.image]();
 ---
 
 <Layout title="About Karolina Nocoń">
