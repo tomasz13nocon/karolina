@@ -1,0 +1,288 @@
+---
+import type { ImgHTMLAttributes } from '@astrojs/image/components';
+import { getImage } from '@astrojs/image';
+import * as fs from 'node:fs/promises'
+import sharp from 'sharp';
+import { encode } from "blurhash";
+import Layout from '@layouts/Layout.astro';
+import Nav from '@components/Nav.astro';
+import ImageViewer from '@components/ImageViewer.astro';
+import Main from '@layouts/Main.astro';
+
+export async function getStaticPaths() {
+  let photoSets = await Astro.glob("../../data/photography/*.json");
+  return photoSets.map((photoSet) => ({
+    params: {
+      photoSet: photoSet.name.toLowerCase().replaceAll(" ", "-"),
+    },
+    props: { photoSet },
+  }));
+}
+
+const { photoSet } = Astro.props;
+
+
+
+// let imgs = await Astro.glob("../assets/photography/*");
+// let files = await fs.readdir("./src/assets/photography/");
+// let blurhashes: string[] = [];
+// let processedImgs: ImgHTMLAttributes[] = [];
+//
+// for (let i = 0; i < imgs.length; i++) {
+//   processedImgs.push(await getImage({
+//     src: imgs[i].default,
+//     alt: "photo",
+//     width: 370,
+//     format: "webp",
+//     quality: 90,
+//   }));
+//
+//   // if (imgs[i].default.src.split("/").pop() !== files[i]) {
+//   //   throw new Error(`mismatch between Astro.glob and fs.readdir outputs when reading src/img/photography. glob: "${imgs[i].default.src.split("/").pop()}" readdir: "${files[i]}"`);
+//   // }
+//
+//   let { data: bufferData, info: { width, height } } =
+//     await sharp("./src/assets/photography/" + files[i])
+//     .resize(10) // TODO:prod 100
+//     .raw()
+//     .ensureAlpha()
+//     .toBuffer({ resolveWithObject: true });
+//   // let ar = width / height;
+//   // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
+//   // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
+//   blurhashes[i] = encode(new Uint8ClampedArray(bufferData), width, height, 1, 1); // TODO:prod 4,4 or more
+// }
+---
+
+<Layout title="Karolina Nocoń - Photography">
+  <Main class="sm:!w-auto xl:w-wide overflow-hidden">
+    <Nav />
+    <h1 class="text-center mb-8">Photography</h1>
+    <div id="masonry-container" class="mx-auto w-full">
+      {photoSet.photos.map((img, i) => (
+        <button
+          class="img-container relative overflow-clip w-[340px] group inline-block translate-x-[100vw]"
+          style={`height: ${340 / img.default.width * img.default.height}px;`}
+        >
+          <img
+            data-index={img.i}
+            data-full-size-src={img.default.src}
+            data-blurhash={blurhashes[i]}
+            data-width={img.default.width}
+            data-height={img.default.height}
+            loading="lazy"
+            class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
+            src={processedImgs[i].src}
+            alt="Photo by Karolina Nocoń"
+            width={340}
+            height={Math.floor(340 / img.default.width * img.default.height)}
+          />
+
+          <canvas class="blur-canvas absolute inset-0 -z-10 h-full w-full"
+            width={24}
+            height={24}
+          />
+        </button>
+      ))}
+    </div>
+  </Main>
+  <ImageViewer />
+</Layout>
+
+
+<script>
+import MagicGrid from "magic-grid"
+import { decodeBlurHash } from 'fast-blurhash';
+import { BLUR_TRANSITION, hideImageViewer, IMAGE_VIEWER_TRANSITION, hidingImageViewer
+, IMAGE_TRANSITION } from "@lib/util";
+
+let imageViewer = document.getElementById("image-viewer") as HTMLElement;
+let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
+let imgContainers = document.getElementsByClassName("img-container");
+let prev = document.getElementById("image-prev") as HTMLElement;
+let next = document.getElementById("image-next") as HTMLElement;
+let fetchingImgs = 0;
+let currentIndex = 0;
+
+if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
+// if (imgs.length !== imgContainers.length) throw new Error("Expected every .img to be wrapped in .img-container");
+
+// Setup masonry grid
+let magicGrid = new MagicGrid({
+  container: "#masonry-container",
+  static: true,
+  animate: false,
+  gutter: 8,
+  delay: 25,
+  duration: 500,
+  useMin: true,
+});
+document.addEventListener("DOMContentLoaded", () => {
+  magicGrid.listen();
+});
+
+function fillCanvas(i: number, canvas: HTMLCanvasElement) {
+  const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, canvas.width, canvas.height);
+  const ctx = canvas.getContext('2d')!;
+  const imageData = ctx.createImageData(canvas.width, canvas.height);
+  imageData.data.set(pixels);
+  ctx.putImageData(imageData, 0, 0);
+}
+
+function setupImgViewer(i: number, direction?: -1 | 1) {
+  if (!imgs[i].dataset.fullSizeSrc) {
+    throw new Error("Expected full-size-src to be non empty");
+  }
+  currentIndex = i;
+  let conts = imageViewer.getElementsByClassName("img-container");
+  let cont = conts[conts.length - 1] as HTMLElement;
+  let img = cont.getElementsByTagName("img")[0] as HTMLImageElement;
+  let newCont = cont.cloneNode(true) as HTMLElement;
+  let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
+  let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
+  newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);// + "/" + imgs[i].dataset.height;
+  newWrapper.style.maxWidth = imgs[i].dataset.width + "px";// + "/" + imgs[i].dataset.height;
+  newImg.src = "";
+  newImg.src = imgs[i].dataset.fullSizeSrc!;
+  cont.insertAdjacentElement("afterend", newCont);
+  if (direction) {
+    // CSS ANIM
+    // newImg.style.animation = `slide-img ${IMAGE_TRANSITION}ms forwards cubic-bezier(0.25, 1, 0.5, 1)`;
+    // newCont.style.animation = `slide ${IMAGE_TRANSITION}ms forwards cubic-bezier(0.25, 1, 0.5, 1)`;
+    // img.style.animation = `slide-img ${IMAGE_TRANSITION}ms forwards reverse cubic-bezier(0.25, 1, 0.5, 1)`;
+    // cont.style.animation = `slide ${IMAGE_TRANSITION}ms forwards reverse cubic-bezier(0.25, 1, 0.5, 1)`;
+
+    // JS ANIM
+    // const easing = "cubic-bezier(0.25, 1, 0.5, 1)";
+    // let leftImg = { objectPosition: "100px" };
+    // let centerImg = { objectPosition: "0" };
+    // let rightImg = { objectPosition: "-100px" };
+    // newImg.animate([direction === 1 ? rightImg : leftImg, centerImg], { duration: IMAGE_TRANSITION, easing: easing});
+    // img.animate([centerImg, direction === 1 ? leftImg : rightImg], { duration: IMAGE_TRANSITION, easing: easing});
+    //
+    // let leftCont = { transform: "translateX(-200px)", opacity: 0 };
+    // let centerCont = { transform: "translateX(0)", opacity: 1 };
+    // let rightCont = { transform: "translateX(200px)", opacity: 0 };
+    // newCont.animate([direction === 1 ? rightCont : leftCont, centerCont], { duration: IMAGE_TRANSITION, easing: easing});
+    // img.animate([centerCont, direction === 1 ? leftCont : rightCont], { duration: IMAGE_TRANSITION, easing: easing});
+
+    // JS TRANSITION
+    let translate = direction * (20 + (0.1 * window.innerWidth));
+    let objPos = translate * 0.5;
+    newCont.style.transitionProperty = "none";
+    newCont.style.transform = `translateX(${translate}px)`;
+    newCont.style.opacity = "0";
+    // newImg.style.objectPosition = `${-objPos}px`;
+    requestAnimationFrame(() => {
+      newCont.style.transitionProperty = "transform, opacity";
+      newCont.style.transform = "translateX(0)";
+      newCont.style.opacity = "1";
+      // newImg.style.objectPosition = `50%`;
+    });
+
+    cont.style.transform = `translateX(${-translate}px)`;
+    cont.style.opacity = "0";
+    // img.style.objectPosition = `${objPos}px`;
+
+    setTimeout(() => imageViewer.getElementsByClassName("img-container")[0].remove(), IMAGE_TRANSITION);
+  }
+  else {
+    cont.remove();
+  }
+
+  let blurImg = document.getElementsByClassName("blur-img")[0] as HTMLImageElement;
+  let newBlurImg = blurImg.cloneNode() as HTMLImageElement;
+  newBlurImg.style.opacity = "0";
+  newBlurImg.style.transitionProperty = "opacity";
+  // newBlurImg.classList.remove("hidden");
+  newBlurImg.src = imgs[i].src;
+  fetchingImgs++;
+  function show() {
+    if (!hidingImageViewer.get() && newBlurImg.matches(":last-child")) {
+      newBlurImg.style.opacity = "1"
+    }
+    setTimeout(() => {
+      if (--fetchingImgs === 0) {
+        let imgs = [...document.getElementsByClassName("blur-img")].slice(0, -1);
+        imgs.forEach(img => img.remove());
+      }
+    }, BLUR_TRANSITION);
+  };
+  if (newBlurImg.complete) requestAnimationFrame(() => show());
+  else newBlurImg.addEventListener("load", show);
+  blurImg.parentNode!.appendChild(newBlurImg);
+
+  if (i !== 0) {
+    prev.dataset.imageIndex = `${i - 1}`;
+    prev.style.visibility = "visible";
+  }
+  else {
+    prev.style.visibility = "hidden";
+  }
+  if (i !== imgs.length - 1) {
+    next.dataset.imageIndex = `${i + 1}`;
+    next.style.visibility = "visible";
+  }
+  else {
+    next.style.visibility = "hidden";
+  }
+};
+
+// Lazy loading. Done this way because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
+let observer = new IntersectionObserver((entries, observer) => {
+  for (let entry of entries) {
+    if (entry.isIntersecting) {
+      let img = entry.target.getElementsByTagName("img")[0];
+      img.classList.remove("hidden");
+      observer.unobserve(img);
+      continue;
+    }
+  }
+});
+for (let imgContainer of imgContainers) {
+  observer.observe(imgContainer);
+}
+
+// Setup blurhashes and click events
+for (let i = 0; i < imgs.length; i++) {
+  fillCanvas(i, imgContainers[i].getElementsByTagName("canvas")[0]);
+
+  imgs[i].addEventListener("click", e => {
+    let blurImgs = document.getElementsByClassName("blur-img") as HTMLCollectionOf<HTMLElement>;
+    for (let blurImg of blurImgs) {
+      blurImg.style.transitionProperty = "none";
+      blurImg.style.opacity = "0";
+      blurImg.classList.remove("hidden");
+    }
+    imageViewer.classList.remove("hidden");
+    requestAnimationFrame(() => {
+      imageViewer.style.opacity = "1";
+      // let blurImgs = document.getElementsByClassName("blur-img");
+      // for (let blurImg of blurImgs) {
+      //   blurImg.style.opacity = "1";
+      // }
+    });
+
+    setupImgViewer(i);
+  });
+};
+
+document.getElementById("image-viewer-close")!.addEventListener("click", hideImageViewer);
+
+function keySwitch(e: KeyboardEvent) {
+  if (!imageViewer.classList.contains("hidden")) {
+    if (e.key === "ArrowLeft" && currentIndex > 0) setupImgViewer(parseInt(prev.dataset.imageIndex!), -1);
+    if (e.key === "ArrowRight" && currentIndex < imgs.length - 1) setupImgViewer(parseInt(next.dataset.imageIndex!), 1);
+  }
+}
+prev.addEventListener("click", () => setupImgViewer(parseInt(prev.dataset.imageIndex ?? "0"), -1));
+next.addEventListener("click", () => setupImgViewer(parseInt(next.dataset.imageIndex ?? "0"), 1));
+document.addEventListener("keydown", keySwitch);
+
+</script>
+
+<style>
+.text-shadow {
+  text-shadow: 0 0 4px black;
+};
+</style>
