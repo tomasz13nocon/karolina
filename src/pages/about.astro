@@ -1,31 +1,32 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import Main from '../layouts/Main.astro';
-// import image from "../img/about.jpg";
-import { Image, Picture } from '@astrojs/image/components';
-import { Markdown } from '@astropub/md'
-import data from "../data/about.json";
-const images = import.meta.glob("/src/img/*");
-const image = await images[data.image]();
+import { Image } from "@astrojs/image/components";
+import { Markdown } from "@astropub/md";
+import Layout from "@layouts/Layout.astro";
+import Nav from "@components/Nav.astro";
+import { getAsset } from "@lib/util";
+import data from "@data/about.json";
+import MainFlex from "@layouts/MainFlex.astro";
+
+const image = await getAsset(data.image);
 ---
 
 <Layout title="About Karolina Nocoń">
-  <Nav />
-  <Main class="text-center px-8 xl:w-wide flex items-center gap-8 xl:gap-12 xl:mt-12 xl:flex-row flex-col">
-    <Image src={image.default} alt="Photo by Karolina Nocoń" quality={90} width={500} format="webp" class="order-1 xl:order-none" />
-    <article class="flex flex-col gap-10 content-center">
-      <section class="flex flex-col gap-4 text-left">
-        <h1 class="text-center">{data.title}</h1>
+  <MainFlex>
+    <Nav />
+    <Image
+      src={image.default}
+      alt="Photo by Karolina Nocoń"
+      width={400}
+      format="webp"
+      quality={90}
+      class="mx-auto shadow-image rounded-full"
+    />
+    <article>
+      <section class="text-grey-3 mb-6">
+        <h1 class="font-bold tracking-[0.20em] text-xl leading-tight mb-12 text-grey-1">{data.title}</h1>
         <Markdown of={data.content} />
       </section>
-      <section>
-        <h2 class="-mt-2">Contact</h2>
-        {data.contact.map(({ text }) => (
-          <address>{text}</address>
-        ))}
-      </section>
+      {data.contact.map(({ text }) => <address class="not-italic">{text}</address>)}
     </article>
-  </Main>
+  </MainFlex>
 </Layout>
-

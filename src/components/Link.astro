@@ -2,14 +2,15 @@
 const props = Astro.props;
 const classes = props.class ?? "";
 const active = Astro.url.pathname === props.href || Astro.url.pathname === props.href + "/";
+const light = props.light;
 ---
 <a
   data-test={Astro.url.pathname}
   aria-current={active ? "page" : null}
   class={`
-overflow-clip uppercase hover:after:translate-x-0 relative inline-block mx-auto
+overflow-clip hover:after:translate-x-0 relative inline-block mx-auto tracking-wide ${light ? "text-grey-4" : "font-medium"}
 before:w-full before:block before:h-[2px] before:bg-zinc-300 before:absolute before:bottom-0
-after:block after:w-full after:h-[2px] after:bg-black after:-translate-x-[101%] after:transition-transform
+after:block after:w-full after:h-[2px] after:bg-black ${light ? "after:bg-grey-1" : ""} after:-translate-x-[105%] after:transition-transform
 ${active ? "after:translate-x-0 pointer-events-none" : ""}
 ${classes}`}
   {...props}

@@ -1,20 +1,30 @@
 ---
 import Link from "./Link.astro";
 import Socials from "./Socials.astro";
+
+const { exclude = [] } = Astro.props;
 const pages = [
   ["Home", "/"],
   ["About", "/about"],
   ["Photography", "/photography"],
-  ["Diary", "/diary"],
-];
-const { exclude = [] } = Astro.props;
+  ["Shows", "/shows"],
+].filter(
+  ([_, href]) =>
+    href !== Astro.url.pathname && href + "/" !== Astro.url.pathname && !exclude.includes(href)
+);
 ---
-<header class="my-6 bg-zinc-50/90">
-  <ul class="text-center uppercase mb-4 mx-20 flex flex-wrap gap-4 sm:gap-6 justify-center">
-    {pages.filter(([_, href]) => href !== Astro.url.pathname && href + "/" !== Astro.url.pathname && !exclude.includes(href)).map(([name, href]) => (
-      <li><Link href={href}>{name}</Link></li>
-    ))}
-  </ul>
-  <Socials />
-</header>
 
+<nav class="text-center">
+  <ul class="flex flex-col gap-1 lowercase">
+    {
+      pages.map(([name, href]) => (
+        <li>
+          <Link href={href}>{name}</Link>
+        </li>
+      ))
+    }
+  </ul>
+  <div class="mt-4">
+    <Socials />
+  </div>
+</nav>

@@ -1,10 +1,15 @@
-import { atom } from 'nanostores';
+import { atom } from "nanostores";
 
 export const IMAGE_VIEWER_TRANSITION = 300;
 export const BLUR_TRANSITION = 400;
 export const IMAGE_TRANSITION = 400;
 
 export const hidingImageViewer = atom(false);
+
+export async function getAsset(path: string) {
+  const images = import.meta.glob("/src/assets/*");
+  return images[path]() as Promise<{ default: ImageMetadata }>;
+}
 
 export function hideImageViewer() {
   hidingImageViewer.set(true);
@@ -17,7 +22,7 @@ export function hideImageViewer() {
   }
 
   setTimeout(() => {
-    imageViewer.classList.add("hidden")
+    imageViewer.classList.add("hidden");
     for (let blurImg of blurImgs) {
       blurImg.classList.add("hidden");
     }
