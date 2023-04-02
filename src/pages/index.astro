@@ -5,7 +5,7 @@ import Socials from '../components/Socials.astro';
 import Layout from '../layouts/Layout.astro';
 import Main from '../layouts/Main.astro';
 // import image from "../img/home.jpg";
-import data from "../content/home.json";
+import data from "../data/home.json";
 const images = import.meta.glob("/src/img/*");
 const image = await images[data.image]();
 ---

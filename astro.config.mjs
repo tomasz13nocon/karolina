@@ -24,10 +24,12 @@ export default defineConfig({
             label: "Diary",
             folder: "src/content/diary",
             create: true,
+            media_folder: "/public",
             fields: [
               { name: 'title', widget: 'string', label: 'Post Title' },
+              { name: 'date', widget: 'datetime', label: 'Publication Date' },
               { name: 'description', widget: 'string', label: 'Description', required: false },
-              { name: 'body', widget: 'markdown', label: 'Post Body' },
+              { name: 'body', widget: 'markdown', label: 'Post Body', media_folder: "/public" },
             ],
           },
           {
@@ -35,9 +37,23 @@ export default defineConfig({
             label: "Pages",
             files: [
               {
+                name: "icon",
+                label: "Icon",
+                file: "src/data/icon.json",
+                fields: [
+                  {
+                    name: "image",
+                    label: "Image",
+                    widget: "image",
+                    public_folder: "/",
+                    media_folder: "/public",
+                  },
+                ],
+              },
+              {
                 name: "home",
                 label: "Home",
-                file: "src/content/home.json",
+                file: "src/data/home.json",
                 fields: [
                   {
                     name: "image",
@@ -50,7 +66,7 @@ export default defineConfig({
               {
                 name: "about",
                 label: "About",
-                file: "src/content/about.json",
+                file: "src/data/about.json",
                 fields: [
                   {
                     name: "image",

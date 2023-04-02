@@ -21,6 +21,7 @@ const { Content } = await blog.render();
     <article class="prose">
       <h1 class="mb-4">{blog.data.title}</h1>
       <time class="italic">{blog.data.date.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric", })} </time>
+      <p class="">{blog.data.description}</p>
       <hr class="my-4 border-zinc-300" />
       <Content />
     </article>
