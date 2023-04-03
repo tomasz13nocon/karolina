@@ -1,0 +1,14 @@
+{
+  "shows": [
+    {
+      "upcoming": false,
+      "poster": "/src/assets/shows/show2014.jpg",
+      "alt": "test"
+    },
+    {
+      "upcoming": false,
+      "poster": "/src/assets/shows/show2021.jpg",
+      "alt": "poster"
+    }
+  ]
+}

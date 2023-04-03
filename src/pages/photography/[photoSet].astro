@@ -11,7 +11,7 @@ import { getAsset, toUrl } from "@lib/util";
 import Link from "@components/Link.astro";
 
 interface Photo {
-  photo: string;
+  src: string;
   alt?: string;
 }
 interface PhotoSet {
@@ -29,6 +29,7 @@ interface MyImage {
   height: number;
   hash: string;
   src: string;
+  fullSrc: string;
   alt?: string;
 }
 
@@ -47,10 +48,10 @@ const { photoSet, allSets } = Astro.props;
 let imgs: MyImage[] = [];
 
 // Calculate blurhashes and transform images to smaller size
-for (let { photo: src, alt } of photoSet.photos) {
+for (let { src, alt } of photoSet.photos) {
   const img = await getAsset(src);
 
-  const { src: astroSrc } = await getImage({
+  const { src: smallSrc } = await getImage({
     src: img.default.src,
     alt: "photo",
     width: 340 * 1.1,
@@ -58,8 +59,14 @@ for (let { photo: src, alt } of photoSet.photos) {
     format: "webp",
     quality: 90,
   });
-  if (astroSrc == null) {
-    throw new Error("astroSrc is undefined");
+  const { src: fullSrc } = await getImage({
+    src: img.default.src,
+    alt: "photo",
+    width: img.default.width,
+    height: img.default.height,
+  });
+  if (smallSrc == null || fullSrc == null) {
+    throw new Error("Astro's getImage failed. src is not present.");
   }
 
   const {
@@ -72,11 +79,11 @@ for (let { photo: src, alt } of photoSet.photos) {
     .toBuffer({ resolveWithObject: true });
 
   const hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
-  imgs.push({ width: img.default.width, height: img.default.height, hash, src: astroSrc, alt });
+  imgs.push({ width: img.default.width, height: img.default.height, hash, src: smallSrc, fullSrc, alt });
 }
 ---
 
-<Layout title="Karolina Nocoń - Photography">
+<Layout title={`Karolina Nocoń - ${photoSet.name}`}>
   <Main class="sm:!w-auto xl:w-wide overflow-hidden">
     <Nav />
     <nav class="mt-8 mb-16">
@@ -116,7 +123,7 @@ for (let { photo: src, alt } of photoSet.photos) {
             {/* data-hash MUST be set */}
             <img
               data-index={i}
-              data-full-size-src={img.src}
+              data-full-size-src={img.fullSrc}
               data-hash={img.hash}
               data-width={img.width}
               data-height={img.height}
@@ -127,20 +134,6 @@ for (let { photo: src, alt } of photoSet.photos) {
               width={340}
               height={Math.floor((340 / img.width) * img.height)}
             />
-
-            {/* <img */}
-            {/*   data-index={img.i} */}
-            {/*   data-full-size-src={img.default.src} */}
-            {/*   data-blurhash={blurhashes[i]} */}
-            {/*   data-width={img.default.width} */}
-            {/*   data-height={img.default.height} */}
-            {/*   loading="lazy" */}
-            {/*   class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden" */}
-            {/*   src={processedImgs[i].src} */}
-            {/*   alt="Photo by Karolina Nocoń" */}
-            {/*   width={340} */}
-            {/*   height={Math.floor(340 / img.default.width * img.default.height)} */}
-            {/* /> */}
 
             <canvas
               class="blur-canvas absolute inset-0 -z-10 h-full w-full"

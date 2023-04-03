@@ -1,22 +1,30 @@
 {
   "index": 2,
-  "thumb": "/src/assets/photography/february/2617906880900262513_40771053472.jpg",
+  "thumb": {
+    "src": "/src/assets/photography/february/2617906880900262513_40771053472.jpg",
+    "alt": ""
+  },
   "name": "february",
   "photos": [
     {
-      "photo": "/src/assets/photography/february/2617906880900262513_40771053472.jpg"
+      "src": "/src/assets/photography/february/2617906880900262513_40771053472.jpg",
+      "alt": ""
     },
     {
-      "photo": "/src/assets/photography/february/2625742130280062745_40771053472.jpg"
+      "src": "/src/assets/photography/february/2625742130280062745_40771053472.jpg",
+      "alt": ""
     },
     {
-      "photo": "/src/assets/photography/february/2527701920795866843_40771053472.jpg"
+      "src": "/src/assets/photography/february/2527701920795866843_40771053472.jpg",
+      "alt": ""
     },
     {
-      "photo": "/src/assets/photography/february/2661961421807491528_40771053472.jpg"
+      "src": "/src/assets/photography/february/2661961421807491528_40771053472.jpg",
+      "alt": ""
     },
     {
-      "photo": "/src/assets/photography/february/2603289412189951717_40771053472.jpg"
+      "src": "/src/assets/photography/february/2603289412189951717_40771053472.jpg",
+      "alt": ""
     }
   ]
 }

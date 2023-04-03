@@ -15,7 +15,7 @@ const months = [
 
 export default {
   config: {
-    media_folder: "/src/assets/photography",
+    media_folder: "/src/assets",
     backend: {
       name: "github",
       repo: "tomasz13nocon/karolina",
@@ -58,15 +58,10 @@ export default {
             {
               name: "thumb",
               label: "Thumbnail",
-              widget: "image",
-            },
-            {
-              name: `photos`,
-              label: "Photos",
               widget: "list",
               fields: [
                 {
-                  name: "photo",
+                  name: "src",
                   label: "Photo",
                   widget: "image",
                 },
@@ -74,7 +69,23 @@ export default {
                   name: "alt",
                   label: "Alt text",
                   widget: "string",
-                  required: false,
+                },
+              ],
+            },
+            {
+              name: `photos`,
+              label: "Photos",
+              widget: "list",
+              fields: [
+                {
+                  name: "src",
+                  label: "Photo",
+                  widget: "image",
+                },
+                {
+                  name: "alt",
+                  label: "Alt text",
+                  widget: "string",
                 },
               ],
             },
@@ -82,9 +93,70 @@ export default {
         })),
       },
       {
+        name: "shows",
+        label: "Shows",
+        folder: "src/content/shows",
+        create: true,
+        media_folder: "/src/assets/shows",
+        fields: [
+          {
+            name: "title",
+            label: "Title",
+            widget: "string",
+          },
+          {
+            name: "poster",
+            label: "Poster",
+            widget: "image",
+          },
+          {
+            name: "alt",
+            label: "Alt text",
+            widget: "string",
+          },
+          {
+            name: "upcoming",
+            label: "Upcoming",
+            widget: "boolean",
+            default: false,
+          },
+        ],
+      },
+      {
         name: "pages",
         label: "Pages",
         files: [
+          // {
+          //   name: "shows",
+          //   label: "Shows",
+          //   media_folder: "/src/assets/shows",
+          //   file: "src/data/shows.json",
+          //   fields: [
+          //     {
+          //       name: "shows",
+          //       label: "Shows",
+          //       widget: "list",
+          //       fields: [
+          //         {
+          //           name: "poster",
+          //           label: "Poster",
+          //           widget: "image",
+          //         },
+          //         {
+          //           name: "alt",
+          //           label: "Alt text",
+          //           widget: "string",
+          //         },
+          //         {
+          //           name: "upcoming",
+          //           label: "Upcoming",
+          //           widget: "boolean",
+          //           default: false,
+          //         },
+          //       ],
+          //     },
+          //   ],
+          // },
           {
             name: "icon",
             label: "Icon",

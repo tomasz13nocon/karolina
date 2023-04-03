@@ -8,6 +8,7 @@ import { getAsset, toUrl } from "@lib/util";
 interface Thumb {
   name: string;
   src: string;
+  alt: string;
 }
 
 let photoSets = await Astro.glob("../data/photography/*.json");
@@ -15,24 +16,25 @@ photoSets = photoSets.sort((a, b) => a.index - b.index);
 let thumbs: Thumb[] = [];
 
 for (let photoSet of photoSets) {
-  const img = await getAsset(photoSet.thumb);
+  const img = await getAsset(photoSet.thumb.src);
   // TODO: Can we just use Image instead of getImage?
   const imgTransformed = await getImage({
     src: img.default.src,
-    alt: "photo",
+    alt: photoSet.thumb.alt,
     width: 416 * 1.1,
     height: 160 * 1.1,
     format: "webp",
     quality: 90,
   });
 
-  if (imgTransformed.src == null) {
-    throw new Error("Astro's getImage failed. src is not present.");
+  if (imgTransformed.src == null || imgTransformed.alt == null) {
+    throw new Error("Astro's getImage failed. src or alt is not present.");
   }
 
   thumbs.push({
     name: photoSet.name,
     src: imgTransformed.src,
+    alt: imgTransformed.alt,
   });
 }
 ---
@@ -50,7 +52,7 @@ for (let photoSet of photoSets) {
             >
               <img
                 src={thumb.src}
-                alt=""
+                alt={thumb.alt}
                 class="absolute transition-transform group-hover:scale-110 w-full duration-500 ease-expo"
                 width="416"
               />
