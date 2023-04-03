@@ -9,7 +9,7 @@ for month in months:
 
 for i, month in enumerate(months):
     with open('./src/data/photography/' + month + '.json', 'w+', encoding='utf-8') as f:
-        base = "src/assets/photography/" + month + "/"
+        base = "/src/assets/photography/" + month + "/"
         photos = list(map(lambda src: { "photo": base + src }, monthPics[month]))
         json.dump({
             "index": i + 1,

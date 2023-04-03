@@ -59,9 +59,6 @@ for (let { photo: src, alt } of photoSet.photos) {
   } = await sharp(src).resize(20).raw().ensureAlpha().toBuffer({ resolveWithObject: true });
 
   let hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
-  // if (!src.startsWith("/")) {
-  //   src = "/" + src;
-  // }
   let { src: astroSrc } = await getImage({
     src: src,
     alt: "photo",

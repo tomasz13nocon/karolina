@@ -4,6 +4,7 @@ import type { ImgHTMLAttributes } from "@astrojs/image/components";
 import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
+import { getAsset } from "@lib/util";
 
 let monthsData = await Astro.glob("../data/photography/*.json");
 monthsData = monthsData.sort((a, b) => a.index - b.index);
@@ -11,6 +12,7 @@ let thumbs: ImgHTMLAttributes[] = [];
 
 // let monthThumbs = await Astro.glob("../data/photography/*.json");
 for (let month of monthsData) {
+  // const img = await getAsset(month.thumb);
   thumbs.push(await getImage({
     src: month.thumb,
     alt: "photo",
