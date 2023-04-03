@@ -1,28 +1,40 @@
 ---
 import { getImage } from "@astrojs/image";
-import type { ImgHTMLAttributes } from "@astrojs/image/components";
 import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import { getAsset } from "@lib/util";
 
-let monthsData = await Astro.glob("../data/photography/*.json");
-monthsData = monthsData.sort((a, b) => a.index - b.index);
-let thumbs: ImgHTMLAttributes[] = [];
+interface Thumb {
+  name: string;
+  src: string;
+}
 
-// let monthThumbs = await Astro.glob("../data/photography/*.json");
-for (let month of monthsData) {
-  // const img = await getAsset(month.thumb);
-  thumbs.push(await getImage({
-    src: month.thumb,
+let photoSets = await Astro.glob("../data/photography/*.json");
+photoSets = photoSets.sort((a, b) => a.index - b.index);
+let thumbs: Thumb[] = [];
+
+for (let photoSet of photoSets) {
+  const img = await getAsset(photoSet.thumb);
+  // TODO: Can we just use Image instead of getImage?
+  const imgTransformed = await getImage({
+    src: img.default.src,
     alt: "photo",
     width: 416 * 1.1,
     height: 160 * 1.1,
     format: "webp",
     quality: 90,
-  }));
+  });
+
+  if (imgTransformed.src == null) {
+    throw new Error("Astro's getImage failed. src is not present.");
+  }
+
+  thumbs.push({
+    name: photoSet.name,
+    src: imgTransformed.src,
+  });
 }
-console.log(monthsData);
 ---
 
 <Layout title="Karolina Nocoń - Photography">
@@ -30,21 +42,21 @@ console.log(monthsData);
     <Nav />
     <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 mx-auto">
       {
-        monthsData.map((month, i) => (
+        thumbs.map((thumb) => (
           <li>
             <a
-              href={"/photography/" + month.name.toLowerCase().replace(" ", "-")}
+              href={"/photography/" + thumb.name.toLowerCase().replace(" ", "-")}
               class="w-[26rem] h-[10rem] flex items-center justify-center relative overflow-clip group"
             >
               <img
-                src={thumbs[i].src}
+                src={thumb.src}
                 alt=""
                 class="absolute transition-transform group-hover:scale-110 w-full duration-500 ease-expo"
                 width="416"
               />
               <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100" />
               <span class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.5em]">
-                {month.name}
+                {thumb.name}
               </span>
             </a>
           </li>

@@ -2,6 +2,7 @@
 import type { ImgHTMLAttributes } from "@astrojs/image/components";
 import { getImage } from "@astrojs/image";
 import * as fs from "node:fs/promises";
+import path from "node:path";
 import sharp from "sharp";
 import { encode } from "blurhash";
 import Layout from "@layouts/Layout.astro";
@@ -9,6 +10,7 @@ import Nav from "@components/Nav.astro";
 import ImageViewer from "@components/ImageViewer.astro";
 import Main from "@layouts/Main.astro";
 import { rgbaToThumbHash } from "thumbhash";
+import { getAsset } from "@lib/util";
 
 interface Photo {
   photo: string;
@@ -44,35 +46,33 @@ const { photoSet } = Astro.props;
 
 let imgs: MyImage[] = [];
 
+// Calculate blurhashes and transform images to smaller size
 for (let { photo: src, alt } of photoSet.photos) {
-  let imgFile = await fs.readFile(src);
-  let img = sharp(imgFile);
+  const img = await getAsset(src);
 
-  let { width, height } = await img.metadata();
-  if (width === undefined || height === undefined) {
-    throw new Error("width or height is undefined");
-  }
-
-  let {
-    data: bufferData,
-    info: { width: hashW, height: hashH },
-  } = await sharp(src).resize(20).raw().ensureAlpha().toBuffer({ resolveWithObject: true });
-
-  let hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
-  let { src: astroSrc } = await getImage({
-    src: src,
+  const { src: astroSrc } = await getImage({
+    src: img.default.src,
     alt: "photo",
-    width: 370,
-    aspectRatio: width / height,
+    width: 340 * 1.1,
+    aspectRatio: img.default.width / img.default.height,
     format: "webp",
     quality: 90,
   });
   if (astroSrc == null) {
     throw new Error("astroSrc is undefined");
   }
-  imgs.push({ width, height, hash, src: astroSrc, alt });
+
+  const {
+    data: bufferData,
+    info: { width: hashW, height: hashH },
+  } = await sharp(path.join(".", src)).resize(20).raw().ensureAlpha().toBuffer({ resolveWithObject: true });
+
+  // THUMBHASH
+  const hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
+  // BLURHASH
+  // const hash = encode(new Uint8ClampedArray(bufferData), hashW, hashH, 3, 3); // TODO:prod 4,4 or more
+  imgs.push({ width: img.default.width, height: img.default.height, hash, src: astroSrc, alt });
 }
-console.log(imgs);
 
 // let imgs = await Astro.glob("../assets/photography/*");
 // let files = await fs.readdir("./src/assets/photography/");
@@ -198,35 +198,22 @@ console.log(imgs);
   });
 
   function fillCanvas(img: HTMLImageElement, canvas: HTMLCanvasElement) {
-
-    // if (img.complete) return;
-    // const originalSrc = img.src;
-    // img.addEventListener(
-    //   "load",
-    //   () => {
-    //     img.src = originalSrc;
-    //   },
-    //   { once: true }
-    // );
-
+    // THUMBHASH CANVAS
     let b64 = img.dataset.hash!;
-    // img.src = thumbHashToDataURL(Uint8Array.from(window.atob(b64), (c) => c.charCodeAt(0)));
-    // console.log(img.src);
     let byteArr = Uint8Array.from(window.atob(b64), (c) => c.charCodeAt(0));
-
     const { rgba: pixels, w, h } = thumbHashToRGBA(byteArr);
     const ctx = canvas.getContext("2d")!;
     const imageData = ctx.createImageData(w, h);
     imageData.data.set(pixels);
     ctx.putImageData(imageData, 0, 0);
 
-    // const pixels = decodeBlurHash(imgs[i].dataset.blurhash!, canvas.width, canvas.height);
+    // BLURHASH
+    // const pixels = decodeBlurHash(img.dataset.hash!, canvas.width, canvas.height);
     // const ctx = canvas.getContext('2d')!;
     // const imageData = ctx.createImageData(canvas.width, canvas.height);
     // imageData.data.set(pixels);
     // ctx.putImageData(imageData, 0, 0);
   }
-  fillCanvas(imgs[0], imgContainers[0].getElementsByTagName("canvas")[0] as HTMLCanvasElement);
 
   function setupImgViewer(i: number, direction?: -1 | 1) {
     if (!imgs[i].dataset.fullSizeSrc) {

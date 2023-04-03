@@ -6,6 +6,7 @@ export const IMAGE_TRANSITION = 400;
 
 export const hidingImageViewer = atom(false);
 
+// Throws if `path` doesn't exist in /src/assets
 export async function getAsset(path: string) {
   const images = import.meta.glob("/src/assets/**/*");
   return images[path]() as Promise<{ default: ImageMetadata }>;
