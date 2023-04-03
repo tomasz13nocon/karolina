@@ -1,6 +1,7 @@
 ---
 import Link from "./Link.astro";
 import Socials from "./Socials.astro";
+import { isCurrent } from "@lib/util";
 
 const { exclude = [] } = Astro.props;
 const pages = [
@@ -8,10 +9,7 @@ const pages = [
   ["About", "/about"],
   ["Photography", "/photography"],
   ["Shows", "/shows"],
-].filter(
-  ([_, href]) =>
-    href !== Astro.url.pathname && href + "/" !== Astro.url.pathname && !exclude.includes(href)
-);
+].filter(([_, href]) => !isCurrent(href, Astro.url.pathname) && !exclude.includes(href));
 ---
 
 <nav class="text-center">

@@ -62,4 +62,9 @@ const { title } = Astro.props;
     font-size: .67em;
   }
 }
+@layer utilities {
+  .transition-1 {
+    @apply duration-500 ease-expo;
+  }
+}
 </style>

@@ -14,14 +14,15 @@ interface Photo {
   photo: string;
   alt?: string;
 }
+interface PhotoSet {
+  index: number;
+  thumb: string;
+  name: string;
+  photos: Photo[];
+}
 interface Props {
-  photoSet: {
-    index: number;
-    thumb: string;
-    name: string;
-    photos: Photo[];
-  };
-  allSets: string[];
+  photoSet: PhotoSet;
+  allSets: PhotoSet[];
 }
 interface MyImage {
   width: number;
@@ -37,7 +38,7 @@ export async function getStaticPaths() {
     params: {
       photoSet: toUrl(photoSet.name),
     },
-    props: { photoSet, allSets: photoSets.map((photoSet) => photoSet.name) },
+    props: { photoSet, allSets: photoSets },
   }));
 }
 
@@ -78,14 +79,28 @@ for (let { photo: src, alt } of photoSet.photos) {
 <Layout title="Karolina Nocoń - Photography">
   <Main class="sm:!w-auto xl:w-wide overflow-hidden">
     <Nav />
-    <nav class="mb-8">
-      <ul class="flex flex-wrap gap-4 justify-center">
+    <nav class="mt-8 mb-16">
+      <ul class="flex flex-wrap justify-center">
         {
-          allSets.map((set, i) => (
-            <li class="inline-block">
-              <Link href={"/photography/" + toUrl(set)}>{set}</Link>
-            </li>
-          ))
+          allSets
+            .sort((a, b) => a.index - b.index)
+            .map((set, i) => (
+              <li class="inline-block">
+                <Link
+                  href={"/photography/" + toUrl(set.name)}
+                  class="px-2 group"
+                  activeClass="!tracking-[0.5em] !font-bold px-6"
+                  nohover
+                >
+                  <span
+                    data-before={set.name}
+                    class="block relative before:content-[attr(data-before)] before:absolute before:top-full transition-transform transition-1 group-hover:-translate-y-full before:text-black"
+                  >
+                    {set.name}
+                  </span>
+                </Link>
+              </li>
+            ))
         }
       </ul>
     </nav>

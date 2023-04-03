@@ -1,17 +1,30 @@
 ---
+import { isCurrent } from "@lib/util";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string;
+  class?: string;
+  activeClass?: string;
+  light?: boolean;
+  nohover?: boolean;
+}
+
 const props = Astro.props;
 const classes = props.class ?? "";
-const active = Astro.url.pathname === props.href || Astro.url.pathname === props.href + "/";
+const activeClasses = props.activeClass ?? "";
+const active = isCurrent(props.href, Astro.url.pathname);
 const light = props.light;
+const nohover = props.nohover;
 ---
+
 <a
-  data-test={Astro.url.pathname}
   aria-current={active ? "page" : null}
   class={`
-overflow-clip hover:after:translate-x-0 relative inline-block mx-auto tracking-wide ${light ? "text-grey-4" : "font-medium"}
-before:w-full before:block before:h-[2px] before:bg-zinc-300 before:absolute before:bottom-0
-after:block after:w-full after:h-[2px] after:bg-black ${light ? "after:bg-grey-1" : ""} after:-translate-x-[105%] after:transition-transform
-${active ? "after:translate-x-0 pointer-events-none" : ""}
+overflow-clip relative inline-block mx-auto tracking-wide
+${nohover ? "" : "hover:text-black"}
+${light ? "text-grey-4" : "font-medium"}
+${active ? activeClasses + " pointer-events-none" : ""}
 ${classes}`}
   {...props}
 >

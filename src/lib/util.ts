@@ -18,6 +18,10 @@ export function toUrl(str: string) {
   return encodeURIComponent(str.toLowerCase().replaceAll(" ", "-"));
 }
 
+export function isCurrent(href: string, pathname: string) {
+  return href === pathname || href + "/" === pathname;
+}
+
 export function hideImageViewer() {
   hidingImageViewer.set(true);
   let imageViewer = document.getElementById("image-viewer") as HTMLElement;
