@@ -30,7 +30,8 @@ module.exports = {
         smooth: "cubic-bezier(0.19, 1, 0.22, 1)",
       },
       dropShadow: {
-        "2xl": "1px 1px 5px rgba(0, 0, 0, 1)",
+        "text-1": "1px 1px 4px rgba(0, 0, 0, 1)",
+        "2xl": "2px 1px 10px rgba(0, 0, 0, 1)",
       },
     },
   },

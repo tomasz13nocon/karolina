@@ -11,20 +11,21 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/image": "^0.13.0",
-    "@astrojs/tailwind": "^3.0.0",
-    "@astropub/md": "^0.1.5",
+    "@astrojs/image": "^0.16.4",
+    "@astrojs/tailwind": "^3.1.1",
+    "@astropub/md": "^0.2.0",
     "@staticcms/core": "^1.2.14",
     "@tailwindcss/typography": "^0.5.9",
-    "astro": "^2.0.2",
+    "astro": "^2.1.9",
     "astro-icon": "^0.8.0",
     "astro-netlify-cms": "^0.5.3",
-    "blurhash": "^2.0.4",
+    "blurhash": "^2.0.5",
     "fast-blurhash": "^1.1.2",
     "magic-grid": "github:tomasz13nocon/Magic-Grid",
     "nanostores": "^0.7.4",
-    "sharp": "^0.31.3",
-    "tailwindcss": "^3.2.4"
+    "sharp": "^0.31.0",
+    "tailwindcss": "^3.3.1",
+    "thumbhash": "^0.1.1"
   },
   "devDependencies": {
     "@rollup/plugin-yaml": "^4.0.1",
