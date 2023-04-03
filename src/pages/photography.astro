@@ -3,7 +3,7 @@ import { getImage } from "@astrojs/image";
 import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
-import { getAsset } from "@lib/util";
+import { getAsset, toUrl } from "@lib/util";
 
 interface Thumb {
   name: string;
@@ -45,7 +45,7 @@ for (let photoSet of photoSets) {
         thumbs.map((thumb) => (
           <li>
             <a
-              href={"/photography/" + thumb.name.toLowerCase().replace(" ", "-")}
+              href={"/photography/" + toUrl(thumb.name)}
               class="w-[26rem] h-[10rem] flex items-center justify-center relative overflow-clip group"
             >
               <img

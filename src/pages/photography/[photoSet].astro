@@ -1,16 +1,14 @@
 ---
-import type { ImgHTMLAttributes } from "@astrojs/image/components";
 import { getImage } from "@astrojs/image";
-import * as fs from "node:fs/promises";
 import path from "node:path";
 import sharp from "sharp";
-import { encode } from "blurhash";
 import Layout from "@layouts/Layout.astro";
 import Nav from "@components/Nav.astro";
 import ImageViewer from "@components/ImageViewer.astro";
 import Main from "@layouts/Main.astro";
 import { rgbaToThumbHash } from "thumbhash";
-import { getAsset } from "@lib/util";
+import { getAsset, toUrl } from "@lib/util";
+import Link from "@components/Link.astro";
 
 interface Photo {
   photo: string;
@@ -23,6 +21,7 @@ interface Props {
     name: string;
     photos: Photo[];
   };
+  allSets: string[];
 }
 interface MyImage {
   width: number;
@@ -36,13 +35,13 @@ export async function getStaticPaths() {
   let photoSets = await Astro.glob("../../data/photography/*.json");
   return photoSets.map((photoSet) => ({
     params: {
-      photoSet: photoSet.name.toLowerCase().replaceAll(" ", "-"),
+      photoSet: toUrl(photoSet.name),
     },
-    props: { photoSet },
+    props: { photoSet, allSets: photoSets.map((photoSet) => photoSet.name) },
   }));
 }
 
-const { photoSet } = Astro.props;
+const { photoSet, allSets } = Astro.props;
 
 let imgs: MyImage[] = [];
 
@@ -65,50 +64,31 @@ for (let { photo: src, alt } of photoSet.photos) {
   const {
     data: bufferData,
     info: { width: hashW, height: hashH },
-  } = await sharp(path.join(".", src)).resize(20).raw().ensureAlpha().toBuffer({ resolveWithObject: true });
+  } = await sharp(path.join(".", src))
+    .resize(20)
+    .raw()
+    .ensureAlpha()
+    .toBuffer({ resolveWithObject: true });
 
-  // THUMBHASH
   const hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
-  // BLURHASH
-  // const hash = encode(new Uint8ClampedArray(bufferData), hashW, hashH, 3, 3); // TODO:prod 4,4 or more
   imgs.push({ width: img.default.width, height: img.default.height, hash, src: astroSrc, alt });
 }
-
-// let imgs = await Astro.glob("../assets/photography/*");
-// let files = await fs.readdir("./src/assets/photography/");
-// let blurhashes: string[] = [];
-// let processedImgs: ImgHTMLAttributes[] = [];
-//
-// for (let i = 0; i < imgs.length; i++) {
-//   processedImgs.push(await getImage({
-//     src: imgs[i].default,
-//     alt: "photo",
-//     width: 370,
-//     format: "webp",
-//     quality: 90,
-//   }));
-//
-//   // if (imgs[i].default.src.split("/").pop() !== files[i]) {
-//   //   throw new Error(`mismatch between Astro.glob and fs.readdir outputs when reading src/img/photography. glob: "${imgs[i].default.src.split("/").pop()}" readdir: "${files[i]}"`);
-//   // }
-//
-//   let { data: bufferData, info: { width, height } } =
-//     await sharp("./src/assets/photography/" + files[i])
-//     .resize(10) // TODO:prod 100
-//     .raw()
-//     .ensureAlpha()
-//     .toBuffer({ resolveWithObject: true });
-//   // let ar = width / height;
-//   // let w = Math.floor(Math.min(9 ,Math.max(3, 3 * ar)));
-//   // let h = Math.floor(Math.min(9 ,Math.max(3, 3 / ar)));
-//   blurhashes[i] = encode(new Uint8ClampedArray(bufferData), width, height, 1, 1); // TODO:prod 4,4 or more
-// }
 ---
 
 <Layout title="Karolina Nocoń - Photography">
   <Main class="sm:!w-auto xl:w-wide overflow-hidden">
     <Nav />
-    <h1 class="text-center mb-8">Photography</h1>
+    <nav class="mb-8">
+      <ul class="flex flex-wrap gap-4 justify-center">
+        {
+          allSets.map((set, i) => (
+            <li class="inline-block">
+              <Link href={"/photography/" + toUrl(set)}>{set}</Link>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
     <div id="masonry-container" class="mx-auto w-full">
       {
         imgs.map((img, i) => (
@@ -162,8 +142,7 @@ for (let { photo: src, alt } of photoSet.photos) {
 
 <script>
   import MagicGrid from "magic-grid";
-  import { decodeBlurHash } from "fast-blurhash";
-  import { thumbHashToDataURL, thumbHashToRGBA } from "thumbhash";
+  import { thumbHashToRGBA } from "thumbhash";
   import {
     BLUR_TRANSITION,
     hideImageViewer,
@@ -198,7 +177,6 @@ for (let { photo: src, alt } of photoSet.photos) {
   });
 
   function fillCanvas(img: HTMLImageElement, canvas: HTMLCanvasElement) {
-    // THUMBHASH CANVAS
     let b64 = img.dataset.hash!;
     let byteArr = Uint8Array.from(window.atob(b64), (c) => c.charCodeAt(0));
     const { rgba: pixels, w, h } = thumbHashToRGBA(byteArr);
@@ -206,13 +184,6 @@ for (let { photo: src, alt } of photoSet.photos) {
     const imageData = ctx.createImageData(w, h);
     imageData.data.set(pixels);
     ctx.putImageData(imageData, 0, 0);
-
-    // BLURHASH
-    // const pixels = decodeBlurHash(img.dataset.hash!, canvas.width, canvas.height);
-    // const ctx = canvas.getContext('2d')!;
-    // const imageData = ctx.createImageData(canvas.width, canvas.height);
-    // imageData.data.set(pixels);
-    // ctx.putImageData(imageData, 0, 0);
   }
 
   function setupImgViewer(i: number, direction?: -1 | 1) {
