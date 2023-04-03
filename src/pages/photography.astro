@@ -1,10 +1,26 @@
 ---
+import { getImage } from "@astrojs/image";
+import type { ImgHTMLAttributes } from "@astrojs/image/components";
 import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 
 let monthsData = await Astro.glob("../data/photography/*.json");
 monthsData = monthsData.sort((a, b) => a.index - b.index);
+let thumbs: ImgHTMLAttributes[] = [];
+
+// let monthThumbs = await Astro.glob("../data/photography/*.json");
+for (let month of monthsData) {
+  thumbs.push(await getImage({
+    src: month.thumb,
+    alt: "photo",
+    width: 416 * 1.1,
+    height: 160 * 1.1,
+    format: "webp",
+    quality: 90,
+  }));
+}
+console.log(monthsData);
 ---
 
 <Layout title="Karolina Nocoń - Photography">
@@ -12,14 +28,14 @@ monthsData = monthsData.sort((a, b) => a.index - b.index);
     <Nav />
     <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 mx-auto">
       {
-        monthsData.map((month) => (
+        monthsData.map((month, i) => (
           <li>
             <a
               href={"/photography/" + month.name.toLowerCase().replace(" ", "-")}
               class="w-[26rem] h-[10rem] flex items-center justify-center relative overflow-clip group"
             >
               <img
-                src={month.thumb}
+                src={thumbs[i].src}
                 alt=""
                 class="absolute transition-transform group-hover:scale-110 w-full duration-500 ease-expo"
                 width="416"

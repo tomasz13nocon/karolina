@@ -59,10 +59,21 @@ for (let { photo: src, alt } of photoSet.photos) {
   } = await sharp(src).resize(20).raw().ensureAlpha().toBuffer({ resolveWithObject: true });
 
   let hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
-  if (!src.startsWith("/")) {
-    src = "/" + src;
+  // if (!src.startsWith("/")) {
+  //   src = "/" + src;
+  // }
+  let { src: astroSrc } = await getImage({
+    src: src,
+    alt: "photo",
+    width: 370,
+    aspectRatio: width / height,
+    format: "webp",
+    quality: 90,
+  });
+  if (astroSrc == null) {
+    throw new Error("astroSrc is undefined");
   }
-  imgs.push({ width, height, hash, src, alt });
+  imgs.push({ width, height, hash, src: astroSrc, alt });
 }
 console.log(imgs);
 
