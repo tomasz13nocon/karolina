@@ -73,7 +73,7 @@ for (let { src, alt } of photoSet.photos) {
     data: bufferData,
     info: { width: hashW, height: hashH },
   } = await sharp(path.join(".", src))
-    .resize(20)
+    .resize(20) // TODO:prod increase
     .raw()
     .ensureAlpha()
     .toBuffer({ resolveWithObject: true });

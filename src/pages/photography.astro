@@ -1,40 +1,27 @@
 ---
-import { getImage } from "@astrojs/image";
+import { Image } from "@astrojs/image/components";
 import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import { getAsset, toUrl } from "@lib/util";
 
-interface Thumb {
+interface Thumb extends ImageMetadata {
   name: string;
-  src: string;
   alt: string;
 }
 
+let thumbs: Thumb[] = [];
+
 let photoSets = await Astro.glob("../data/photography/*.json");
 photoSets = photoSets.sort((a, b) => a.index - b.index);
-let thumbs: Thumb[] = [];
 
 for (let photoSet of photoSets) {
   const img = await getAsset(photoSet.thumb.src);
-  // TODO: Can we just use Image instead of getImage?
-  const imgTransformed = await getImage({
-    src: img.default.src,
-    alt: photoSet.thumb.alt,
-    width: 416 * 1.1,
-    height: 160 * 1.1,
-    format: "webp",
-    quality: 90,
-  });
-
-  if (imgTransformed.src == null || imgTransformed.alt == null) {
-    throw new Error("Astro's getImage failed. src or alt is not present.");
-  }
 
   thumbs.push({
     name: photoSet.name,
-    src: imgTransformed.src,
-    alt: imgTransformed.alt,
+    alt: photoSet.thumb.alt,
+    ...img.default,
   });
 }
 ---
@@ -50,11 +37,12 @@ for (let photoSet of photoSets) {
               href={"/photography/" + toUrl(thumb.name)}
               class="w-[26rem] h-[10rem] flex items-center justify-center relative overflow-clip group"
             >
-              <img
+              <Image
                 src={thumb.src}
                 alt={thumb.alt}
+                width={416 * 1.1}
+                height={160 * 1.1}
                 class="absolute transition-transform group-hover:scale-110 w-full duration-500 ease-expo"
-                width="416"
               />
               <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100" />
               <span class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.5em]">

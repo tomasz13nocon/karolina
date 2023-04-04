@@ -11,6 +11,7 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/image": "^0.16.4",
     "@astrojs/tailwind": "^3.1.1",
     "@astropub/md": "^0.2.0",
     "@tailwindcss/typography": "^0.5.9",
