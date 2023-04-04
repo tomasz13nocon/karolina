@@ -144,13 +144,32 @@ for (let { src, alt } of photoSet.photos) {
       }
     </div>
   </Main>
-  <ImageViewer blur />
+  <ImageViewer />
 </Layout>
 
 <script>
-  let imgContainers = document.getElementsByClassName("img-container");
+import MagicGrid from "magic-grid";
+import renderBlurhash from "@lib/renderBlurhash";
 
-  // Lazy loading. Done this way because Astro's Picture, js masonry using translates, and lazy loading all have to work with each other.
+  let magicGrid = new MagicGrid({
+    container: "#masonry-container",
+    static: true,
+    animate: false,
+    gutter: 8,
+    delay: 25,
+    duration: 500,
+    useMin: true,
+  });
+  document.addEventListener("DOMContentLoaded", () => {
+    magicGrid.listen();
+  });
+
+
+  let imgContainers = document.getElementsByClassName("img-container");
+  let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
+
+  // Lazy loading
+  // Done this way because Astro's Images, js masonry using translates, and lazy loading all have to work with each other
   let observer = new IntersectionObserver((entries, observer) => {
     for (let entry of entries) {
       if (entry.isIntersecting) {
@@ -161,8 +180,10 @@ for (let { src, alt } of photoSet.photos) {
       }
     }
   });
-  for (let imgContainer of imgContainers) {
-    observer.observe(imgContainer);
+
+  for (let i = 0; i < imgContainers.length; i++) {
+    renderBlurhash(imgs[i].dataset.hash!, imgContainers[i].getElementsByTagName("canvas")[0]);
+    observer.observe(imgContainers[i]);
   }
 </script>
 

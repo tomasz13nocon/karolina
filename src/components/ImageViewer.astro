@@ -1,30 +1,34 @@
 ---
 import { Icon } from "astro-icon";
 import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION, IMAGE_TRANSITION } from "../lib/util";
+import ImageViewerBtn from "./ImageViewerBtn.astro";
 
 interface Props {
-  blur: boolean;
+  blur?: boolean;
 }
+const { blur } = Astro.props;
 ---
 
+<!-- Setting both grid and hidden to be able to easily remove hidden -->
 <div
   id="image-viewer"
-  class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/25 backdrop-blur-2xl opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center"
+  class={`z-20 w-screen h-screen max-w-full max-h-full fixed top-0 left-0 opacity-0 transition-opacity
+  grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center
+  ${blur ? "text-white" : "text-grey-4 bg-grey-7"}`}
   style={{ transitionDuration: IMAGE_VIEWER_TRANSITION + "ms" }}
+  data-blur={blur}
 >
-  <button
+  <ImageViewerBtn
     id="image-viewer-close"
-    class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center z-10"
+    class="col-start-3 h-12 flex items-center justify-center"
+    blur={blur}
   >
     <Icon name="ph:x" width="2.5em" height="2.5em" class="drop-shadow-md" />
-  </button>
+  </ImageViewerBtn>
 
-  <button
-    id="image-prev"
-    class="row-start-1 row-end-3 w-12 h-full cursor-pointer hover:bg-black/25 transition-colors z-10"
-  >
+  <ImageViewerBtn id="image-prev" class="row-start-1 row-end-3 h-full" blur={blur}>
     <Icon name="ph:caret-left" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
-  </button>
+  </ImageViewerBtn>
 
   <div
     class="img-viewer-container self-center row-start-1 row-end-3 col-start-2 max-h-full ease-out-quart"
@@ -46,61 +50,37 @@ interface Props {
     </div>
   </div>
 
-  <button
-    id="image-next"
-    class="pb-12 h-full w-12 col-start-3 cursor-pointer hover:bg-black/25 transition-colors z-10"
-  >
+  <ImageViewerBtn id="image-next" class="pb-12 h-full col-start-3" blur={blur}>
     <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
-  </button>
+  </ImageViewerBtn>
+  <img
+    class="select-none blur-img object-cover scale-[115%] fixed inset-0 blur-2xl -z-10 w-screen h-screen transition-opacity opacity-0 hidden"
+    style={`transition-duration: ${BLUR_TRANSITION}ms`}
+  />
 </div>
 
-<img
-  class="select-none blur-img object-cover fixed inset-0 z-10 w-screen h-screen transition-opacity opacity-0 hidden"
-  style={`transition-duration: ${BLUR_TRANSITION}ms`}
-/>
 
 <script>
-  import MagicGrid from "magic-grid";
-  import { thumbHashToRGBA } from "thumbhash";
   import { BLUR_TRANSITION, IMAGE_TRANSITION, IMAGE_VIEWER_TRANSITION } from "@lib/util";
   import { hidingImageViewer } from "@lib/stores";
 
   let imageViewer = document.getElementById("image-viewer") as HTMLElement;
   let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
   let imgContainers = document.getElementsByClassName("img-container");
+  // TODO there's only one blur-img, refactor
   let blurImgs = document.getElementsByClassName("blur-img") as HTMLCollectionOf<HTMLElement>;
   let prev = document.getElementById("image-prev") as HTMLElement;
   let next = document.getElementById("image-next") as HTMLElement;
+  if (imageViewer.dataset.blur === undefined) {
+    // create an empty dummy collection to maintain API, and have loops be no-ops
+    blurImgs = document.createElement("div").children as HTMLCollectionOf<HTMLElement>;
+  }
   let fetchingImgs = 0;
   let currentIndex = 0;
 
   if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
   if (imgs.length !== imgContainers.length)
-    throw new Error("Expected every .img to be wrapped in .img-container");
-
-  // Setup masonry grid
-  let magicGrid = new MagicGrid({
-    container: "#masonry-container",
-    static: true,
-    animate: false,
-    gutter: 8,
-    delay: 25,
-    duration: 500,
-    useMin: true,
-  });
-  document.addEventListener("DOMContentLoaded", () => {
-    magicGrid.listen();
-  });
-
-  function renderBlurhash(img: HTMLImageElement, canvas: HTMLCanvasElement) {
-    let b64 = img.dataset.hash!;
-    let byteArr = Uint8Array.from(window.atob(b64), (c) => c.charCodeAt(0));
-    const { rgba: pixels, w, h } = thumbHashToRGBA(byteArr);
-    const ctx = canvas.getContext("2d")!;
-    const imageData = ctx.createImageData(w, h);
-    imageData.data.set(pixels);
-    ctx.putImageData(imageData, 0, 0);
-  }
+    throw new Error("Expected every .img to be wrapped in .img-container, imgs: " + imgs.length + ", containers: " + imgContainers.length);
 
   function hideImageViewer(imageViewer: HTMLElement, blurImgs: HTMLCollectionOf<HTMLElement>) {
     hidingImageViewer.set(true);
@@ -126,7 +106,6 @@ interface Props {
     currentIndex = i;
     let conts = imageViewer.getElementsByClassName("img-viewer-container");
     let cont = conts[conts.length - 1] as HTMLElement;
-    let img = cont.getElementsByTagName("img")[0] as HTMLImageElement;
     let newCont = cont.cloneNode(true) as HTMLElement;
     let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
     let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
@@ -137,21 +116,17 @@ interface Props {
     cont.insertAdjacentElement("afterend", newCont);
     if (direction) {
       let translate = direction * (20 + 0.1 * window.innerWidth);
-      let objPos = translate * 0.5;
       newCont.style.transitionProperty = "none";
       newCont.style.transform = `translateX(${translate}px)`;
       newCont.style.opacity = "0";
-      // newImg.style.objectPosition = `${-objPos}px`;
       requestAnimationFrame(() => {
         newCont.style.transitionProperty = "transform, opacity";
         newCont.style.transform = "translateX(0)";
         newCont.style.opacity = "1";
-        // newImg.style.objectPosition = `50%`;
       });
 
       cont.style.transform = `translateX(${-translate}px)`;
       cont.style.opacity = "0";
-      // img.style.objectPosition = `${objPos}px`;
 
       setTimeout(
         () => imageViewer.getElementsByClassName("img-viewer-container")[0].remove(),
@@ -161,27 +136,28 @@ interface Props {
       cont.remove();
     }
 
-    let blurImg = document.getElementsByClassName("blur-img")[0] as HTMLImageElement;
-    let newBlurImg = blurImg.cloneNode() as HTMLImageElement;
-    newBlurImg.style.opacity = "0";
-    newBlurImg.style.transitionProperty = "opacity";
-    // newBlurImg.classList.remove("hidden");
-    newBlurImg.src = imgs[i].src;
-    fetchingImgs++;
-    function show() {
-      if (!hidingImageViewer.get() && newBlurImg.matches(":last-child")) {
-        newBlurImg.style.opacity = "1";
-      }
-      setTimeout(() => {
-        if (--fetchingImgs === 0) {
-          let imgs = [...document.getElementsByClassName("blur-img")].slice(0, -1);
-          imgs.forEach((img) => img.remove());
+    let blurImg = blurImgs[0];
+    if (blurImg !== undefined) {
+      let newBlurImg = blurImg.cloneNode() as HTMLImageElement;
+      newBlurImg.style.opacity = "0";
+      newBlurImg.style.transitionProperty = "opacity";
+      newBlurImg.src = imgs[i].src;
+      fetchingImgs++;
+      function show() {
+        if (!hidingImageViewer.get() && newBlurImg.matches(":last-child")) {
+          newBlurImg.style.opacity = "1";
         }
-      }, BLUR_TRANSITION);
+        setTimeout(() => {
+          if (--fetchingImgs === 0) {
+            let imgs = [...blurImgs].slice(0, -1);
+            imgs.forEach((img) => img.remove());
+          }
+        }, BLUR_TRANSITION);
+      }
+      if (newBlurImg.complete) requestAnimationFrame(() => show());
+      else newBlurImg.addEventListener("load", show);
+      blurImg.parentNode!.appendChild(newBlurImg);
     }
-    if (newBlurImg.complete) requestAnimationFrame(() => show());
-    else newBlurImg.addEventListener("load", show);
-    blurImg.parentNode!.appendChild(newBlurImg);
 
     if (i !== 0) {
       prev.dataset.imageIndex = `${i - 1}`;
@@ -199,10 +175,7 @@ interface Props {
 
   // Setup blurhashes and click events
   for (let i = 0; i < imgs.length; i++) {
-    renderBlurhash(imgs[i], imgContainers[i].getElementsByTagName("canvas")[0]);
-
     imgs[i].addEventListener("click", () => {
-      let blurImgs = document.getElementsByClassName("blur-img") as HTMLCollectionOf<HTMLElement>;
       for (let blurImg of blurImgs) {
         blurImg.style.transitionProperty = "none";
         blurImg.style.opacity = "0";
@@ -211,10 +184,6 @@ interface Props {
       imageViewer.classList.remove("hidden");
       requestAnimationFrame(() => {
         imageViewer.style.opacity = "1";
-        // let blurImgs = document.getElementsByClassName("blur-img");
-        // for (let blurImg of blurImgs) {
-        //   blurImg.style.opacity = "1";
-        // }
       });
 
       setupImgViewer(i);

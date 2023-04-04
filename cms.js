@@ -45,15 +45,15 @@ export default {
           media_folder: `/src/assets/photography/${month.toLowerCase()}`,
           fields: [
             {
+              name: "name",
+              label: "Name",
+              widget: "string",
+            },
+            {
               name: "index",
               label: "Index",
               widget: "number",
               value_type: "int",
-            },
-            {
-              name: "name",
-              label: "Name",
-              widget: "string",
             },
             {
               name: "thumb",

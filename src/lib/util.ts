@@ -1,5 +1,5 @@
 export const IMAGE_VIEWER_TRANSITION = 300;
-export const BLUR_TRANSITION = 400;
+export const BLUR_TRANSITION = 300;
 export const IMAGE_TRANSITION = 400;
 
 // Dybamically import an image from /src/assets

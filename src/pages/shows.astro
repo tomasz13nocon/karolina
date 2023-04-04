@@ -4,9 +4,9 @@ import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import ShowList from "@components/ShowList.astro";
 import { getCollection } from "astro:content";
+import ImageViewer from "@components/ImageViewer.astro";
 
 const shows = await getCollection("shows");
-console.log(shows);
 const anyUpcoming = shows.some((show) => show.data.upcoming);
 const anyPast = shows.some((show) => !show.data.upcoming);
 ---
@@ -29,4 +29,5 @@ const anyPast = shows.some((show) => !show.data.upcoming);
       )
     }
   </Main>
+  <ImageViewer blur />
 </Layout>
