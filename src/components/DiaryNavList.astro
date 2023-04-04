@@ -22,7 +22,8 @@ for (let blog of blogs) {
     maxPostCount = postCount[year];
   }
 }
-blogs.sort((a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime());
+
+years.sort();
 ---
 
 <div class={`text-grey-4 flex sm:flex-row flex-col gap-3 justify-center items-baseline ${col ? "flex-col" : ""}`}>
