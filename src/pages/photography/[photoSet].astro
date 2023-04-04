@@ -115,9 +115,10 @@ for (let { src, alt } of photoSet.photos) {
       {
         imgs.map((img, i) => (
           <button
-            class="img-container relative overflow-clip w-[340px] group inline-block translate-x-[100vw]"
+            class="img-container relative overflow-clip max-w-full w-[340px] group inline-block translate-x-[100vw]"
             style={{
-              height: `${(340 / img.width) * img.height}px;`,
+              // height: `${(340 / img.width) * img.height}px;`,
+              aspectRatio: `${img.width} / ${img.height}`,
             }}
           >
             <img

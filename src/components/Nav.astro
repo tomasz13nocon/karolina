@@ -3,13 +3,18 @@ import Link from "./Link.astro";
 import Socials from "./Socials.astro";
 import { isCurrent } from "@lib/util";
 
-const { exclude = [] } = Astro.props;
+const { exclude = [], include = [], socials = true } = Astro.props;
 const pages = [
   ["Home", "/"],
   ["About", "/about"],
   ["Photography", "/photography"],
   ["Shows", "/shows"],
-].filter(([_, href]) => !isCurrent(href, Astro.url.pathname) && !exclude.includes(href));
+].filter(
+  ([_, href]) =>
+    !isCurrent(href, Astro.url.pathname) &&
+    !exclude.includes(href) &&
+    (include.length === 0 || include.includes(href))
+);
 ---
 
 <nav class="text-center">
@@ -22,7 +27,11 @@ const pages = [
       ))
     }
   </ul>
-  <div class="mt-4">
-    <Socials />
-  </div>
+  {
+    socials ? (
+      <div class="mt-4">
+        <Socials />
+      </div>
+    ) : null
+  }
 </nav>

@@ -1,7 +1,10 @@
 ---
 import Main from "./Main.astro";
 
+interface Props {
+  class?: string;
+}
 ---
-<Main class="text-center flex flex-col justify-between gap-16 min-h-screen">
+<Main class={`text-center flex flex-col justify-between gap-16 min-h-screen ${Astro.props.class}`}>
   <slot />
 </Main>

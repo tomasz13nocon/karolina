@@ -1,15 +1,40 @@
 ---
-import Link from './Link.astro';
+import { getCollection } from "astro:content";
+import Link from "@components/Link.astro";
 
 interface Props {
   years: number[];
   col?: boolean;
 }
+
 const { years, col } = Astro.props;
+
+const blogs = await getCollection("diary");
+const postCount: Record<number, number> = {};
+let maxPostCount = 1;
+for (let blog of blogs) {
+  let year = blog.data.date.getFullYear();
+  // We start at -1 to make it 0 indexed,
+  // so that the font size scales easily between the lower and upper bounds
+  postCount[year] = (postCount[year] ?? -1) + 1;
+
+  if (postCount[year] > maxPostCount) {
+    maxPostCount = postCount[year];
+  }
+}
 ---
-<ul class={`gap-4 justify-center flex ${col ? "flex-col" : ""}`}>
-  {years.map(year => (
-    <li><Link href={`/diary/year/${year}`}>{year}</Link></li>
-  ))}
-  <li><Link href="/diary">All</Link></li>
-</ul>
+
+<div class={`text-grey-4 flex sm:flex-row flex-col gap-3 justify-center items-baseline ${col ? "flex-col" : ""}`}>
+  {
+    years.map((year) => (
+      <Link
+        href={`/diary/year/${year}`}
+        class="sm:!mx-0"
+        activeClass="text-grey-1 !font-bold"
+        style={{ fontSize: `${16 + 24 * (postCount[year] / maxPostCount)}px` }}
+      >
+        {year}
+      </Link>
+    ))
+  }
+</div>

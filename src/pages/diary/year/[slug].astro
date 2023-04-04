@@ -3,7 +3,9 @@ import { getCollection } from "astro:content";
 import BlogList from "../../../components/BlogList.astro";
 import DiaryNav from "../../../components/DiaryNav.astro";
 import Layout from "../../../layouts/Layout.astro";
-import Main from "../../../layouts/Main.astro";
+import MainFlex from "@layouts/MainFlex.astro";
+import Nav from "@components/Nav.astro";
+import Link from "@components/Link.astro";
 
 export async function getStaticPaths() {
   const blogs = await getCollection("diary");
@@ -15,11 +17,18 @@ export async function getStaticPaths() {
 const { year } = Astro.props;
 let blogs = await getCollection("diary");
 blogs = blogs.filter(blog => blog.data.date.getFullYear() === year);
+
 ---
+
 <Layout title={`Karolina Nocoń - Diary - ${year}`}>
-  <DiaryNav />
-  <Main>
-    <h1 class="text-center">Diary - {year}</h1>
-    <BlogList {blogs} />
-  </Main>
+  <MainFlex class="!min-h-0">
+    <div>
+      <Nav include={["/"]} socials={false} />
+      <Link href="/diary">diary</Link>
+    </div>
+    <DiaryNav />
+    <div class="flex flex-col gap-24 text-left text-grey-3 mb-24">
+      <BlogList {blogs} />
+    </div>
+  </MainFlex>
 </Layout>

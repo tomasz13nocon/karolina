@@ -53,6 +53,7 @@ const { blur } = Astro.props;
   <ImageViewerBtn id="image-next" class="pb-12 h-full col-start-3" blur={blur}>
     <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
   </ImageViewerBtn>
+
   <img
     class="select-none blur-img object-cover scale-[115%] fixed inset-0 blur-2xl -z-10 w-screen h-screen transition-opacity opacity-0 hidden"
     style={`transition-duration: ${BLUR_TRANSITION}ms`}

@@ -29,9 +29,8 @@ export default {
         create: true,
         media_folder: "/public",
         fields: [
-          { name: "title", widget: "string", label: "Post Title" },
-          { name: "date", widget: "datetime", label: "Publication Date" },
-          { name: "description", widget: "string", label: "Description", required: false },
+          { name: "title", widget: "string", label: "Title" },
+          { name: "date", widget: "date", label: "Publication Date" },
           { name: "body", widget: "markdown", label: "Post Body", media_folder: "/public" },
         ],
       },
@@ -44,34 +43,15 @@ export default {
           file: `src/data/photography/${month.toLowerCase()}.json`,
           media_folder: `/src/assets/photography/${month.toLowerCase()}`,
           fields: [
-            {
-              name: "name",
-              label: "Name",
-              widget: "string",
-            },
-            {
-              name: "index",
-              label: "Index",
-              widget: "number",
-              value_type: "int",
-            },
+            { name: "name", label: "Name", widget: "string" },
+            { name: "index", label: "Index", widget: "number", value_type: "int" },
             {
               name: "thumb",
               label: "Thumbnail",
               widget: "list",
               fields: [
-                {
-                  name: "src",
-                  label: "Photo",
-                  widget: "image",
-                },
-                {
-                  name: "alt",
-                  label: "Alt text",
-                  widget: "string",
-                  required: false,
-                  default: "",
-                },
+                { name: "src", label: "Photo", widget: "image" },
+                { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
               ],
             },
             {
@@ -79,18 +59,8 @@ export default {
               label: "Photos",
               widget: "list",
               fields: [
-                {
-                  name: "src",
-                  label: "Photo",
-                  widget: "image",
-                },
-                {
-                  name: "alt",
-                  label: "Alt text",
-                  widget: "string",
-                  required: false,
-                  default: "",
-                },
+                { name: "src", label: "Photo", widget: "image" },
+                { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
               ],
             },
           ],
@@ -103,29 +73,10 @@ export default {
         create: true,
         media_folder: "/src/assets/shows",
         fields: [
-          {
-            name: "title",
-            label: "Title",
-            widget: "string",
-          },
-          {
-            name: "poster",
-            label: "Poster",
-            widget: "image",
-          },
-          {
-            name: "alt",
-            label: "Alt text",
-            widget: "string",
-            required: false,
-            default: "",
-          },
-          {
-            name: "upcoming",
-            label: "Upcoming",
-            widget: "boolean",
-            default: false,
-          },
+          { name: "title", label: "Title", widget: "string" },
+          { name: "poster", label: "Poster", widget: "image" },
+          { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
+          { name: "upcoming", label: "Upcoming", widget: "boolean", default: false },
         ],
       },
       {
@@ -183,19 +134,8 @@ export default {
             label: "Home",
             file: "src/data/home.json",
             fields: [
-              {
-                name: "image",
-                label: "Image",
-                widget: "image",
-                media_folder: "/src/assets",
-              },
-              {
-                name: "alt",
-                label: "Alt text",
-                widget: "string",
-                required: false,
-                default: "",
-              },
+              { name: "image", label: "Image", widget: "image", media_folder: "/src/assets" },
+              { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
             ],
           },
           {
@@ -203,40 +143,15 @@ export default {
             label: "About",
             file: "src/data/about.json",
             fields: [
-              {
-                name: "image",
-                label: "Image",
-                widget: "image",
-                media_folder: "/src/assets",
-              },
-              {
-                name: "alt",
-                label: "Alt text",
-                widget: "string",
-                required: false,
-                default: "",
-              },
-              {
-                name: "title",
-                label: "Title",
-                widget: "string",
-              },
-              {
-                name: "content",
-                label: "Content",
-                widget: "markdown",
-              },
+              { name: "image", label: "Image", widget: "image", media_folder: "/src/assets" },
+              { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
+              { name: "title", label: "Title", widget: "string" },
+              { name: "content", label: "Content", widget: "markdown" },
               {
                 name: "contact",
                 label: "Contact",
                 widget: "list",
-                fields: [
-                  {
-                    name: "text",
-                    label: "Contact Text",
-                    widget: "string",
-                  },
-                ],
+                fields: [{ name: "text", label: "Contact Text", widget: "string" }],
               },
             ],
           },

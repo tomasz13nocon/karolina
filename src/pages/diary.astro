@@ -1,19 +1,21 @@
 ---
-import Layout from '../layouts/Layout.astro';
-import Nav from '../components/Nav.astro';
-import { getCollection } from 'astro:content';
-import DiaryNav from '../components/DiaryNav.astro';
-import BlogList from '../components/BlogList.astro';
-import Main from '../layouts/Main.astro';
+import { getCollection } from "astro:content";
+import Layout from "@layouts/Layout.astro";
+import MainFlex from "@layouts/MainFlex.astro";
+import Nav from "@components/Nav.astro";
+import DiaryNav from "@components/DiaryNav.astro";
+import BlogList from "@components/BlogList.astro";
 
 const blogs = await getCollection("diary");
-const bodies = await Promise.all(blogs.map(async blog => await blog.render()));
+const bodies = await Promise.all(blogs.map(async (blog) => await blog.render()));
 ---
 
 <Layout title="Karolina Nocoń - Diary">
-  <DiaryNav />
-  <Main>
-    <h1 class="text-center">Diary</h1>
-    <BlogList {blogs} />
-  </Main>
+  <MainFlex class="!min-h-0">
+    <Nav include={["/"]} socials={false} />
+    <DiaryNav />
+    <div class="flex flex-col gap-24 text-left text-grey-3 mb-24">
+      <BlogList {blogs} />
+    </div>
+  </MainFlex>
 </Layout>
