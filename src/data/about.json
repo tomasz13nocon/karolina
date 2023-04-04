@@ -6,5 +6,6 @@
       "text": "karolinocon@gmail.com"
     }
   ],
-  "image": "/src/assets/about.webp"
+  "image": "/src/assets/about.webp",
+  "alt": ""
 }

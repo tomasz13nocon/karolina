@@ -1,42 +1,253 @@
 ---
-import { Icon } from 'astro-icon';
-import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION, IMAGE_TRANSITION } from '../lib/util';
----
-<div id="image-viewer" class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/25 backdrop-blur-2xl opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center" style={{transitionDuration: IMAGE_VIEWER_TRANSITION + "ms"}}>
+import { Icon } from "astro-icon";
+import { IMAGE_VIEWER_TRANSITION, BLUR_TRANSITION, IMAGE_TRANSITION } from "../lib/util";
 
-  <button id="image-viewer-close" class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center z-10">
+interface Props {
+  blur: boolean;
+}
+---
+
+<div
+  id="image-viewer"
+  class="z-20 text-white w-screen h-screen max-w-full max-h-full bg-black/25 backdrop-blur-2xl opacity-0 transition-opacity fixed top-0 left-0 grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center"
+  style={{ transitionDuration: IMAGE_VIEWER_TRANSITION + "ms" }}
+>
+  <button
+    id="image-viewer-close"
+    class="col-start-3 cursor-pointer hover:bg-black/25 transition-colors w-12 h-12 flex items-center justify-center z-10"
+  >
     <Icon name="ph:x" width="2.5em" height="2.5em" class="drop-shadow-md" />
   </button>
 
-  <button id="image-prev" class="row-start-1 row-end-3 w-12  h-full cursor-pointer hover:bg-black/25 transition-colors z-10">
+  <button
+    id="image-prev"
+    class="row-start-1 row-end-3 w-12 h-full cursor-pointer hover:bg-black/25 transition-colors z-10"
+  >
     <Icon name="ph:caret-left" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
   </button>
 
-  <div class="img-container self-center row-start-1 row-end-3 col-start-2 max-h-full ease-out-quart" style={{ transitionProperty: "opacity, transform", transitionDuration: IMAGE_TRANSITION + "ms" }}>
+  <div
+    class="img-viewer-container self-center row-start-1 row-end-3 col-start-2 max-h-full ease-out-quart"
+    style={{
+      transitionProperty: "opacity, transform",
+      transitionDuration: IMAGE_TRANSITION + "ms",
+    }}
+  >
     <div class="img-wrapper mx-auto max-h-screen">
-      <img src="" alt="" class="mx-auto select-none max-h-screen ease-out-quart" style={{ transitionProperty: "object-position", transitionDuration: IMAGE_TRANSITION + "ms" }}>
+      <img
+        src=""
+        alt=""
+        class="mx-auto select-none max-h-screen ease-out-quart"
+        style={{
+          transitionProperty: "object-position",
+          transitionDuration: IMAGE_TRANSITION + "ms",
+        }}
+      />
     </div>
   </div>
 
-  <button id="image-next" class="pb-12 h-full w-12 col-start-3 cursor-pointer hover:bg-black/25 transition-colors z-10">
+  <button
+    id="image-next"
+    class="pb-12 h-full w-12 col-start-3 cursor-pointer hover:bg-black/25 transition-colors z-10"
+  >
     <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
   </button>
-
 </div>
 
-<img class="select-none blur-img object-cover fixed inset-0 z-10 w-screen h-screen transition-opacity opacity-0 hidden" style={`transition-duration: ${BLUR_TRANSITION}ms`} />
+<img
+  class="select-none blur-img object-cover fixed inset-0 z-10 w-screen h-screen transition-opacity opacity-0 hidden"
+  style={`transition-duration: ${BLUR_TRANSITION}ms`}
+/>
 
 <script>
-import { hideImageViewer } from "../lib/util";
+  import MagicGrid from "magic-grid";
+  import { thumbHashToRGBA } from "thumbhash";
+  import { BLUR_TRANSITION, IMAGE_TRANSITION, IMAGE_VIEWER_TRANSITION } from "@lib/util";
+  import { hidingImageViewer } from "@lib/stores";
 
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape") {
-    hideImageViewer();
+  let imageViewer = document.getElementById("image-viewer") as HTMLElement;
+  let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
+  let imgContainers = document.getElementsByClassName("img-container");
+  let blurImgs = document.getElementsByClassName("blur-img") as HTMLCollectionOf<HTMLElement>;
+  let prev = document.getElementById("image-prev") as HTMLElement;
+  let next = document.getElementById("image-next") as HTMLElement;
+  let fetchingImgs = 0;
+  let currentIndex = 0;
+
+  if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
+  if (imgs.length !== imgContainers.length)
+    throw new Error("Expected every .img to be wrapped in .img-container");
+
+  // Setup masonry grid
+  let magicGrid = new MagicGrid({
+    container: "#masonry-container",
+    static: true,
+    animate: false,
+    gutter: 8,
+    delay: 25,
+    duration: 500,
+    useMin: true,
+  });
+  document.addEventListener("DOMContentLoaded", () => {
+    magicGrid.listen();
+  });
+
+  function renderBlurhash(img: HTMLImageElement, canvas: HTMLCanvasElement) {
+    let b64 = img.dataset.hash!;
+    let byteArr = Uint8Array.from(window.atob(b64), (c) => c.charCodeAt(0));
+    const { rgba: pixels, w, h } = thumbHashToRGBA(byteArr);
+    const ctx = canvas.getContext("2d")!;
+    const imageData = ctx.createImageData(w, h);
+    imageData.data.set(pixels);
+    ctx.putImageData(imageData, 0, 0);
   }
-});
-document.getElementById("image-viewer")!.addEventListener("click", (e) => {
-  if (!e.target!.matches("img, button, button *")) {
-    hideImageViewer();
+
+  function hideImageViewer(imageViewer: HTMLElement, blurImgs: HTMLCollectionOf<HTMLElement>) {
+    hidingImageViewer.set(true);
+
+    imageViewer.style.opacity = "0";
+    for (let blurImg of blurImgs) {
+      blurImg.style.opacity = "0";
+    }
+
+    setTimeout(() => {
+      imageViewer.classList.add("hidden");
+      for (let blurImg of blurImgs) {
+        blurImg.classList.add("hidden");
+      }
+      hidingImageViewer.set(false);
+    }, IMAGE_VIEWER_TRANSITION);
   }
-});
+
+  function setupImgViewer(i: number, direction?: -1 | 1) {
+    if (!imgs[i].dataset.fullSizeSrc) {
+      throw new Error("Expected full-size-src to be non empty");
+    }
+    currentIndex = i;
+    let conts = imageViewer.getElementsByClassName("img-viewer-container");
+    let cont = conts[conts.length - 1] as HTMLElement;
+    let img = cont.getElementsByTagName("img")[0] as HTMLImageElement;
+    let newCont = cont.cloneNode(true) as HTMLElement;
+    let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
+    let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
+    newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!); // + "/" + imgs[i].dataset.height;
+    newWrapper.style.maxWidth = imgs[i].dataset.width + "px"; // + "/" + imgs[i].dataset.height;
+    newImg.src = "";
+    newImg.src = imgs[i].dataset.fullSizeSrc!;
+    cont.insertAdjacentElement("afterend", newCont);
+    if (direction) {
+      let translate = direction * (20 + 0.1 * window.innerWidth);
+      let objPos = translate * 0.5;
+      newCont.style.transitionProperty = "none";
+      newCont.style.transform = `translateX(${translate}px)`;
+      newCont.style.opacity = "0";
+      // newImg.style.objectPosition = `${-objPos}px`;
+      requestAnimationFrame(() => {
+        newCont.style.transitionProperty = "transform, opacity";
+        newCont.style.transform = "translateX(0)";
+        newCont.style.opacity = "1";
+        // newImg.style.objectPosition = `50%`;
+      });
+
+      cont.style.transform = `translateX(${-translate}px)`;
+      cont.style.opacity = "0";
+      // img.style.objectPosition = `${objPos}px`;
+
+      setTimeout(
+        () => imageViewer.getElementsByClassName("img-viewer-container")[0].remove(),
+        IMAGE_TRANSITION
+      );
+    } else {
+      cont.remove();
+    }
+
+    let blurImg = document.getElementsByClassName("blur-img")[0] as HTMLImageElement;
+    let newBlurImg = blurImg.cloneNode() as HTMLImageElement;
+    newBlurImg.style.opacity = "0";
+    newBlurImg.style.transitionProperty = "opacity";
+    // newBlurImg.classList.remove("hidden");
+    newBlurImg.src = imgs[i].src;
+    fetchingImgs++;
+    function show() {
+      if (!hidingImageViewer.get() && newBlurImg.matches(":last-child")) {
+        newBlurImg.style.opacity = "1";
+      }
+      setTimeout(() => {
+        if (--fetchingImgs === 0) {
+          let imgs = [...document.getElementsByClassName("blur-img")].slice(0, -1);
+          imgs.forEach((img) => img.remove());
+        }
+      }, BLUR_TRANSITION);
+    }
+    if (newBlurImg.complete) requestAnimationFrame(() => show());
+    else newBlurImg.addEventListener("load", show);
+    blurImg.parentNode!.appendChild(newBlurImg);
+
+    if (i !== 0) {
+      prev.dataset.imageIndex = `${i - 1}`;
+      prev.style.visibility = "visible";
+    } else {
+      prev.style.visibility = "hidden";
+    }
+    if (i !== imgs.length - 1) {
+      next.dataset.imageIndex = `${i + 1}`;
+      next.style.visibility = "visible";
+    } else {
+      next.style.visibility = "hidden";
+    }
+  }
+
+  // Setup blurhashes and click events
+  for (let i = 0; i < imgs.length; i++) {
+    renderBlurhash(imgs[i], imgContainers[i].getElementsByTagName("canvas")[0]);
+
+    imgs[i].addEventListener("click", () => {
+      let blurImgs = document.getElementsByClassName("blur-img") as HTMLCollectionOf<HTMLElement>;
+      for (let blurImg of blurImgs) {
+        blurImg.style.transitionProperty = "none";
+        blurImg.style.opacity = "0";
+        blurImg.classList.remove("hidden");
+      }
+      imageViewer.classList.remove("hidden");
+      requestAnimationFrame(() => {
+        imageViewer.style.opacity = "1";
+        // let blurImgs = document.getElementsByClassName("blur-img");
+        // for (let blurImg of blurImgs) {
+        //   blurImg.style.opacity = "1";
+        // }
+      });
+
+      setupImgViewer(i);
+    });
+  }
+
+  document
+    .getElementById("image-viewer-close")!
+    .addEventListener("click", () => hideImageViewer(imageViewer, blurImgs));
+
+  function keySwitch(e: KeyboardEvent) {
+    if (!imageViewer.classList.contains("hidden")) {
+      if (e.key === "ArrowLeft" && currentIndex > 0)
+        setupImgViewer(parseInt(prev.dataset.imageIndex!), -1);
+      if (e.key === "ArrowRight" && currentIndex < imgs.length - 1)
+        setupImgViewer(parseInt(next.dataset.imageIndex!), 1);
+    }
+  }
+  prev.addEventListener("click", () =>
+    setupImgViewer(parseInt(prev.dataset.imageIndex ?? "0"), -1)
+  );
+  next.addEventListener("click", () => setupImgViewer(parseInt(next.dataset.imageIndex ?? "0"), 1));
+  document.addEventListener("keydown", keySwitch);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      hideImageViewer(imageViewer, blurImgs);
+    }
+  });
+  imageViewer.addEventListener("click", (e) => {
+    const el = e.target as HTMLElement;
+    if (!el.matches("img, button, button *")) {
+      hideImageViewer(imageViewer, blurImgs);
+    }
+  });
 </script>

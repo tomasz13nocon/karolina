@@ -189,6 +189,13 @@ export default {
                 widget: "image",
                 media_folder: "/src/assets",
               },
+              {
+                name: "alt",
+                label: "Alt text",
+                widget: "string",
+                required: false,
+                default: "",
+              },
             ],
           },
           {
@@ -201,6 +208,13 @@ export default {
                 label: "Image",
                 widget: "image",
                 media_folder: "/src/assets",
+              },
+              {
+                name: "alt",
+                label: "Alt text",
+                widget: "string",
+                required: false,
+                default: "",
               },
               {
                 name: "title",

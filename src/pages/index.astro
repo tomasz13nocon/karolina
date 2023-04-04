@@ -21,7 +21,7 @@ const image = await getAsset(data.image);
     <a href="/photography">
       <Image
         src={image.default}
-        alt="Photo by Karolina Nocoń"
+        alt={data.alt}
         width={400}
         format="webp"
         quality={90}
