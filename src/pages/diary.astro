@@ -11,7 +11,7 @@ const bodies = await Promise.all(blogs.map(async (blog) => await blog.render()))
 ---
 
 <Layout title="Karolina Nocoń - Diary">
-  <MainFlex class="!min-h-0">
+  <MainFlex>
     <Nav include={["/"]} socials={false} />
     <DiaryNav />
     <div class="flex flex-col gap-24 text-left text-grey-3 mb-24">

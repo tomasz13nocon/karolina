@@ -5,6 +5,6 @@ interface Props {
   class?: string;
 }
 ---
-<Main class={`text-center flex flex-col justify-between gap-16 min-h-screen ${Astro.props.class}`}>
+<Main class={`text-center flex flex-col justify-between gap-16 ${Astro.props.class}`}>
   <slot />
 </Main>
