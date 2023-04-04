@@ -126,6 +126,7 @@ export default {
         name: "pages",
         label: "Pages",
         files: [
+          // TODO: decide between json approach vs frontmatter approach
           // {
           //   name: "shows",
           //   label: "Shows",

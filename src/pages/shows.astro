@@ -2,13 +2,13 @@
 import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
-import Shows from "@components/Shows.astro";
+import ShowList from "@components/ShowList.astro";
 import { getCollection } from "astro:content";
 
 const shows = await getCollection("shows");
+console.log(shows);
 const anyUpcoming = shows.some((show) => show.data.upcoming);
 const anyPast = shows.some((show) => !show.data.upcoming);
-console.log(anyUpcoming, anyPast);
 ---
 
 <Layout title="Karolina Nocoń - Shows">
@@ -16,14 +16,14 @@ console.log(anyUpcoming, anyPast);
     <Nav />
     {
       anyUpcoming ? (
-        <Shows shows={shows.filter((show) => show.data.upcoming)} />
+        <ShowList shows={shows.filter((show) => show.data.upcoming)} heading="upcoming shows:" />
       ) : (
         <p>no upcoming shows</p>
       )
     }
     {
       anyPast ? (
-        <Shows shows={shows.filter((show) => !show.data.upcoming)} />
+        <ShowList shows={shows.filter((show) => !show.data.upcoming)} heading="past shows:" />
       ) : (
         <p>no past shows</p>
       )

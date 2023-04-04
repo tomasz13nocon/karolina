@@ -1,0 +1,27 @@
+---
+import { Image } from 'astro:assets';
+import { getAsset } from '@lib/util';
+
+interface Show {
+  data: {
+    poster: string;
+    alt: string;
+  };
+}
+interface Props {
+  heading: string;
+  shows: Show[];
+}
+
+const imgs: ImageMetadata[] = [];
+
+for (const show of Astro.props.shows) {
+  imgs.push((await getAsset(show.data.poster)).default);
+  // console.log(show.data.poster);
+}
+---
+
+<h2 class="font-medium block text-base">{Astro.props.heading}</h2>
+<div class="flex flex-wrap gap-24 justify-center">
+  {Astro.props.shows.map((show, i) => <Image src={imgs[i].src} alt={show.data.alt} width={380} height={380 / imgs[i].width * imgs[i].height} />)}
+</div>
