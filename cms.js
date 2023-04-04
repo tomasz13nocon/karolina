@@ -19,7 +19,7 @@ export default {
     backend: {
       name: "github",
       repo: "tomasz13nocon/karolina",
-      branch: "beta",
+      branch: "master",
     },
     collections: [
       {
