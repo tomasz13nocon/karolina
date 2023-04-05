@@ -48,7 +48,7 @@ export default {
             {
               name: "thumb",
               label: "Thumbnail",
-              widget: "list",
+              widget: "object",
               fields: [
                 { name: "src", label: "Photo", widget: "image" },
                 { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
