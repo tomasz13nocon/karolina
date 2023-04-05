@@ -1,29 +1,116 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { CHUNK_SIZE } from "@lib/util";
+import Spinner from "@components/Spinner.astro";
 
 interface Props {
   blogs: CollectionEntry<"diary">[];
+  year?: string;
 }
-const { blogs } = Astro.props;
+const blogs = Astro.props.blogs;
+const shouldFetch = blogs.length <= CHUNK_SIZE;
 ---
 
-{
-  blogs
-    .sort((a, b) => b.data.date - a.data.date)
-    .map(async (blog) => {
-      const { Content } = await blog.render();
-      return (
-        <section class="my-4 text-sm my-prose">
-          <time class="block text-grey-5 mb-6">
-            {blog.data.date.toLocaleDateString("pl-PL", {
-              year: "numeric",
-              month: "numeric",
-              day: "numeric",
-            })}{" "}
-          </time>
-          <Content />
-        </section>
-      );
-    })
-}
+<div
+  class="dont-fetch-data diary-fetch-error self-center pl-12 pr-16 py-6 fixed top-0 bg-red-200 text-grey-0 hidden"
+  data-should-fetch={shouldFetch}
+>
+  <button class="hide-error-btn absolute -translate-y-1/2 top-1/2 right-6 text-4xl">&times;</button>
+  Error fetching diary entries!
+</div>
+<!-- fragment because syntax highlighting gets scuffed without it -->
+<>
+  {
+    blogs
+      .sort((a, b) => b.data.date - a.data.date)
+      .slice(0, CHUNK_SIZE)
+      .map(async (blog) => {
+        const { Content } = await blog.render();
+        return (
+          <article class="diary-entry my-4 text-sm my-prose">
+            <time class="diary-date block text-grey-5 mb-6">
+              {blog.data.date.toLocaleDateString("pl-PL", {
+                year: "numeric",
+                month: "numeric",
+                day: "numeric",
+              })}{" "}
+            </time>
+            <div class="diary-content">
+              <Content />
+            </div>
+          </article>
+        );
+      })
+  }
+</>
+<Spinner />
 
+<script>
+  import { marked } from "marked";
+
+  if (
+    (document.getElementsByClassName("dont-fetch-data")[0] as HTMLElement).dataset.shouldFetch ===
+    undefined
+  ) {
+    let fetchCount = 1;
+    let posts = document.getElementsByClassName("diary-entry");
+    let lastPost = posts[posts.length - 1];
+    let diaryList = document.getElementsByClassName("diary-list")[0];
+    let spinner = document.getElementsByClassName("diary-spinner")[0];
+    let yearEl = document.getElementsByClassName("diary-year-data")[0] as HTMLElement;
+    let yearParam = yearEl?.dataset.year ?? "";
+    if (yearParam) yearParam += "-";
+
+    if (lastPost && diaryList) {
+      let observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            observer.unobserve(lastPost!);
+            spinner.classList.remove("hidden");
+
+            // fetch("/diary/partial").then(resp => {
+            //   return resp.text();
+            // }).then(data => {
+            // console.log(data);
+            // });
+
+            fetch(`/diary/${yearParam}${fetchCount++}.json?`)
+              .then((resp) => resp.json())
+              .then((data) => {
+                let newPost: HTMLElement;
+                for (let post of data.posts) {
+                  newPost = lastPost!.cloneNode(true) as HTMLElement;
+                  newPost.getElementsByClassName("diary-date")[0].innerHTML = new Date(
+                    post.data.date
+                  ).toLocaleDateString("pl-PL", {
+                    year: "numeric",
+                    month: "numeric",
+                    day: "numeric",
+                  });
+                  newPost.getElementsByClassName("diary-content")[0].innerHTML = marked(post.body);
+                  diaryList.appendChild(newPost);
+                }
+                if (newPost! && !data.last) {
+                  lastPost = newPost;
+                  observer.observe(lastPost);
+                }
+              })
+              .catch(() => {
+                document.getElementsByClassName("diary-fetch-error")[0]?.classList.remove("hidden");
+              })
+              .finally(() => {
+                spinner.classList.add("hidden");
+                diaryList.appendChild(spinner);
+              });
+          }
+        });
+      });
+
+      observer.observe(lastPost);
+    }
+  }
+
+  document.getElementsByClassName("hide-error-btn")[0]?.addEventListener("click", () => {
+    document.getElementsByClassName("diary-fetch-error")[0]?.classList.add("hidden");
+  });
+</script>
