@@ -43,6 +43,8 @@ export async function getStaticPaths() {
   }));
 }
 
+const IMG_WIDTH = 320;
+
 const { photoSet, allSets } = Astro.props;
 
 let imgs: MyImage[] = [];
@@ -54,7 +56,7 @@ for (let { src, alt } of photoSet.photos) {
   const { src: smallSrc } = await getImage({
     src: img.default.src,
     alt,
-    width: 340 * 1.1,
+    width: IMG_WIDTH * 1.1,
     aspectRatio: img.default.width / img.default.height,
     format: "webp",
     quality: 90,
@@ -83,10 +85,10 @@ for (let { src, alt } of photoSet.photos) {
 }
 ---
 
-<Layout title={`Karolina Nocoń - ${photoSet.name}`}>
+<Layout>
   <Main class="sm:!w-auto xl:w-wide overflow-hidden">
     <Nav />
-    <nav class="mt-8 mb-16">
+    <nav class="mt-12 lg:mt-8 mb-16">
       <ul class="flex flex-wrap justify-center">
         {
           allSets
@@ -95,16 +97,10 @@ for (let { src, alt } of photoSet.photos) {
               <li class="inline-block">
                 <Link
                   href={"/photography/" + toUrl(set.name)}
-                  class="px-2 group"
-                  activeClass="!tracking-[0.5em] !font-bold px-6"
-                  nohover
+                  class="px-4 pb-4 lg:px-2 group"
+                  activeClass="!tracking-[0.55em] !font-bold px-6"
                 >
-                  <span
-                    data-before={set.name}
-                    class="block relative before:content-[attr(data-before)] before:absolute before:top-full transition-transform transition-1 group-hover:-translate-y-full before:text-black"
-                  >
                     {set.name}
-                  </span>
                 </Link>
               </li>
             ))
@@ -115,9 +111,10 @@ for (let { src, alt } of photoSet.photos) {
       {
         imgs.map((img, i) => (
           <button
-            class="img-container relative overflow-clip max-w-full w-[340px] group inline-block translate-x-[100vw]"
+            class="img-container relative overflow-clip max-w-full group inline-block translate-x-[100vw]"
             style={{
-              // height: `${(340 / img.width) * img.height}px;`,
+              width: `${IMG_WIDTH}px`,
+              // height: `${(IMG_WIDTH / img.width) * img.height}px;`,
               aspectRatio: `${img.width} / ${img.height}`,
             }}
           >
@@ -131,8 +128,8 @@ for (let { src, alt } of photoSet.photos) {
               class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
               src={img.src}
               alt={img.alt}
-              width={340}
-              height={Math.floor((340 / img.width) * img.height)}
+              width={IMG_WIDTH}
+              height={Math.floor((IMG_WIDTH / img.width) * img.height)}
             />
 
             <canvas

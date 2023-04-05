@@ -5,10 +5,10 @@ import { isCurrent } from "@lib/util";
 
 const { exclude = [], include = [], socials = true } = Astro.props;
 const pages = [
-  ["Home", "/"],
-  ["About", "/about"],
-  ["Photography", "/photography"],
-  ["Shows", "/shows"],
+  ["home", "/"],
+  ["about", "/about"],
+  ["photography", "/photography"],
+  ["shows", "/shows"],
 ].filter(
   ([_, href]) =>
     !isCurrent(href, Astro.url.pathname) &&
@@ -18,7 +18,7 @@ const pages = [
 ---
 
 <nav class="text-center">
-  <ul class="flex flex-col lowercase">
+  <ul class="flex flex-col gap-4 lg:gap-0">
     {
       pages.map(([name, href]) => (
         <li>
@@ -29,7 +29,7 @@ const pages = [
   </ul>
   {
     socials ? (
-      <div class="mt-4">
+      <div class="mt-8 lg:mt-4">
         <Socials />
       </div>
     ) : null

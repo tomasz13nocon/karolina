@@ -26,14 +26,15 @@ for (let blog of blogs) {
 years.sort();
 ---
 
-<div class={`text-grey-4 flex sm:flex-row flex-col gap-3 justify-center items-baseline ${col ? "flex-col" : ""}`}>
+<div class={`flex sm:flex-row flex-col gap-4 lg:gap-3 justify-center items-baseline ${col ? "flex-col" : ""}`}>
   {
     years.map((year) => (
       <Link
-        href={`/diary/year/${year}`}
+        href={`/diary/${year}`}
         class="sm:!mx-0"
-        activeClass="text-grey-1 !font-bold"
-        style={{ fontSize: `${16 + 24 * (postCount[year] / maxPostCount)}px` }}
+        activeClass="!text-grey-2 !font-bold"
+        style={{ fontSize: `${1 + 1.5 * (postCount[year] / maxPostCount)}rem` }}
+        light
       >
         {year}
       </Link>

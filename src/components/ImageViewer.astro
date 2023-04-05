@@ -23,11 +23,11 @@ const { blur } = Astro.props;
     class="col-start-3 h-12 flex items-center justify-center"
     blur={blur}
   >
-    <Icon name="ph:x" width="2.5em" height="2.5em" class="drop-shadow-md" />
+    <Icon name="ph:x" width="2.5em" height="2.5em" />
   </ImageViewerBtn>
 
   <ImageViewerBtn id="image-prev" class="row-start-1 row-end-3 h-full" blur={blur}>
-    <Icon name="ph:caret-left" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
+    <Icon name="ph:caret-left" width="3em" height="3em" class="h-full" />
   </ImageViewerBtn>
 
   <div
@@ -51,7 +51,7 @@ const { blur } = Astro.props;
   </div>
 
   <ImageViewerBtn id="image-next" class="pb-12 h-full col-start-3" blur={blur}>
-    <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" class="drop-shadow-md" />
+    <Icon name="ph:caret-right" width="3em" height="3em" class="h-full" />
   </ImageViewerBtn>
 
   <img

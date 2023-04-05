@@ -2,10 +2,11 @@
 import data from "../data/icon.json";
 
 export interface Props {
-  title: string;
+  title?: string;
 }
 
-const { title } = Astro.props;
+const pathLast = Astro.url.pathname.split("/").slice(-1)[0];
+const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathLast :"");
 ---
 
 <!DOCTYPE html>
@@ -37,8 +38,9 @@ const { title } = Astro.props;
 @tailwind utilities;
 
 @layer base {
-  body {
+  html {
     font-family: "Open Sans", sans-serif;
+    font-size: 12px;
   }
   h1, h2, h3, h4, h5, h6 {
     font-weight: bold;
@@ -69,6 +71,12 @@ const { title } = Astro.props;
 @layer utilities {
   .transition-1 {
     @apply duration-500 ease-expo;
+  }
+  .text-hover {
+    @apply text-grey-0
+  }
+  .text-hover-2 {
+    @apply text-grey-3
   }
 }
 </style>

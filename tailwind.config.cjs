@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       colors: {
         grey: {
+          0: "#4a4a4a",
           1: "#7f7f7f",
           2: "#888888",
           3: "#a5a5a5",
@@ -32,6 +33,9 @@ module.exports = {
       dropShadow: {
         "text-1": "1px 1px 4px rgba(0, 0, 0, 1)",
         "2xl": "2px 1px 10px rgba(0, 0, 0, 1)",
+      },
+      gap: {
+        mid: "3rem",
       },
     },
   },

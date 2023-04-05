@@ -8,7 +8,7 @@ interface Props extends HTMLAttributes<"button"> {
 
 <button
   class={`w-12 cursor-pointer transition-colors z-10
-    ${Astro.props.blur ? "hover:bg-black/25" : "hover:bg-grey-6"}
+    ${Astro.props.blur ? "hover:bg-black/25" : ""}
     ${Astro.props.class ?? ""}
   `}
   {...Astro.props}

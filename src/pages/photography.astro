@@ -26,26 +26,26 @@ for (let photoSet of photoSets) {
 }
 ---
 
-<Layout title="Karolina Nocoń - Photography">
+<Layout>
   <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-16">
     <Nav />
-    <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 mx-auto">
+    <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 lg:gap-2 mx-auto">
       {
         thumbs.map((thumb) => (
           <li>
             <a
               href={"/photography/" + toUrl(thumb.name)}
-              class="max-w-full w-[26rem] h-[10rem] flex items-center justify-center relative overflow-clip group"
+              class="max-w-full w-[26rem] aspect-[2.6_/_1] flex items-center justify-center relative overflow-clip group"
             >
               <Image
                 src={thumb.src}
                 alt={thumb.alt}
-                width={416 * 1.1}
-                height={160 * 1.1}
-                class="absolute transition-transform group-hover:scale-110 w-full duration-500 ease-expo"
+                width={312}
+                height={120}
+                class="absolute w-full duration-500 ease-expo"
               />
               <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100" />
-              <span class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.5em]">
+              <span class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.55em]">
                 {thumb.name}
               </span>
             </a>

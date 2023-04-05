@@ -14,7 +14,7 @@ const { blogs } = Astro.props;
       const { Content } = await blog.render();
       return (
         <section class="my-4 text-sm my-prose">
-          <time class="block text-grey-4 mb-6">
+          <time class="block text-grey-5 mb-6">
             {blog.data.date.toLocaleDateString("pl-PL", {
               year: "numeric",
               month: "numeric",

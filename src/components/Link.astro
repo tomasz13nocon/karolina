@@ -7,7 +7,6 @@ interface Props extends HTMLAttributes<"a"> {
   class?: string;
   activeClass?: string;
   light?: boolean;
-  nohover?: boolean;
 }
 
 const props = Astro.props;
@@ -15,15 +14,13 @@ const classes = props.class ?? "";
 const activeClasses = props.activeClass ?? "";
 const active = isCurrent(props.href, Astro.url.pathname);
 const light = props.light;
-const nohover = props.nohover;
 ---
 
 <a
   aria-current={active ? "page" : null}
   class={`
-overflow-clip relative inline-block mx-auto tracking-wide
-${nohover ? "" : "hover:text-black"}
-${light ? "text-grey-4" : "font-medium"}
+overflow-clip relative inline-block mx-auto tracking-wide font-medium hover:text-hover
+${light ? "text-grey-5 hover:text-hover-2" : ""}
 ${active ? activeClasses + " pointer-events-none" : ""}
 ${classes}`}
   {...props}

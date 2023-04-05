@@ -10,26 +10,28 @@ import Nav from "@components/Nav.astro";
 const image = await getAsset(data.image);
 ---
 
-<Layout title="Karolina Nocoń">
+<Layout>
   <MainFlex class="min-h-screen">
-    <h1
-      class="font-normal tracking-[0.30em] text-3xl leading-tight mt-16 animate-[fadein_1s_paused]"
-      id="index-title"
-    >
-      karolina nocoń
-    </h1>
-    <a href="/photography">
-      <Image
-        src={image.default}
-        alt={data.alt}
-        width={400}
-        format="webp"
-        quality={90}
-        class="mx-auto shadow-image rounded-full animate-[fadein2_1s_0.4s_both_paused]"
-        id="index-image"
-      />
-    </a>
-    <Nav />
+    <div class="flex flex-col gap-mid">
+      <h1
+        class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12 animate-[fadein_1s_paused]"
+        id="index-title"
+      >
+        karolina nocoń
+      </h1>
+      <a href="/photography">
+        <Image
+          src={image.default}
+          alt={data.alt}
+          width={300}
+          format="webp"
+          quality={90}
+          class="mx-auto rounded-full animate-[fadein2_1s_0.4s_both_paused]"
+          id="index-image"
+        />
+      </a>
+      <Nav />
+    </div>
     <Link href="/diary" light>diary</Link>
   </MainFlex>
 </Layout>

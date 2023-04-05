@@ -27,6 +27,7 @@ interface MyImage {
 }
 
 const imgs: MyImage[] = [];
+const WIDTH = 300;
 
 for (const {
   data: { poster: src, alt },
@@ -36,7 +37,7 @@ for (const {
   const { src: smallSrc } = await getImage({
     src: img.src,
     alt: alt,
-    width: 380 * 1.1,
+    width: WIDTH * 1.1,
     aspectRatio: img.width / img.height,
     format: "webp",
     quality: 90,
@@ -80,8 +81,8 @@ for (const {
           class="img"
           src={img.src}
           alt={img.alt}
-          width={380}
-          height={Math.floor((380 / img.width) * img.height)}
+          width={WIDTH}
+          height={Math.floor((WIDTH / img.width) * img.height)}
         />
 
         <canvas class="blur-canvas absolute inset-0 -z-10 h-full w-full" width={24} height={24} />

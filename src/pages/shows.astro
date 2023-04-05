@@ -11,8 +11,8 @@ const anyUpcoming = shows.some((show) => show.data.upcoming);
 const anyPast = shows.some((show) => !show.data.upcoming);
 ---
 
-<Layout title="Karolina Nocoń - Shows">
-  <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-12 text-center">
+<Layout>
+  <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-10 text-center">
     <Nav />
     {
       anyUpcoming ? (

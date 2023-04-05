@@ -1,30 +1,13 @@
 ---
-import { Icon } from "astro-icon";
 import { getCollection } from "astro:content";
 import DiaryNavList from "./DiaryNavList.astro";
 
 const blogs = await getCollection("diary");
 const years = [...new Set(blogs.map(blog => blog.data.date.getFullYear()))].reverse();
 ---
-<header class="px-6 items-center">
-  <!-- <Icon name="ph:list" width="3em" class="sm:hidden" id="nav-hamburger" /> -->
+<header class="px-4 items-center">
   <div class="sm:block">
     <DiaryNavList years={years} />
   </div>
 </header>
-
-<!-- sidebar drawer -->
-<!-- <div class="fixed sm:hidden text-center top-0 right-0 transition-transform translate-x-full p-8 border-l-2 border-black h-full bg-zinc-50" id="nav-menu"> -->
-<!--   <Icon name="ph:x" width="3em" id="nav-close" class="pb-8" /> -->
-<!--   <DiaryNavList col years={years} /> -->
-<!-- </div> -->
-
-
-<script>
-// function toggleNav() {
-//   document.getElementById("nav-menu")!.classList.toggle("translate-x-full");
-// }
-// document.getElementById("nav-hamburger")!.addEventListener("click", toggleNav);
-// document.getElementById("nav-close")!.addEventListener("click", toggleNav);
-</script>
 
