@@ -46,8 +46,8 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
 <Spinner />
 
 <script>
-  import { marked } from "marked";
-
+  // Infinite scroll
+  // Don't fetch if all posts are rendered statically
   if (
     (document.getElementsByClassName("dont-fetch-data")[0] as HTMLElement).dataset.shouldFetch ===
     undefined
@@ -68,18 +68,13 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
             observer.unobserve(lastPost!);
             spinner.classList.remove("hidden");
 
-            // fetch("/diary/partial").then(resp => {
-            //   return resp.text();
-            // }).then(data => {
-            // console.log(data);
-            // });
-
             fetch(`/diary/${yearParam}${fetchCount++}.json?`)
               .then((resp) => resp.json())
               .then((data) => {
                 let newPost: HTMLElement;
+
                 for (let post of data.posts) {
-                  newPost = lastPost!.cloneNode(true) as HTMLElement;
+                  newPost = lastPost.cloneNode(true) as HTMLElement;
                   newPost.getElementsByClassName("diary-date")[0].innerHTML = new Date(
                     post.data.date
                   ).toLocaleDateString("pl-PL", {
@@ -87,9 +82,10 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
                     month: "numeric",
                     day: "numeric",
                   });
-                  newPost.getElementsByClassName("diary-content")[0].innerHTML = marked(post.body);
+                  newPost.getElementsByClassName("diary-content")[0].innerHTML = post.body;
                   diaryList.appendChild(newPost);
                 }
+
                 if (newPost! && !data.last) {
                   lastPost = newPost;
                   observer.observe(lastPost);
@@ -110,7 +106,7 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
     }
   }
 
-  document.getElementsByClassName("hide-error-btn")[0]?.addEventListener("click", () => {
-    document.getElementsByClassName("diary-fetch-error")[0]?.classList.add("hidden");
+  document.getElementsByClassName("hide-error-btn")[0].addEventListener("click", () => {
+    document.getElementsByClassName("diary-fetch-error")[0].classList.add("hidden");
   });
 </script>

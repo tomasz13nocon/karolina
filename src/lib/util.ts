@@ -1,7 +1,7 @@
 export const IMAGE_VIEWER_TRANSITION = 300;
 export const BLUR_TRANSITION = 300;
 export const IMAGE_TRANSITION = 400;
-export const CHUNK_SIZE = 10;
+export const CHUNK_SIZE = 2;
 
 // Dybamically import an image from /src/assets
 // Path has to start with /src/assets

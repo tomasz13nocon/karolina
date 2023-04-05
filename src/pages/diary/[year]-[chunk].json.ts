@@ -1,21 +1,27 @@
 import { CHUNK_SIZE } from "@lib/util";
-import type { APIRoute } from "astro";
+import type { APIRoute, InferGetStaticParamsType } from "astro";
 import { getCollection } from "astro:content";
+import { marked } from "marked";
 
-export const get: APIRoute = async function ({ params, request }) {
-  const chunk = +params.chunk!;
-  const year = +params.year!;
+type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
-  const posts = (await getCollection("diary"))
+export const get: APIRoute = async function (context) {
+  const params = context.params as Params;
+  const chunk = +params.chunk;
+  const year = +params.year;
+
+  let posts = await getCollection("diary");
+  posts = posts
     .filter((post) => new Date(post.data.date).getFullYear() === year)
     .sort((a, b) => b.data.date - a.data.date);
 
-  let chunks = posts.slice(chunk * CHUNK_SIZE, chunk * CHUNK_SIZE + CHUNK_SIZE);
+  let chunksMd = posts.slice(chunk * CHUNK_SIZE, chunk * CHUNK_SIZE + CHUNK_SIZE);
+  let chunks = chunksMd.map((chunk) => ({ ...chunk, body: marked(chunk.body) }));
 
   return {
     body: JSON.stringify({
       posts: chunks,
-      last: chunks[chunks.length - 1] === posts[posts.length - 1],
+      last: chunks[chunks.length - 1].id === posts[posts.length - 1].id,
     }),
   };
 };
