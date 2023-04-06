@@ -68,7 +68,6 @@ const { blur } = Astro.props;
   let imageViewer = document.getElementById("image-viewer") as HTMLElement;
   let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
   let imgContainers = document.getElementsByClassName("img-container");
-  // TODO there's only one blur-img, refactor
   let blurImgs = document.getElementsByClassName("blur-img") as HTMLCollectionOf<HTMLElement>;
   let prev = document.getElementById("image-prev") as HTMLElement;
   let next = document.getElementById("image-next") as HTMLElement;
@@ -100,43 +99,7 @@ const { blur } = Astro.props;
     }, IMAGE_VIEWER_TRANSITION);
   }
 
-  function setupImgViewer(i: number, direction?: -1 | 1) {
-    if (!imgs[i].dataset.fullSizeSrc) {
-      throw new Error("Expected full-size-src to be non empty");
-    }
-    currentIndex = i;
-    let conts = imageViewer.getElementsByClassName("img-viewer-container");
-    let cont = conts[conts.length - 1] as HTMLElement;
-    let newCont = cont.cloneNode(true) as HTMLElement;
-    let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
-    let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
-    newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!); // + "/" + imgs[i].dataset.height;
-    newWrapper.style.maxWidth = imgs[i].dataset.width + "px"; // + "/" + imgs[i].dataset.height;
-    newImg.src = "";
-    newImg.src = imgs[i].dataset.fullSizeSrc!;
-    cont.insertAdjacentElement("afterend", newCont);
-    if (direction) {
-      let translate = direction * (20 + 0.1 * window.innerWidth);
-      newCont.style.transitionProperty = "none";
-      newCont.style.transform = `translateX(${translate}px)`;
-      newCont.style.opacity = "0";
-      requestAnimationFrame(() => {
-        newCont.style.transitionProperty = "transform, opacity";
-        newCont.style.transform = "translateX(0)";
-        newCont.style.opacity = "1";
-      });
-
-      cont.style.transform = `translateX(${-translate}px)`;
-      cont.style.opacity = "0";
-
-      setTimeout(
-        () => imageViewer.getElementsByClassName("img-viewer-container")[0].remove(),
-        IMAGE_TRANSITION
-      );
-    } else {
-      cont.remove();
-    }
-
+  function setupBlurImgs(i: number) {
     let blurImg = blurImgs[0];
     if (blurImg !== undefined) {
       let newBlurImg = blurImg.cloneNode() as HTMLImageElement;
@@ -159,6 +122,47 @@ const { blur } = Astro.props;
       else newBlurImg.addEventListener("load", show);
       blurImg.parentNode!.appendChild(newBlurImg);
     }
+  }
+
+  function setupImgViewer(i: number, direction?: -1 | 1) {
+    if (!imgs[i].dataset.fullSizeSrc) {
+      throw new Error("Expected full-size-src to be non empty");
+    }
+    currentIndex = i;
+    let conts = imageViewer.getElementsByClassName("img-viewer-container");
+    let cont = conts[conts.length - 1] as HTMLElement;
+    let newCont = cont.cloneNode(true) as HTMLElement;
+    let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
+    let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
+    newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);
+    newWrapper.style.maxWidth = imgs[i].dataset.width + "px";
+    newImg.src = "";
+    newImg.src = imgs[i].dataset.fullSizeSrc!;
+    cont.insertAdjacentElement("afterend", newCont);
+
+    if (direction) {
+      let translate = direction * (20 + 0.1 * window.innerWidth);
+      newCont.style.transitionProperty = "none";
+      newCont.style.transform = `translateX(${translate}px)`;
+      newCont.style.opacity = "0";
+      requestAnimationFrame(() => {
+        newCont.style.transitionProperty = "transform, opacity";
+        newCont.style.transform = "translateX(0)";
+        newCont.style.opacity = "1";
+      });
+
+      cont.style.transform = `translateX(${-translate}px)`;
+      cont.style.opacity = "0";
+
+      setTimeout(
+        () => imageViewer.getElementsByClassName("img-viewer-container")[0].remove(),
+        IMAGE_TRANSITION
+      );
+    } else {
+      cont.remove();
+    }
+
+    setupBlurImgs(i);
 
     if (i !== 0) {
       prev.dataset.imageIndex = `${i - 1}`;

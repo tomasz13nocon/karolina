@@ -5,6 +5,7 @@ import { marked } from "marked";
 
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
+// get the posts for the current chunk and year
 export const get: APIRoute = async function (context) {
   const params = context.params as Params;
   const chunk = +params.chunk;
@@ -33,6 +34,7 @@ interface Chunk {
   };
 }
 
+// generate chunks of diary for each year for infinite scrolling
 export async function getStaticPaths() {
   const allPosts = await getCollection("diary");
   const yearPosts: Record<string, number> = {};

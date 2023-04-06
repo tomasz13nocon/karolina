@@ -5,6 +5,7 @@ import { marked } from "marked";
 
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
+// get the posts for the current chunk
 export const get: APIRoute = async function (context) {
   const params = context.params as Params;
   const chunk = +params.chunk;
@@ -23,6 +24,7 @@ export const get: APIRoute = async function (context) {
   };
 };
 
+// generate chunks of diary for infinite scrolling
 export async function getStaticPaths() {
   const posts = await getCollection("diary");
   const chunks = new Array(Math.ceil(posts.length / CHUNK_SIZE)).fill(null);
