@@ -1,4 +1,5 @@
 export default {
+  disableIdentityWidgetInjection: true,
   config: {
     media_folder: "/src/assets",
     backend: {

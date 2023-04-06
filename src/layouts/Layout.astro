@@ -15,19 +15,11 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/svg+xml" href={data.image} />
-    <!-- <link rel="preconnect" href="https://fonts.googleapis.com"> -->
-    <!-- <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
-    <!-- <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap"> -->
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400&display=swap" rel="stylesheet"> -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <meta name="description" content="Karolina Nocoń photography portfolio" />
+    <meta name="description" content="karolina nocoń photography portfolio" />
   </head>
   <body class="bg-grey-7 text-grey-1 mx-auto">
-    <!-- <div class="fixed top-0 left-0 text-xs font-bold bg-purple-400 p-1 pr-2 rounded-br-md z-50">BETA</div> -->
     <slot />
   </body>
 </html>
@@ -36,6 +28,34 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* open-sans-regular - latin_latin-ext */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 400;
+  src: url('/fonts/open-sans-v34-latin_latin-ext-regular.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+ */
+       url('/fonts/open-sans-v34-latin_latin-ext-regular.woff') format('woff'); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* open-sans-500 - latin_latin-ext */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 500;
+  src: url('/fonts/open-sans-v34-latin_latin-ext-500.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+ */
+       url('/fonts/open-sans-v34-latin_latin-ext-500.woff') format('woff'); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* open-sans-700 - latin_latin-ext */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Open Sans';
+  font-style: normal;
+  font-weight: 700;
+  src: url('/fonts/open-sans-v34-latin_latin-ext-700.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+ */
+       url('/fonts/open-sans-v34-latin_latin-ext-700.woff') format('woff'); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
 
 @layer base {
   html {
