@@ -82,6 +82,11 @@ const { blur } = Astro.props;
   if (imgs.length !== imgContainers.length)
     throw new Error("Expected every .img to be wrapped in .img-container, imgs: " + imgs.length + ", containers: " + imgContainers.length);
 
+  // Double raf for firefox
+  function raf(cb: () => void) {
+    requestAnimationFrame(() => requestAnimationFrame(cb));
+  }
+
   function hideImageViewer(imageViewer: HTMLElement, blurImgs: HTMLCollectionOf<HTMLElement>) {
     hidingImageViewer.set(true);
 
@@ -118,7 +123,7 @@ const { blur } = Astro.props;
           }
         }, BLUR_TRANSITION);
       }
-      if (newBlurImg.complete) requestAnimationFrame(() => show());
+      if (newBlurImg.complete) raf(() => show());
       else newBlurImg.addEventListener("load", show);
       blurImg.parentNode!.appendChild(newBlurImg);
     }
@@ -145,7 +150,7 @@ const { blur } = Astro.props;
       newCont.style.transitionProperty = "none";
       newCont.style.transform = `translateX(${translate}px)`;
       newCont.style.opacity = "0";
-      requestAnimationFrame(() => {
+      raf(() => {
         newCont.style.transitionProperty = "transform, opacity";
         newCont.style.transform = "translateX(0)";
         newCont.style.opacity = "1";
@@ -187,7 +192,7 @@ const { blur } = Astro.props;
         blurImg.classList.remove("hidden");
       }
       imageViewer.classList.remove("hidden");
-      requestAnimationFrame(() => {
+      raf(() => {
         imageViewer.style.opacity = "1";
       });
 

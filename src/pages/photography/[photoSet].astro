@@ -1,15 +1,13 @@
 ---
 import { getImage } from "@astrojs/image";
-import path from "node:path";
-import sharp from "sharp";
 import Layout from "@layouts/Layout.astro";
 import Nav from "@components/Nav.astro";
 import ImageViewer from "@components/ImageViewer.astro";
 import Main from "@layouts/Main.astro";
-import { rgbaToThumbHash } from "thumbhash";
 import { getAsset, toUrl } from "@lib/util";
 import Link from "@components/Link.astro";
 import { getCollection } from "astro:content";
+import Blurhash from "@components/Blurhash.astro";
 
 interface Photo {
   src: string;
@@ -28,7 +26,7 @@ interface Props {
 interface MyImage {
   width: number;
   height: number;
-  hash: string;
+  ogSrc: string;
   src: string;
   fullSrc: string;
   alt: string;
@@ -73,20 +71,10 @@ for (let { src, alt } of photoSet.photos) {
     throw new Error("Astro's getImage failed. src is not present.");
   }
 
-  const {
-    data: bufferData,
-    info: { width: hashW, height: hashH },
-  } = await sharp(path.join(".", src))
-    .resize(20) // TODO:prod increase
-    .raw()
-    .ensureAlpha()
-    .toBuffer({ resolveWithObject: true });
-
-  const hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
   imgs.push({
     width: img.default.width,
     height: img.default.height,
-    hash,
+    ogSrc: src,
     src: smallSrc,
     fullSrc,
     alt,
@@ -129,7 +117,6 @@ for (let { src, alt } of photoSet.photos) {
             <img
               data-index={i}
               data-full-size-src={img.fullSrc}
-              data-hash={img.hash}
               data-width={img.width}
               data-height={img.height}
               loading="lazy"
@@ -140,11 +127,7 @@ for (let { src, alt } of photoSet.photos) {
               height={Math.floor((IMG_WIDTH / img.width) * img.height)}
             />
 
-            <canvas
-              class="blur-canvas absolute inset-0 -z-10 h-full w-full"
-              width={24}
-              height={24}
-            />
+            <Blurhash src={img.ogSrc} />
           </button>
         ))
       }
@@ -155,7 +138,6 @@ for (let { src, alt } of photoSet.photos) {
 
 <script>
   import MagicGrid from "magic-grid";
-  import renderBlurhash from "@lib/renderBlurhash";
 
   let magicGrid = new MagicGrid({
     container: "#masonry-container",
@@ -168,7 +150,6 @@ for (let { src, alt } of photoSet.photos) {
   });
 
   let imgContainers = document.getElementsByClassName("img-container");
-  let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
 
   // Lazy loading
   // Done this way because Astro's Images, js masonry using translates, and lazy loading all have to work with each other
@@ -184,7 +165,6 @@ for (let { src, alt } of photoSet.photos) {
   });
 
   for (let i = 0; i < imgContainers.length; i++) {
-    renderBlurhash(imgs[i].dataset.hash!, imgContainers[i].getElementsByTagName("canvas")[0]);
     observer.observe(imgContainers[i]);
   }
 </script>

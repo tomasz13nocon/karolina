@@ -1,0 +1,68 @@
+---
+import { getImage } from "@astrojs/image";
+import { getAsset } from "@lib/util";
+import Blurhash from "./Blurhash.astro";
+
+/**
+ * Image intended to be used with ImageViewer.
+ * Displays a small, optimized image,
+ * and defines data attributes for ImageViewer for the full size version.
+ */
+
+interface Props {
+  src: string;
+  alt: string;
+  width: number;
+  index: number;
+}
+
+const { src, alt, width, index } = Astro.props;
+
+const imgRaw = (await getAsset(src)).default;
+
+const { src: smallSrc } = await getImage({
+  src: imgRaw.src,
+  alt,
+  width: width * 1.1,
+  aspectRatio: imgRaw.width / imgRaw.height,
+  format: "webp",
+  quality: 90,
+});
+
+const { src: fullSrc } = await getImage({
+  src: imgRaw.src,
+  alt,
+  width: imgRaw.width,
+  height: imgRaw.height,
+});
+
+if (smallSrc == null || fullSrc == null) {
+  throw new Error("Astro's getImage failed. src is not present.");
+}
+
+const img = {
+  width: imgRaw.width,
+  height: imgRaw.height,
+  src: smallSrc,
+  fullSrc,
+  ogSrc: src,
+  alt,
+};
+---
+
+<button class="img-container relative">
+  <img
+    data-index={index}
+    data-full-size-src={img.fullSrc}
+    data-width={img.width}
+    data-height={img.height}
+    loading="lazy"
+    class="img"
+    src={img.src}
+    alt={img.alt}
+    width={width}
+    height={Math.floor((width / img.width) * img.height)}
+  />
+
+  <Blurhash src={img.ogSrc} />
+</button>

@@ -6,7 +6,7 @@ export interface Props {
 }
 
 const pathLast = Astro.url.pathname.split("/").slice(-1)[0];
-const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathLast :"");
+const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathLast : "");
 ---
 
 <!DOCTYPE html>
@@ -25,89 +25,92 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
 </html>
 
 <style is:global>
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
 
-/* open-sans-regular - latin_latin-ext */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 400;
-  src: url('/fonts/open-sans-v34-latin_latin-ext-regular.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+ */
-       url('/fonts/open-sans-v34-latin_latin-ext-regular.woff') format('woff'); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* open-sans-500 - latin_latin-ext */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 500;
-  src: url('/fonts/open-sans-v34-latin_latin-ext-500.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+ */
-       url('/fonts/open-sans-v34-latin_latin-ext-500.woff') format('woff'); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
-/* open-sans-700 - latin_latin-ext */
-@font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Open Sans';
-  font-style: normal;
-  font-weight: 700;
-  src: url('/fonts/open-sans-v34-latin_latin-ext-700.woff2') format('woff2'), /* Chrome 36+, Opera 23+, Firefox 39+ */
-       url('/fonts/open-sans-v34-latin_latin-ext-700.woff') format('woff'); /* Chrome 5+, Firefox 3.6+, IE 9+, Safari 5.1+ */
-}
+  @font-face {
+    font-display: swap;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 400;
+    src: url("/fonts/open-sans-v34-latin_latin-ext-regular.woff2") format("woff2"),
+      url("/fonts/open-sans-v34-latin_latin-ext-regular.woff") format("woff");
+  }
 
-@layer base {
-  html {
-    font-family: "Open Sans", sans-serif;
-    font-size: 12px;
+  @font-face {
+    font-display: swap;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 500;
+    src: url("/fonts/open-sans-v34-latin_latin-ext-500.woff2") format("woff2"),
+      url("/fonts/open-sans-v34-latin_latin-ext-500.woff") format("woff");
   }
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-  }
-  h1 {
-    font-size: 2.4em;
-  }
-  h2 {
-    font-size: 1.5em;
-  }
-  h3 {
-    font-size: 1.17em;
-  }
-  h4 {
-    font-size: 1em;
-  }
-  h5 {
-    font-size: .83em;
-  }
-  h6 {
-    font-size: .67em;
-  }
-  .my-prose p {
-    margin-bottom: 0.5rem;
-    margin-top: 0.5rem;
-  }
-}
-@layer utilities {
-  .transition-1 {
-    @apply duration-500 ease-expo;
-  }
-  .text-hover {
-    @apply text-grey-0
-  }
-  .text-hover-2 {
-    @apply text-grey-3
-  }
-  .aspect-ratio-polyfill:before {
-    float: left;
-    padding-top: var(--aspect-ratio);
-    content: "";
-  }
-  .aspect-ratio-polyfill:after {
-    display: block;
-    content: "";
-    clear: both;
-  }
-}
 
+  @font-face {
+    font-display: swap;
+    font-family: "Open Sans";
+    font-style: normal;
+    font-weight: 700;
+    src: url("/fonts/open-sans-v34-latin_latin-ext-700.woff2") format("woff2"),
+      url("/fonts/open-sans-v34-latin_latin-ext-700.woff") format("woff");
+  }
+
+  @layer base {
+    html {
+      font-family: "Open Sans", sans-serif;
+      font-size: 12px;
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: bold;
+    }
+    h1 {
+      font-size: 2.4em;
+    }
+    h2 {
+      font-size: 1.5em;
+    }
+    h3 {
+      font-size: 1.17em;
+    }
+    h4 {
+      font-size: 1em;
+    }
+    h5 {
+      font-size: 0.83em;
+    }
+    h6 {
+      font-size: 0.67em;
+    }
+    .my-prose p {
+      margin-bottom: 0.5rem;
+      margin-top: 0.5rem;
+    }
+  }
+  @layer utilities {
+    .transition-1 {
+      @apply duration-500 ease-expo;
+    }
+    .text-hover {
+      @apply text-grey-0;
+    }
+    .text-hover-2 {
+      @apply text-grey-3;
+    }
+    .aspect-ratio-polyfill:before {
+      float: left;
+      padding-top: var(--aspect-ratio);
+      content: "";
+    }
+    .aspect-ratio-polyfill:after {
+      display: block;
+      content: "";
+      clear: both;
+    }
+  }
 </style>

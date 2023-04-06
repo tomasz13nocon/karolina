@@ -1,10 +1,5 @@
 ---
-import { Image } from "@astrojs/image/components";
-import path from "node:path";
-import sharp from "sharp";
-import { getImage } from "@astrojs/image";
-import { getAsset } from "@lib/util";
-import { rgbaToThumbHash } from "thumbhash";
+import ImageViewerImg from "./ImageViewerImg.astro";
 
 interface Show {
   data: {
@@ -12,92 +7,21 @@ interface Show {
     alt: string;
   };
 }
+
 interface Props {
   heading: string;
   shows: Show[];
 }
 
-interface MyImage {
-  width: number;
-  height: number;
-  hash: string;
-  src: string;
-  fullSrc: string;
-  alt: string;
-}
-
-const imgs: MyImage[] = [];
-const WIDTH = 300;
-
-for (const {
-  data: { poster: src, alt },
-} of Astro.props.shows) {
-  const img = (await getAsset(src)).default;
-
-  const { src: smallSrc } = await getImage({
-    src: img.src,
-    alt: alt,
-    width: WIDTH * 1.1,
-    aspectRatio: img.width / img.height,
-    format: "webp",
-    quality: 90,
-  });
-  const { src: fullSrc } = await getImage({
-    src: img.src,
-    alt: alt,
-    width: img.width,
-    height: img.height,
-  });
-  if (smallSrc == null || fullSrc == null) {
-    throw new Error("Astro's getImage failed. src is not present.");
-  }
-
-  const {
-    data: bufferData,
-    info: { width: hashW, height: hashH },
-  } = await sharp(path.join(".", src))
-    .resize(20) // TODO:prod increase
-    .raw()
-    .ensureAlpha()
-    .toBuffer({ resolveWithObject: true });
-
-  const hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
-  imgs.push({ width: img.width, height: img.height, hash, src: smallSrc, fullSrc, alt });
-}
+const shows = Astro.props.shows.map(show => show.data);
 ---
 
 <h2 class="font-medium block text-base">{Astro.props.heading}</h2>
 <div class="flex flex-wrap gap-20 justify-center">
   {
-    imgs.map((img, i) => (
-      <button class="img-container relative">
-        <img
-          data-index={i}
-          data-full-size-src={img.fullSrc}
-          data-hash={img.hash}
-          data-width={img.width}
-          data-height={img.height}
-          loading="lazy"
-          class="img"
-          src={img.src}
-          alt={img.alt}
-          width={WIDTH}
-          height={Math.floor((WIDTH / img.width) * img.height)}
-        />
-
-        <canvas class="blur-canvas absolute inset-0 -z-10 h-full w-full" width={24} height={24} />
-      </button>
+    shows.map(({ poster: src, alt }, i) => (
+      <ImageViewerImg src={src} alt={alt} width={300} index={i} />
     ))
   }
 </div>
 
-<script>
-  import renderBlurhash from "@lib/renderBlurhash";
-
-  let imgContainers = document.getElementsByClassName("img-container");
-  let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
-
-  for (let i = 0; i < imgContainers.length; i++) {
-    renderBlurhash(imgs[i].dataset.hash!, imgContainers[i].getElementsByTagName("canvas")[0]);
-  }
-</script>
