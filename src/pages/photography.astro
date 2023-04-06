@@ -4,22 +4,28 @@ import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import { getAsset, toUrl } from "@lib/util";
+import { getCollection } from "astro:content";
 
 interface Thumb extends ImageMetadata {
-  name: string;
+  title: string;
   alt: string;
 }
 
 let thumbs: Thumb[] = [];
 
-let photoSets = await Astro.glob("../data/photography/*.json");
-photoSets = photoSets.sort((a, b) => a.index - b.index);
+// JSON approach - can't add new entires this way.
+// Better suited for completely static content like site metadata.
+// let photoSets = await Astro.glob("../data/photography/*.json");
+// photoSets = photoSets.sort((a, b) => a.index - b.index);
+
+let photoSetsRaw = await getCollection("photography");
+let photoSets = photoSetsRaw.map((photoSet) => photoSet.data).sort((a, b) => a.index - b.index);
 
 for (let photoSet of photoSets) {
   const img = await getAsset(photoSet.thumb.src);
 
   thumbs.push({
-    name: photoSet.name,
+    title: photoSet.title,
     alt: photoSet.thumb.alt,
     ...img.default,
   });
@@ -34,7 +40,7 @@ for (let photoSet of photoSets) {
         thumbs.map((thumb) => (
           <li>
             <a
-              href={"/photography/" + toUrl(thumb.name)}
+              href={"/photography/" + toUrl(thumb.title)}
               class="max-w-full w-[26rem] aspect-[2.6_/_1] flex items-center justify-center relative overflow-clip group"
             >
               <Image
@@ -46,7 +52,7 @@ for (let photoSet of photoSets) {
               />
               <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100" />
               <span class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.55em]">
-                {thumb.name}
+                {thumb.title}
               </span>
             </a>
           </li>

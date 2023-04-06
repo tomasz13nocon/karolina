@@ -9,6 +9,7 @@ import Main from "@layouts/Main.astro";
 import { rgbaToThumbHash } from "thumbhash";
 import { getAsset, toUrl } from "@lib/util";
 import Link from "@components/Link.astro";
+import { getCollection } from "astro:content";
 
 interface Photo {
   src: string;
@@ -17,7 +18,7 @@ interface Photo {
 interface PhotoSet {
   index: number;
   thumb: string;
-  name: string;
+  title: string;
   photos: Photo[];
 }
 interface Props {
@@ -34,10 +35,11 @@ interface MyImage {
 }
 
 export async function getStaticPaths() {
-  let photoSets = await Astro.glob("../../data/photography/*.json");
+  let photoSetsRaw = await getCollection("photography");
+  let photoSets = photoSetsRaw.map((photoSet) => photoSet.data);
   return photoSets.map((photoSet) => ({
     params: {
-      photoSet: toUrl(photoSet.name),
+      photoSet: toUrl(photoSet.title),
     },
     props: { photoSet, allSets: photoSets },
   }));
@@ -93,14 +95,14 @@ for (let { src, alt } of photoSet.photos) {
         {
           allSets
             .sort((a, b) => a.index - b.index)
-            .map((set, i) => (
+            .map((set) => (
               <li class="inline-block">
                 <Link
-                  href={"/photography/" + toUrl(set.name)}
+                  href={"/photography/" + toUrl(set.title)}
                   class="px-4 pb-4 lg:px-2 group"
                   activeClass="!tracking-[0.55em] !font-bold px-6"
                 >
-                    {set.name}
+                    {set.title}
                 </Link>
               </li>
             ))

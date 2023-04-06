@@ -1,18 +1,3 @@
-const months = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
-
 export default {
   config: {
     media_folder: "/src/assets",
@@ -37,35 +22,65 @@ export default {
       {
         name: "photography",
         label: "Photography",
-        files: months.map((month, i) => ({
-          name: month.toLowerCase(),
-          label: month,
-          file: `src/data/photography/${month.toLowerCase()}.json`,
-          media_folder: `/src/assets/photography/${month.toLowerCase()}`,
-          fields: [
-            { name: "name", label: "Name", widget: "string" },
-            { name: "index", label: "Index", widget: "number", value_type: "int" },
-            {
-              name: "thumb",
-              label: "Thumbnail",
-              widget: "object",
-              fields: [
-                { name: "src", label: "Photo", widget: "image" },
-                { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
-              ],
-            },
-            {
-              name: `photos`,
-              label: "Photos",
-              widget: "list",
-              fields: [
-                { name: "src", label: "Photo", widget: "image" },
-                { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
-              ],
-            },
-          ],
-        })),
+        folder: "src/content/photography",
+        create: true,
+        media_folder: "/src/assets/photography/{{slug}}",
+        sortable_fields: ["title", "index"],
+        fields: [
+          { name: "title", label: "Title", widget: "string" },
+          { name: "index", label: "Index", widget: "number", value_type: "int" },
+          {
+            name: "thumb",
+            label: "Thumbnail",
+            widget: "object",
+            fields: [
+              { name: "src", label: "Photo", widget: "image" },
+              { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
+            ],
+          },
+          {
+            name: `photos`,
+            label: "Photos",
+            widget: "list",
+            fields: [
+              { name: "src", label: "Photo", widget: "image" },
+              { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
+            ],
+          },
+        ],
       },
+      // {
+      //   name: "photography",
+      //   label: "Photography",
+      //   files: months.map((month, i) => ({
+      //     name: month.toLowerCase(),
+      //     label: month,
+      //     file: `src/data/photography/${month.toLowerCase()}.json`,
+      //     media_folder: `/src/assets/photography/${month.toLowerCase()}`,
+      //     fields: [
+      //       { name: "name", label: "Name", widget: "string" },
+      //       { name: "index", label: "Index", widget: "number", value_type: "int" },
+      //       {
+      //         name: "thumb",
+      //         label: "Thumbnail",
+      //         widget: "object",
+      //         fields: [
+      //           { name: "src", label: "Photo", widget: "image" },
+      //           { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
+      //         ],
+      //       },
+      //       {
+      //         name: `photos`,
+      //         label: "Photos",
+      //         widget: "list",
+      //         fields: [
+      //           { name: "src", label: "Photo", widget: "image" },
+      //           { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
+      //         ],
+      //       },
+      //     ],
+      //   })),
+      // },
       {
         name: "shows",
         label: "Shows",
