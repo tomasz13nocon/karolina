@@ -102,7 +102,10 @@ export default {
                 name: "contact",
                 label: "Contact",
                 widget: "list",
-                fields: [{ name: "text", label: "Contact Text", widget: "string" }],
+                fields: [
+                  { name: "text", label: "Contact Text", widget: "string" },
+                  { name: "isEmail", label: "Is email", widget: "boolean", default: false },
+                ],
               },
             ],
           },

@@ -3,7 +3,8 @@
   "title": "karolina nocoń",
   "contact": [
     {
-      "text": "karolinocon@gmail.com"
+      "text": "karolinocon@gmail.com",
+      "isEmail": true
     }
   ],
   "image": "/src/assets/about.webp",
