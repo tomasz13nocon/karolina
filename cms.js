@@ -49,38 +49,6 @@ export default {
           },
         ],
       },
-      // {
-      //   name: "photography",
-      //   label: "Photography",
-      //   files: months.map((month, i) => ({
-      //     name: month.toLowerCase(),
-      //     label: month,
-      //     file: `src/data/photography/${month.toLowerCase()}.json`,
-      //     media_folder: `/src/assets/photography/${month.toLowerCase()}`,
-      //     fields: [
-      //       { name: "name", label: "Name", widget: "string" },
-      //       { name: "index", label: "Index", widget: "number", value_type: "int" },
-      //       {
-      //         name: "thumb",
-      //         label: "Thumbnail",
-      //         widget: "object",
-      //         fields: [
-      //           { name: "src", label: "Photo", widget: "image" },
-      //           { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
-      //         ],
-      //       },
-      //       {
-      //         name: `photos`,
-      //         label: "Photos",
-      //         widget: "list",
-      //         fields: [
-      //           { name: "src", label: "Photo", widget: "image" },
-      //           { name: "alt", label: "Alt text", widget: "string", required: false, default: "" },
-      //         ],
-      //       },
-      //     ],
-      //   })),
-      // },
       {
         name: "shows",
         label: "Shows",
@@ -98,38 +66,6 @@ export default {
         name: "pages",
         label: "Pages",
         files: [
-          // TODO: decide between json approach vs frontmatter approach
-          // {
-          //   name: "shows",
-          //   label: "Shows",
-          //   media_folder: "/src/assets/shows",
-          //   file: "src/data/shows.json",
-          //   fields: [
-          //     {
-          //       name: "shows",
-          //       label: "Shows",
-          //       widget: "list",
-          //       fields: [
-          //         {
-          //           name: "poster",
-          //           label: "Poster",
-          //           widget: "image",
-          //         },
-          //         {
-          //           name: "alt",
-          //           label: "Alt text",
-          //           widget: "string",
-          //         },
-          //         {
-          //           name: "upcoming",
-          //           label: "Upcoming",
-          //           widget: "boolean",
-          //           default: false,
-          //         },
-          //       ],
-          //     },
-          //   ],
-          // },
           {
             name: "icon",
             label: "Icon",

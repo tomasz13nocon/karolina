@@ -13,11 +13,6 @@ interface Thumb extends ImageMetadata {
 
 let thumbs: Thumb[] = [];
 
-// JSON approach - can't add new entires this way.
-// Better suited for completely static content like site metadata.
-// let photoSets = await Astro.glob("../data/photography/*.json");
-// photoSets = photoSets.sort((a, b) => a.index - b.index);
-
 let photoSetsRaw = await getCollection("photography");
 let photoSets = photoSetsRaw.map((photoSet) => photoSet.data).sort((a, b) => a.index - b.index);
 
