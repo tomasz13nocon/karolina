@@ -83,7 +83,14 @@ for (let { src, alt } of photoSet.photos) {
     .toBuffer({ resolveWithObject: true });
 
   const hash = Buffer.from(rgbaToThumbHash(hashW, hashH, bufferData)).toString("base64");
-  imgs.push({ width: img.default.width, height: img.default.height, hash, src: smallSrc, fullSrc, alt });
+  imgs.push({
+    width: img.default.width,
+    height: img.default.height,
+    hash,
+    src: smallSrc,
+    fullSrc,
+    alt,
+  });
 }
 ---
 
@@ -102,7 +109,7 @@ for (let { src, alt } of photoSet.photos) {
                   class="px-4 pb-4 lg:px-2 group"
                   activeClass="!tracking-[0.55em] !font-bold px-6"
                 >
-                    {set.title}
+                  {set.title}
                 </Link>
               </li>
             ))
@@ -113,11 +120,10 @@ for (let { src, alt } of photoSet.photos) {
       {
         imgs.map((img, i) => (
           <button
-            class="img-container relative overflow-clip max-w-full group inline-block translate-x-[100vw]"
+            class="img-container aspect-ratio-polyfill relative overflow-clip max-w-full group inline-block translate-x-[100vw]"
             style={{
               width: `${IMG_WIDTH}px`,
-              // height: `${(IMG_WIDTH / img.width) * img.height}px;`,
-              aspectRatio: `${img.width} / ${img.height}`,
+              "--aspect-ratio": `${(img.height / img.width) * 100}%`,
             }}
           >
             <img
@@ -148,22 +154,18 @@ for (let { src, alt } of photoSet.photos) {
 </Layout>
 
 <script>
-import MagicGrid from "magic-grid";
-import renderBlurhash from "@lib/renderBlurhash";
+  import MagicGrid from "magic-grid";
+  import renderBlurhash from "@lib/renderBlurhash";
 
   let magicGrid = new MagicGrid({
     container: "#masonry-container",
     static: true,
-    animate: false,
     gutter: 8,
-    delay: 25,
-    duration: 500,
     useMin: true,
   });
   document.addEventListener("DOMContentLoaded", () => {
     magicGrid.listen();
   });
-
 
   let imgContainers = document.getElementsByClassName("img-container");
   let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
