@@ -18,3 +18,8 @@ export function toUrl(str: string) {
 export function isCurrent(href: string, pathname: string) {
   return href === pathname || href + "/" === pathname;
 }
+
+export function getDateStr(date: string) {
+  const d = new Date(date);
+  return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear() % 100}`;
+}
