@@ -1,14 +1,11 @@
 ---
 import type { HTMLAttributes } from "astro/types";
 
-interface Props extends HTMLAttributes<"button"> {
-  blur?: boolean;
-}
+interface Props extends HTMLAttributes<"button"> {}
 ---
 
 <button
   class={`w-12 cursor-pointer transition-colors z-10
-    ${Astro.props.blur ? "hover:bg-black/25" : ""}
     ${Astro.props.class ?? ""}
   `}
   {...Astro.props}

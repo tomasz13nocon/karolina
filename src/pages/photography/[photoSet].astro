@@ -1,13 +1,12 @@
 ---
-import { getImage } from "@astrojs/image";
 import Layout from "@layouts/Layout.astro";
 import Nav from "@components/Nav.astro";
 import ImageViewer from "@components/ImageViewer.astro";
 import Main from "@layouts/Main.astro";
-import { getAsset, toUrl } from "@lib/util";
+import { toUrl } from "@lib/util";
 import Link from "@components/Link.astro";
 import { getCollection } from "astro:content";
-import Blurhash from "@components/Blurhash.astro";
+import ImageViewerImg from "@components/ImageViewerImg.astro";
 
 interface Photo {
   src: string;
@@ -23,14 +22,6 @@ interface Props {
   photoSet: PhotoSet;
   allSets: PhotoSet[];
 }
-interface MyImage {
-  width: number;
-  height: number;
-  ogSrc: string;
-  src: string;
-  fullSrc: string;
-  alt: string;
-}
 
 export async function getStaticPaths() {
   let photoSetsRaw = await getCollection("photography");
@@ -43,43 +34,7 @@ export async function getStaticPaths() {
   }));
 }
 
-const IMG_WIDTH = 320;
-
 const { photoSet, allSets } = Astro.props;
-
-let imgs: MyImage[] = [];
-
-// Calculate blurhashes and transform images to smaller size
-for (let { src, alt } of photoSet.photos) {
-  const img = await getAsset(src);
-
-  const { src: smallSrc } = await getImage({
-    src: img.default.src,
-    alt,
-    width: IMG_WIDTH * 1.1,
-    aspectRatio: img.default.width / img.default.height,
-    format: "webp",
-    quality: 90,
-  });
-  const { src: fullSrc } = await getImage({
-    src: img.default.src,
-    alt,
-    width: img.default.width,
-    height: img.default.height,
-  });
-  if (smallSrc == null || fullSrc == null) {
-    throw new Error("Astro's getImage failed. src is not present.");
-  }
-
-  imgs.push({
-    width: img.default.width,
-    height: img.default.height,
-    ogSrc: src,
-    src: smallSrc,
-    fullSrc,
-    alt,
-  });
-}
 ---
 
 <Layout>
@@ -106,29 +61,15 @@ for (let { src, alt } of photoSet.photos) {
     </nav>
     <div id="masonry-container" class="mx-auto w-full">
       {
-        imgs.map((img, i) => (
-          <button
-            class="img-container aspect-ratio-polyfill relative overflow-clip max-w-full group inline-block translate-x-[100vw]"
-            style={{
-              width: `${IMG_WIDTH}px`,
-              "--aspect-ratio": `${(img.height / img.width) * 100}%`,
-            }}
-          >
-            <img
-              data-index={i}
-              data-full-size-src={img.fullSrc}
-              data-width={img.width}
-              data-height={img.height}
-              loading="lazy"
-              class="img transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
-              src={img.src}
-              alt={img.alt}
-              width={IMG_WIDTH}
-              height={Math.floor((IMG_WIDTH / img.width) * img.height)}
-            />
-
-            <Blurhash src={img.ogSrc} />
-          </button>
+        photoSet.photos.map(({ src, alt }, i) => (
+          <ImageViewerImg
+            src={src}
+            alt={alt}
+            width={320}
+            index={i}
+            buttonClass="aspect-ratio-polyfill overflow-clip group inline-block translate-x-[100vw] max-w-[calc(50%-8px)]"
+            class="transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
+          />
         ))
       }
     </div>

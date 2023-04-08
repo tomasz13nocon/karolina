@@ -14,9 +14,11 @@ interface Props {
   alt: string;
   width: number;
   index: number;
+  class?: string;
+  buttonClass?: string;
 }
 
-const { src, alt, width, index } = Astro.props;
+const { src, alt, width, index, buttonClass = "" } = Astro.props;
 
 const imgRaw = (await getAsset(src)).default;
 
@@ -50,14 +52,20 @@ const img = {
 };
 ---
 
-<button class="img-container relative">
+<button
+  class={`img-container relative ${buttonClass}`}
+  style={{
+    width: `${width}px`,
+    "--aspect-ratio": `${(img.height / img.width) * 100}%`,
+  }}
+>
   <img
     data-index={index}
     data-full-size-src={img.fullSrc}
     data-width={img.width}
     data-height={img.height}
     loading="lazy"
-    class="img"
+    class={`img ${Astro.props.class ?? ""}`}
     src={img.src}
     alt={img.alt}
     width={width}

@@ -1,0 +1,5 @@
+---
+title: "małe światło u stóp wielkiej góry"
+date: 2016-02-02T22:32:00.000+01:00
+---
+małe światło u stóp wielkiej góry i pękający pod stopami lód. ślady stóp śledzące te same ślady innych stóp i pękający lód. i pękający głośno lód. niebo otwiera się, kiedy mówisz do mnie językiem decybeli, ziemia otwiera się, kiedy ona mówi do niej słowami, pod którymi uginam się i które drążą, jak kropla skałę, wciąż to samo miejsce na mojej skórze. to samo miejsce, które zmienia się w jedną, niewinną kroplę krwi, kiedy odwracasz wzrok i przestajesz czu(wa)ć. nie jestem i nigdy nie będę, ale mimo to unoszę się i strącam starannie nieuważnymi ruchami śnieg z woalujących gałęzi. mój dom śpi ciężkim snem zimowym, a ja wyruszam w podróż, która składa się z jednego kroku. pozwól mi dotknąć żarzącej się powierzchni wody i zapuścić korzenie w równinie abisalnej, gdzie nikt nigdy nie znajdzie tego, co pragnie być znalezione. lód pęka głośno, ale jeszcze wciąż ciszej niż najgłośniej, nie patrz w dół. przede wszystkim jednak nie patrz w górę.

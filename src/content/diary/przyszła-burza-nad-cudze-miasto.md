@@ -1,0 +1,5 @@
+---
+title: "przyszła burza nad cudze miasto"
+date: 2016-06-25T23:57:00.000+02:00
+---
+przyszła burza nad cudze miasto. gwałtowny wiatr, któremu odwiecznie, choć geograficznie zmiennie, kradnę imię. mnę jak materiał warstwę czasu, która wyściela grunt pod moimi stopami. nie rozpoznaję już ulic i nie oddycham. zamykam oczy i przykładam skronie do zakurzonej szyby pociągu, nie wiem dokąd jadę. choruję na palącą potrzebę rozentuzjazmowanej niestabilności i jedynie jednego, jedynego elementu, który zdoła związać w punkcie całą sieć linii i poligonów. tymczasem tylko burza nad cudzym miastem, a ja zamykam oczy i łapię w dłonie płatki śniegu, spadające cicho i nieprzerwanie na makietę mojego młodego domu. potrzebuję dni, które pozwolą mi zasnąć i nocy, które nie pozwolą zapomnieć. wulkanicznych wysp i gwałtownych opadów, samotności i jedności, i dłoni, które zatrzymają mnie w pół słowa. tymczasem pada deszcz nad cudzym miastem, a ja biegnę tak, jakbym miała dokąd. pada deszcz nad cudzym miastem, a ja powoli zapominam, czego szukałam, i że to było bardzo ważne. jeszcze ciągle chcę wierzyć, że wszystko być może, i że nigdy nie mów nigdy. ale czasem mów  zawsze .&nbsp;

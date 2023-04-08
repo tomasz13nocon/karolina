@@ -4,10 +4,9 @@ import Link from "@components/Link.astro";
 
 interface Props {
   years: number[];
-  col?: boolean;
 }
 
-const { years, col } = Astro.props;
+const { years } = Astro.props;
 
 let blogs = await getCollection("diary");
 const postCount: Record<number, number> = {};
@@ -26,12 +25,12 @@ for (let blog of blogs) {
 years.sort();
 ---
 
-<div class={`flex sm:flex-row flex-col gap-4 lg:gap-3 justify-center items-baseline ${col ? "flex-col" : ""}`}>
+<div class={`flex flex-wrap gap-y-4 gap-x-6 lg:gap-x-4 justify-center items-baseline`}>
   {
     years.map((year) => (
       <Link
         href={`/diary/${year}`}
-        class="sm:!mx-0"
+        class="sm:mx-0"
         activeClass="!text-grey-2 !font-bold"
         style={{ fontSize: `${1 + 1.5 * (postCount[year] / maxPostCount)}rem` }}
         light
