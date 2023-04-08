@@ -296,7 +296,7 @@ const { blur } = Astro.props;
       rightEnd.style.opacity = String(Math.min(1, -translate / 100));
       rightEnd.style.transform = `translateX(50%) scaleX(${1 - translate / 30})`;
     }
-    conts[conts.length - 1].style.transform = `translateX(${translate * 0.40}px)`;
+    conts[conts.length - 1].style.transform = `translateX(${translate * 0.5}px)`;
   });
 
   function handleGesture() {

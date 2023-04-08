@@ -23,10 +23,10 @@ const image = await getAsset(data.image);
         <Image
           src={image.default}
           alt={data.alt}
-          width={300}
+          width={300 * 2}
           format="webp"
-          quality={100}
-          class="mx-auto rounded-full animate-[fadein2_1s_0.4s_both_paused]"
+          quality={90}
+          class="mx-auto rounded-full animate-[fadein2_1s_0.4s_both_paused] w-[300px]"
           id="index-image"
         />
       </a>
