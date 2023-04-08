@@ -27,8 +27,6 @@ blogs = blogs.filter(blog => blog.data.date.getFullYear() === year);
       <Link href="/diary" class="mt-4 lg:mt-0">diary</Link>
     </div>
     <DiaryNav />
-    <div class="mx-auto sm:w-narrow flex flex-col gap-24 text-left text-grey-3 mb-24 diary-list diary-year-data" data-year={year}>
-      <BlogList {blogs} />
-    </div>
+    <BlogList {blogs} />
   </MainFlex>
 </Layout>

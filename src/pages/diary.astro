@@ -13,8 +13,6 @@ const blogs = await getCollection("diary");
   <MainFlex class="!w-auto">
     <Nav include={["/"]} socials={false} />
     <DiaryNav />
-    <div class="diary-list mx-auto sm:w-narrow flex flex-col gap-24 text-left text-grey-3 mb-24">
-      <BlogList {blogs} />
-    </div>
+    <BlogList {blogs} />
   </MainFlex>
 </Layout>

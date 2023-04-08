@@ -18,8 +18,8 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
   <button class="hide-error-btn absolute -translate-y-1/2 top-1/2 right-6 text-4xl">&times;</button>
   Error fetching diary entries!
 </div>
-<!-- fragment because syntax highlighting gets scuffed without it -->
-<>
+
+<div class="diary-list mx-auto sm:w-narrow flex flex-col gap-32 text-left text-grey-3 mt-16 mb-28" data-year={Astro.props.year}>
   {
     blogs
       .sort((a, b) => b.data.date - a.data.date)
@@ -27,10 +27,8 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
       .map(async (blog) => {
         const { Content } = await blog.render();
         return (
-          <article class="diary-entry my-4 text-sm my-prose">
-            <time class="diary-date block text-grey-5 mb-6">
-              {getDateStr(blog.data.date)}
-            </time>
+          <article class="diary-entry text-sm my-prose">
+            <time class="diary-date block text-grey-5 mb-6">{getDateStr(blog.data.date)}</time>
             <div class="diary-content text-justify">
               <Content />
             </div>
@@ -38,7 +36,8 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
         );
       })
   }
-</>
+</div>
+
 <Spinner />
 
 <script>
@@ -54,10 +53,9 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
     let fetchCount = 1;
     let posts = document.getElementsByClassName("diary-entry");
     let lastPost = posts[posts.length - 1];
-    let diaryList = document.getElementsByClassName("diary-list")[0];
+    let diaryList = document.getElementsByClassName("diary-list")[0] as HTMLElement;
     let spinner = document.getElementsByClassName("diary-spinner")[0];
-    let yearEl = document.getElementsByClassName("diary-year-data")[0] as HTMLElement;
-    let yearParam = yearEl?.dataset.year ?? "";
+    let yearParam = diaryList.dataset.year ?? "";
     if (yearParam) yearParam += "-";
 
     if (lastPost && diaryList) {
@@ -74,7 +72,9 @@ const shouldFetch = blogs.length <= CHUNK_SIZE;
 
                 for (let post of data.posts) {
                   newPost = lastPost.cloneNode(true) as HTMLElement;
-                  newPost.getElementsByClassName("diary-date")[0].innerHTML = getDateStr(post.data.date);
+                  newPost.getElementsByClassName("diary-date")[0].innerHTML = getDateStr(
+                    post.data.date
+                  );
                   newPost.getElementsByClassName("diary-content")[0].innerHTML = post.body;
                   diaryList.appendChild(newPost);
                 }
