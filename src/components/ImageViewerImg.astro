@@ -1,5 +1,5 @@
 ---
-import { getImage } from "@astrojs/image";
+import { getImage } from "astro:assets";
 import { getAsset } from "@lib/util";
 import Blurhash from "./Blurhash.astro";
 
@@ -23,7 +23,7 @@ const { src, alt, width, index, buttonClass = "" } = Astro.props;
 const imgRaw = (await getAsset(src)).default;
 
 const { src: smallSrc } = await getImage({
-  src: imgRaw.src,
+  src: imgRaw,
   alt,
   width: width * 1.1,
   aspectRatio: imgRaw.width / imgRaw.height,
@@ -32,7 +32,7 @@ const { src: smallSrc } = await getImage({
 });
 
 const { src: fullSrc } = await getImage({
-  src: imgRaw.src,
+  src: imgRaw,
   alt,
   width: imgRaw.width,
   height: imgRaw.height,

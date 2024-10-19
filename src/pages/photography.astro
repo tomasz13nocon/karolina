@@ -1,5 +1,5 @@
 ---
-import { Image } from "@astrojs/image/components";
+import { Image } from "astro:assets";
 import Blurhash from "@components/Blurhash.astro";
 import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
@@ -7,10 +7,11 @@ import Main from "@layouts/Main.astro";
 import { getAsset, toUrl } from "@lib/util";
 import { getCollection } from "astro:content";
 
-interface Thumb extends ImageMetadata {
+interface Thumb {
   title: string;
   alt: string;
   ogSrc: string;
+  src: ImageMetadata
 }
 
 let thumbs: Thumb[] = [];
@@ -25,7 +26,7 @@ for (let photoSet of photoSets) {
     title: photoSet.title,
     alt: photoSet.thumb.alt,
     ogSrc: photoSet.thumb.src,
-    ...img.default,
+    src: img.default,
   });
 }
 ---

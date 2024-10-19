@@ -7,15 +7,23 @@ interface Props {
   src: string;
 }
 
-const {
-  data: bufferData,
-  info: { width: hashW, height: hashH },
-} = await sharp(path.join(".", Astro.props.src))
+let imageBuffer;
+try {
+  imageBuffer = await sharp(path.join(".", Astro.props.src))
   .resize({ width: 40, height: 40, fit: "inside" })
   .raw()
   .ensureAlpha()
   .toBuffer({ resolveWithObject: true });
 
+}
+catch(e) {
+  return;
+}
+
+const {
+  data: bufferData,
+  info: { width: hashW, height: hashH },
+} = imageBuffer;
 const thumbhash = rgbaToThumbHash(hashW, hashH, bufferData);
 const rgba = thumbHashToAverageRGBA(thumbhash);
 const hash = Buffer.from(thumbhash).toString("base64");
