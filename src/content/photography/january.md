@@ -7,6 +7,4 @@ thumb:
 photos:
   - alt: ""
     src: /src/assets/photography/january/2023010052.jpg
-  - alt: ""
-    src: https://picsum.photos/200/300
 ---
