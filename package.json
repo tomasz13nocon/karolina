@@ -19,7 +19,6 @@
     "astro": "^5.0.0-beta.4",
     "astro-icon": "^1.1.1",
     "blurhash": "^2.0.5",
-    "decap-cms-app": "^3.3.3",
     "fast-blurhash": "^1.1.4",
     "magic-grid": "github:tomasz13nocon/Magic-Grid",
     "marked": "^14.1.2",
