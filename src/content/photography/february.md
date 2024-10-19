@@ -15,6 +15,4 @@ photos:
     src: /src/assets/photography/february/2661961421807491528_40771053472.jpg
   - alt: ""
     src: /src/assets/photography/february/2603289412189951717_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/february/16061771733_678a0a996d_k.jpg
 ---
