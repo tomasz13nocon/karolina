@@ -2,7 +2,7 @@
 title: collaboration
 index: 13
 thumb:
-  alt: ""
+  alt: bla bla bla test
   src: /src/assets/photography/collaboration/2022110075.jpg
 photos:
   - alt: ""
