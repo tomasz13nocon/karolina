@@ -6,7 +6,6 @@ i am at the end of the world.
 
 i'm taking one step forward. *ikke stopp.* 
 
-
-
+<br/>
 
 *ingenting vil bli som før*.
