@@ -11,10 +11,10 @@ interface Thumb {
   title: string;
   alt: string;
   ogSrc: string;
-  src: ImageMetadata
+  src: ImageMetadata;
 }
 
-let thumbs: Thumb[] = [];
+let sections: Record<string, Thumb[]> = {};
 
 let photoSetsRaw = await getCollection("photography");
 let photoSets = photoSetsRaw.map((photoSet) => photoSet.data).sort((a, b) => a.index - b.index);
@@ -22,7 +22,7 @@ let photoSets = photoSetsRaw.map((photoSet) => photoSet.data).sort((a, b) => a.i
 for (let photoSet of photoSets) {
   const img = await getAsset(photoSet.thumb.src);
 
-  thumbs.push({
+  (sections[photoSet.section] ??= []).push({
     title: photoSet.title,
     alt: photoSet.thumb.alt,
     ogSrc: photoSet.thumb.src,
@@ -34,33 +34,35 @@ for (let photoSet of photoSets) {
 <Layout>
   <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-16">
     <Nav />
-    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-2 mx-auto">
-      {
-        thumbs.map((thumb) => (
-          <li>
-            <a
-              href={"/photography/" + toUrl(thumb.title)}
-              class="max-w-full w-[26rem] aspect-ratio-polyfill flex items-center justify-center relative overflow-clip group"
-              style={{
-                "--aspect-ratio": `${(1 / 2.6) * 100}%`,
-              }}
-            >
-              <Image
-                src={thumb.src}
-                alt={thumb.alt}
-                width={312}
-                height={120}
-                class="absolute w-full duration-500 ease-expo"
-              />
-              <Blurhash src={thumb.ogSrc} />
-              <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100" />
-              <span class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.55em]">
-                {thumb.title}
-              </span>
-            </a>
-          </li>
-        ))
-      }
-    </ul>
+    {
+      Object.values(sections).map((thumbs) => (
+        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-2 mx-auto">
+          {thumbs.map((thumb) => (
+            <li>
+              <a
+                href={"/photography/" + toUrl(thumb.title)}
+                class="max-w-full w-[26rem] aspect-ratio-polyfill flex items-center justify-center relative overflow-clip group"
+                style={{
+                  "--aspect-ratio": `${(1 / 2.6) * 100}%`,
+                }}
+              >
+                <Image
+                  src={thumb.src}
+                  alt={thumb.alt}
+                  width={312}
+                  height={120}
+                  class="absolute w-full duration-500 ease-expo"
+                />
+                <Blurhash src={thumb.ogSrc} />
+                <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100" />
+                <span class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.55em]">
+                  {thumb.title}
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
   </Main>
 </Layout>

@@ -1,6 +1,7 @@
 ---
 title: collaboration
-index: 13
+section: 2
+index: 1
 thumb:
   alt: bla bla bla test
   src: /src/assets/photography/collaboration/2022110075.jpg

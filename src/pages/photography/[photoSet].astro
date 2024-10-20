@@ -14,38 +14,44 @@ interface Photo {
 }
 interface PhotoSet {
   index: number;
-  thumb: string;
+  thumb: Photo;
   title: string;
   photos: Photo[];
 }
 interface Props {
   photoSet: PhotoSet;
-  allSets: PhotoSet[];
+  sections: Record<string, PhotoSet[]>;
 }
 
 export async function getStaticPaths() {
+  let sections: Record<string, PhotoSet[]> = {};
+
   let photoSetsRaw = await getCollection("photography");
-  let photoSets = photoSetsRaw.map((photoSet) => photoSet.data);
+  let photoSets = photoSetsRaw.map((photoSet) => photoSet.data).sort((a, b) => a.index - b.index);
+
+  for (let photoSet of photoSets) {
+    (sections[photoSet.section] ??= []).push(photoSet);
+  }
+
   return photoSets.map((photoSet) => ({
     params: {
       photoSet: toUrl(photoSet.title),
     },
-    props: { photoSet, allSets: photoSets },
+    props: { photoSet, sections },
   }));
 }
 
-const { photoSet, allSets } = Astro.props;
+const { photoSet, sections } = Astro.props;
 ---
 
 <Layout>
   <Main class="sm:!w-auto xl:w-wide overflow-hidden">
     <Nav />
     <nav class="mt-12 lg:mt-8 mb-16">
-      <ul class="flex flex-wrap justify-center">
-        {
-          allSets
-            .sort((a, b) => a.index - b.index)
-            .map((set) => (
+      {
+        Object.values(sections).map((sets) => (
+          <ul class="flex flex-wrap justify-center">
+            {sets.map((set) => (
               <li class="inline-block">
                 <Link
                   href={"/photography/" + toUrl(set.title)}
@@ -55,9 +61,10 @@ const { photoSet, allSets } = Astro.props;
                   {set.title}
                 </Link>
               </li>
-            ))
-        }
-      </ul>
+            ))}
+          </ul>
+        ))
+      }
     </nav>
     <div id="masonry-container" class="mx-auto w-full">
       {

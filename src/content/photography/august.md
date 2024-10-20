@@ -1,5 +1,6 @@
 ---
 title: august
+section: 1
 index: 8
 thumb:
   alt: ""
