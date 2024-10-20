@@ -32,13 +32,13 @@ for (let photoSet of photoSets) {
 ---
 
 <Layout>
-  <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-16">
+  <Main class="w-full sm:w-auto overflow-hidden flex flex-col gap-16 justify-items-center">
     <Nav />
     {
       Object.values(sections).map((thumbs) => (
-        <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-2 mx-auto">
+      <ul class="flex flex-wrap justify-center max-w-[min(1000px,100%)] gap-4 lg:gap-2 mx-auto mb-16">
           {thumbs.map((thumb) => (
-            <li>
+            <li class="max-w-full">
               <a
                 href={"/photography/" + toUrl(thumb.title)}
                 class="max-w-full w-[26rem] aspect-ratio-polyfill flex items-center justify-center relative overflow-clip group"
