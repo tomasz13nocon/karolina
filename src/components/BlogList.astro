@@ -8,7 +8,7 @@ interface Props {
   year?: string;
 }
 const blogs = Astro.props.blogs;
-const shouldFetch = blogs.length >= CHUNK_SIZE;
+const shouldFetch = blogs.length > CHUNK_SIZE;
 ---
 
 <div
