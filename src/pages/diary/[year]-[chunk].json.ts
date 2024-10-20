@@ -6,7 +6,7 @@ import { marked } from "marked";
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
 // get the posts for the current chunk and year
-export const get: APIRoute = async function (context) {
+export const GET: APIRoute = async function (context) {
   const params = context.params as Params;
   const chunk = +params.chunk;
   const year = +params.year;
@@ -14,17 +14,17 @@ export const get: APIRoute = async function (context) {
   let posts = await getCollection("diary");
   posts = posts
     .filter((post) => new Date(post.data.date).getFullYear() === year)
-    .sort((a, b) => b.data.date - a.data.date);
+    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   let chunksMd = posts.slice(chunk * CHUNK_SIZE, chunk * CHUNK_SIZE + CHUNK_SIZE);
   let chunks = chunksMd.map((chunk) => ({ ...chunk, body: marked(chunk.body) }));
 
-  return {
-    body: JSON.stringify({
+  return new Response(
+    JSON.stringify({
       posts: chunks,
       last: chunks[chunks.length - 1].id === posts[posts.length - 1].id,
     }),
-  };
+  );
 };
 
 interface Chunk {

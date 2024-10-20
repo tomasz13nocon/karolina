@@ -1,4 +1,7 @@
 media_folder: /src/assets
+# local_backend: true
+# backend:
+#   name: git-gateway
 backend:
   name: github
   repo: tomasz13nocon/karolina
@@ -14,8 +17,9 @@ collections:
         widget: string
         label: Title
       - name: date
-        widget: date
+        widget: datetime
         label: Publication Date
+        default: "{{now}}"
       - name: body
         widget: markdown
         label: Post Body
@@ -36,6 +40,7 @@ collections:
         label: Index
         widget: number
         value_type: int
+        hint: "Determines the order on the 'photography' page"
       - name: thumb
         label: Thumbnail
         widget: object

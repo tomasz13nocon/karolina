@@ -21,7 +21,6 @@ export function isCurrent(href: string, pathname: string) {
   return href === pathname || href + "/" === pathname;
 }
 
-export function getDateStr(date: string) {
-  const d = new Date(date);
-  return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear() % 100}`;
+export function getDateStr(date: Date) {
+  return `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear() % 100}`;
 }
