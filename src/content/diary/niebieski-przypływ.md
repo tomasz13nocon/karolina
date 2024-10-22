@@ -1,5 +1,5 @@
 ---
-title: niebieski przypływ
-date: 2024-01-14T16:49:00.000Z
+title: tęsknij za tym
+date: 2024-02-10T16:57:00.000Z
 ---
-niebieski przypływ budzi sól w krwi, i zasklepia każdą przyzwyczajoną już do soli ranę. patrzę na lekko nieostry horyzont z perspektywy fal, które dotykają mnie powoli, jednostajnie i konsekwentnie, odwiecznie i z tą samą, upartą wolą. wodą wysyłam zaszyfrowane wołanie o pomoc, zwieńczone oddechem, i tą samą co zawsze nadzieją: jeszcze nie jest za późno. cisza tego domu opowiada o stworzeniach zbudowanych z morskiej wody i delikatnej materii skóry, która pragnie ukłuć i zaciśnięć. przygotowuję się na powrót słońca.
+tęsknij za tym, czego nie ma, i nie mów nikomu dokąd się wybierasz. rozdrapuj aż do krwi zakrzepły smak tajemnicy i ucieczki, płacz, kiedy nikt nie patrzy, patrz, kiedy płaczą i kochają myśl, że kochają. rozdrapuj aż do krwi. pamiętaj, że musisz mieć mniej, mniej więcej, więcej niż myślisz, i dokładnie tyle, ile potrafisz udźwignąć. za jednym razem. im dalej na północ, tym bliżej na południe, ocean zawsze mówi tylko o wyspach, a ja mieszkam przecież na samym jego skraju. nareszcie.
