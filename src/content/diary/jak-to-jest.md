@@ -1,5 +1,5 @@
 ---
-title: jak to jest
-date: 2024-04-23T16:59:00.000Z
+title: i don't
+date: 2024-07-16T17:03:00.000Z
 ---
-jak to jest, że czasem najbardziej oswojona tkanka wciąż wyślizguje mi się spomiędzy skóry. nie umiem się oduczyć, wciąż rozdrapuję i wracam dłońmi tam, gdzie ból wydaje się oswojony, a jego ciężar przyjemnie zmniejsza moją objętość. nigdy nie nauczyłam się ekspandować, istnieć w wielu miejscach naraz. trzymam się morza tak mocno, że aż woda zmienia stan skupienia, i nasze struktury scalają się; moja skóra jest już przezroczysta. oczy niebieskie, odbijając jasne niebo w samym środku nocy.
+i don't have enough strength to be weak.
