@@ -7,9 +7,9 @@ thumb:
   src: /src/assets/photography/february/february_1.jpg
 photos:
   - alt: ""
-    src: /src/assets/photography/february/february_24.jpg
-  - alt: ""
     src: /src/assets/photography/february/february_23.jpg
+  - alt: ""
+    src: /src/assets/photography/february/february_24.jpg
   - alt: ""
     src: /src/assets/photography/february/february_22.jpg
   - alt: ""
