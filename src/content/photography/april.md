@@ -2,18 +2,90 @@
 title: april
 section: 1
 index: 4
-photos:
-  - alt: ""
-    src: /src/assets/photography/april/123452035_2693910524195049_2708567757351397724_n.jpg
-  - alt: ""
-    src: /src/assets/photography/april/119603766_2653431478242954_1226982587364223932_n.jpg
-  - alt: ""
-    src: /src/assets/photography/april/298828696_3150955578490539_4154127865200831914_n.jpg
-  - alt: ""
-    src: /src/assets/photography/april/2751631136804332759_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/april/118876766_2646077368978365_8912151441355804883_n.jpg
 thumb:
   alt: ""
-  src: /src/assets/photography/april/2751631136804332759_40771053472.jpg
+  src: /src/assets/photography/april/april_32.jpg
+photos:
+  - alt: ""
+    src: /src/assets/photography/april/april_41.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_40.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_39.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_38.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_37.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_36.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_35.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_34.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_33.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_32.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_31.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_30.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_29.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_28.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_27.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_26.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_25.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_24.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_23.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_22.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_21.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_20.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_19.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_18.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_17.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_16.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_15.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_14.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_13.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_12.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_11.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_10.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_9.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_8.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_7.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_6.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_5.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_4.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_3.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_2.jpg
+  - alt: ""
+    src: /src/assets/photography/april/april_1.jpg
 ---
