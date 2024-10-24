@@ -1,29 +1,63 @@
 ---
+title: september
 section: 1
 index: 9
-photos:
-  - alt: ""
-    src: /src/assets/photography/september/2939692195439027388_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/2968937133255099782_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/3012857166638988510_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/2887233727012936173_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/2954859993163112754_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/2956901569890736356_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/3021412882255676057_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/3016359702606028921_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/2960626883015772847_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/september/2962062061974319227_40771053472.jpg
 thumb:
   alt: ""
-  src: /src/assets/photography/september/2887233727012936173_40771053472.jpg
-title: september
+  src: /src/assets/photography/september/september_22.jpg
+photos:
+  - alt: ""
+    src: /src/assets/photography/september/september_27.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_26.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_25.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_24.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_23.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_22.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_21.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_20.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_19.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_18.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_17.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_16.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_15.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_14.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_13.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_12.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_11.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_10.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_9.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_8.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_7.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_6.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_5.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_4.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_3.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_2.jpg
+  - alt: ""
+    src: /src/assets/photography/september/september_1.jpg
 ---
