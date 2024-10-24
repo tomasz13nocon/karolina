@@ -4,7 +4,7 @@ section: 1
 index: 8
 thumb:
   alt: ""
-  src: /src/assets/photography/august/august_44.jpg
+  src: /src/assets/photography/august/august_46.jpg
 photos:
   - alt: ""
     src: /src/assets/photography/august/august_47.jpg
