@@ -7,6 +7,8 @@ thumb:
   src: /src/assets/photography/march/march_5.jpg
 photos:
   - alt: ""
+    src: /src/assets/photography/march/march_20.jpg
+  - alt: ""
     src: /src/assets/photography/march/march_19.jpg
   - alt: ""
     src: /src/assets/photography/march/march_18.jpg
@@ -44,6 +46,4 @@ photos:
     src: /src/assets/photography/march/march_2.jpg
   - alt: ""
     src: /src/assets/photography/march/march_1.jpg
-  - alt: ""
-    src: /src/assets/photography/march/march_20.jpg
 ---
