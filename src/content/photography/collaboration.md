@@ -3,7 +3,7 @@ title: collaboration
 section: 2
 index: 1
 thumb:
-  alt: bla bla bla test
+  alt: ""
   src: /src/assets/photography/collaboration/collaborationnnn.jpg
 photos:
   - alt: ""
