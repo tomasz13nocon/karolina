@@ -4,7 +4,7 @@ section: 1
 index: 7
 thumb:
   alt: ""
-  src: /src/assets/photography/july/july.jpg
+  src: /src/assets/photography/july/julyy.jpg
 photos:
   - alt: ""
     src: /src/assets/photography/july/july_40.jpg
