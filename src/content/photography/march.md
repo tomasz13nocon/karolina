@@ -4,7 +4,7 @@ section: 1
 index: 3
 thumb:
   alt: ""
-  src: /src/assets/photography/march/march_5.jpg
+  src: /src/assets/photography/march/march.jpg
 photos:
   - alt: ""
     src: /src/assets/photography/march/march_20.jpg
