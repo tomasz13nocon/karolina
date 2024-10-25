@@ -4,7 +4,7 @@ section: 1
 index: 5
 thumb:
   alt: ""
-  src: /src/assets/photography/may/mayy.jpg
+  src: /src/assets/photography/may/mayyy.jpg
 photos:
   - alt: ""
     src: /src/assets/photography/may/may_22.jpg
