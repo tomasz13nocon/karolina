@@ -4,7 +4,7 @@ section: 1
 index: 12
 thumb:
   alt: ""
-  src: /src/assets/photography/december/december.jpg
+  src: /src/assets/photography/december/decemberr.jpg
 photos:
   - alt: ""
     src: /src/assets/photography/december/december_33.jpg
