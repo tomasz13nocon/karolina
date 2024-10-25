@@ -44,4 +44,6 @@ photos:
     src: /src/assets/photography/march/march_2.jpg
   - alt: ""
     src: /src/assets/photography/march/march_1.jpg
+  - alt: ""
+    src: /src/assets/photography/march/march_20.jpg
 ---
