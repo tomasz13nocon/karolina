@@ -4,7 +4,7 @@ section: 1
 index: 11
 thumb:
   alt: ""
-  src: /src/assets/photography/november/november.jpg
+  src: /src/assets/photography/november/novemberrrr.jpg
 photos:
   - alt: ""
     src: /src/assets/photography/november/november_30.jpg
