@@ -4,7 +4,7 @@ section: 2
 index: 1
 thumb:
   alt: ""
-  src: /src/assets/photography/collaboration/collaborationnnn.jpg
+  src: /src/assets/photography/collaboration/collaboration.jpg
 photos:
   - alt: ""
     src: /src/assets/photography/collaboration/2022110075.jpg
