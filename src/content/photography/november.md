@@ -1,21 +1,69 @@
 ---
+title: november
 section: 1
 index: 11
-photos:
-  - alt: ""
-    src: /src/assets/photography/november/2919847067276940502_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/november/2885691065237534270_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/november/2895389852593884407_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/november/2882869285005460300_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/november/2519933072927691847_40771053472.jpg
-  - alt: ""
-    src: /src/assets/photography/november/2880937350574313136_40771053472.jpg
 thumb:
   alt: ""
-  src: /src/assets/photography/november/2519933072927691847_40771053472.jpg
-title: november
+  src: /src/assets/photography/november/november_8.jpg
+photos:
+  - alt: ""
+    src: /src/assets/photography/november/november_30.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_29.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_28.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_27.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_26.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_25.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_24.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_23.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_22.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_21.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_20.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_19.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_18.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_17.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_16.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_15.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_14.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_13.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_12.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_11.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_10.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_9.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_8.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_7.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_6.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_5.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_4.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_3.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_2.jpg
+  - alt: ""
+    src: /src/assets/photography/november/november_1.jpg
 ---
