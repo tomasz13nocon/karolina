@@ -1,4 +1,5 @@
 media_folder: /src/assets
+publish_mode: editorial_workflow
 local_backend: true
 backend:
   name: github
