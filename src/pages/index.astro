@@ -14,7 +14,7 @@ const image = await getAsset(data.image);
   <MainFlex class="min-h-screen">
     <div class="flex flex-col gap-mid">
       <h1
-        class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12 animate-[fadein_1s_paused]"
+        class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12"
         id="index-title"
       >
         karolina nocoń
@@ -26,7 +26,7 @@ const image = await getAsset(data.image);
           width={300 * 2}
           format="webp"
           quality={90}
-          class="mx-auto rounded-full animate-[fadein2_1s_0.4s_both_paused] w-[300px]"
+          class="mx-auto rounded-full animate-[fadein2_1s_both_paused] w-[300px]"
           id="index-image"
         />
       </a>
@@ -39,16 +39,10 @@ const image = await getAsset(data.image);
 <script>
   let img = document.getElementById("index-image") as HTMLImageElement;
 
-  let heading = document.getElementById("index-title") as HTMLElement;
-  await document.fonts.ready;
-  heading.style.animationPlayState = "running";
-  let t = performance.now();
-
   if (img.complete) {
     img.style.animationPlayState = "running";
   } else {
     img.addEventListener("load", () => {
-      img.style.animationDelay = Math.max(0, 400 - (performance.now() - t)) + "ms";
       img.style.animationPlayState = "running";
     });
   }
