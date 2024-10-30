@@ -33,7 +33,7 @@ const shouldFetch = blogs.length > CHUNK_SIZE;
           <article class="diary-entry text-sm my-prose">
             <time class="diary-date block text-grey-5 mb-6">{getDateStr(blog.date)}</time>
             <div class="diary-content text-justify">
-              <Markdown of={blog.body} />
+              <div set:html={blog.body} />
             </div>
           </article>
         );
