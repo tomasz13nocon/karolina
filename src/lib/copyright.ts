@@ -13,7 +13,7 @@ export function setupCopyright(imgElement?: HTMLImageElement) {
       clearTimeout(contextTimeout);
       copyright.classList.remove("hidden");
       console.log(e);
-      copyright.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      copyright.style.transform = `translate(${e.pageX}px, ${e.pageY}px)`;
       contextTimeout = setTimeout(() => {
         copyright.classList.add("hidden");
       }, 3000);
