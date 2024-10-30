@@ -1,15 +1,17 @@
 ---
 import sharp from "sharp";
 import { rgbaToThumbHash, thumbHashToAverageRGBA } from "thumbhash";
-import path from "node:path";
+import { imgSrc } from "@lib/directus";
 
 interface Props {
-  src: string;
+  rawSrc: string;
 }
 
 let imageBuffer;
 try {
-  imageBuffer = await sharp(path.join(".", Astro.props.src))
+  let resp = await fetch(imgSrc(Astro.props.rawSrc, {width:40, height:40}));
+  let buf = await resp.arrayBuffer();
+  imageBuffer = await sharp(buf)
   .resize({ width: 40, height: 40, fit: "inside" })
   .raw()
   .ensureAlpha()

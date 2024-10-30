@@ -1,12 +1,12 @@
 ---
-import { getCollection } from "astro:content";
 import Layout from "@layouts/Layout.astro";
 import MainFlex from "@layouts/MainFlex.astro";
 import Nav from "@components/Nav.astro";
 import DiaryNav from "@components/DiaryNav.astro";
 import BlogList from "@components/BlogList.astro";
+import { getDiaryEntries } from "@lib/directus";
 
-const blogs = await getCollection("diary");
+let blogs = await getDiaryEntries();
 ---
 
 <Layout>
@@ -16,3 +16,4 @@ const blogs = await getCollection("diary");
     <BlogList {blogs} />
   </MainFlex>
 </Layout>
+

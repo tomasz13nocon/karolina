@@ -5,39 +5,36 @@ import ImageViewer from "@components/ImageViewer.astro";
 import Main from "@layouts/Main.astro";
 import { toUrl } from "@lib/util";
 import Link from "@components/Link.astro";
-import { getCollection } from "astro:content";
 import ImageViewerImg from "@components/ImageViewerImg.astro";
+import directus, { imgSrc, type PhotoSet } from "@lib/directus";
+import { readItems, readFiles } from "@directus/sdk";
 
-interface Photo {
-  src: string;
-  alt: string;
-}
-interface PhotoSet {
-  index: number;
-  thumb: Photo;
-  title: string;
-  photos: Photo[];
-}
 interface Props {
   photoSet: PhotoSet;
   sections: Record<string, PhotoSet[]>;
 }
 
 export async function getStaticPaths() {
-  let sections: Record<string, PhotoSet[]> = {};
+  const sections = await directus.request(
+    readItems("photo_sections", { fields: ["photoSets",  { photoSets: ["*"] }] }),
+  );
+  // const photoSets = sections.flatMap(({photoSets})=> photoSets);
 
-  let photoSetsRaw = await getCollection("photography");
-  let photoSets = photoSetsRaw.map((photoSet) => photoSet.data).sort((a, b) => a.index - b.index);
-
-  for (let photoSet of photoSets) {
-    (sections[photoSet.section] ??= []).push(photoSet);
-  }
+  const photoSets = await directus.request(
+    readItems("photo_sets", {
+      fields: [
+        "*",
+        // @ts-ignore
+        { photos: ["directus_files_id", { directus_files_id: ["id", "width", "height"] }] },
+      ],
+    }),
+  );
 
   return photoSets.map((photoSet) => ({
     params: {
       photoSet: toUrl(photoSet.title),
     },
-    props: { photoSet, sections },
+    props: { photoSet, sections: Object.groupBy(photoSets, ({ section }) => section) },
   }));
 }
 
@@ -49,16 +46,16 @@ const { photoSet, sections } = Astro.props;
     <Nav />
     <nav class="mt-12 lg:mt-8 mb-16">
       {
-        Object.values(sections).map((sets) => (
+        Object.values(sections).map((photoSets) => (
           <ul class="flex flex-wrap justify-center">
-            {sets.map((set) => (
+            {photoSets.map((photoSet) => (
               <li class="inline-block">
                 <Link
-                  href={"/photography/" + toUrl(set.title)}
+                  href={"/photography/" + toUrl(photoSet.title)}
                   class="px-4 pb-4 lg:px-2 group"
                   activeClass="!tracking-[0.55em] !font-bold px-6"
                 >
-                  {set.title}
+                  {photoSet.title}
                 </Link>
               </li>
             ))}
@@ -68,14 +65,14 @@ const { photoSet, sections } = Astro.props;
     </nav>
     <div id="masonry-container" class="mx-auto w-full">
       {
-        photoSet.photos.map(({ src, alt }, i) => (
+        photoSet.photos.map(({ directus_files_id: { id, width, height } }, i) => (
           <ImageViewerImg
-            src={src}
-            alt={alt}
+            rawSrc={id}
             width={320}
+            height={320 / (width / height)}
             index={i}
             buttonClass="aspect-ratio-polyfill overflow-clip group inline-block translate-x-[100vw] max-w-[calc(50%-8px)]"
-            class="transition-transform cursor-pointer group-hover:scale-110 duration-300 hidden"
+            class="transition-transform cursor-pointer group-hover:scale-110 duration-300"
           />
         ))
       }

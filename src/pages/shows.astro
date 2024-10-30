@@ -3,12 +3,14 @@ import Nav from "@components/Nav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import ShowList from "@components/ShowList.astro";
-import { getCollection } from "astro:content";
 import ImageViewer from "@components/ImageViewer.astro";
+import directus from "@lib/directus";
+import { readSingleton, readItems } from "@directus/sdk";
 
-const shows = await getCollection("shows");
-const anyUpcoming = shows.some((show) => show.data.upcoming);
-const anyPast = shows.some((show) => !show.data.upcoming);
+const data = await directus.request(readSingleton("shows_page"));
+const shows = await directus.request(readItems("shows"));
+const anyUpcoming = shows.some((show) => show.upcoming);
+const anyPast = shows.some((show) => !show.upcoming);
 ---
 
 <Layout>
@@ -16,16 +18,22 @@ const anyPast = shows.some((show) => !show.data.upcoming);
     <Nav />
     {
       anyUpcoming ? (
-        <ShowList shows={shows.filter((show) => show.data.upcoming)} heading="upcoming shows:" />
+        <ShowList
+          shows={shows.filter((show) => show.upcoming)}
+          heading={data.upcomingShowsText}
+        />
       ) : (
-        <p>no upcoming shows</p>
+        <p>{data.noUpcomingShowsText}</p>
       )
     }
     {
       anyPast ? (
-        <ShowList shows={shows.filter((show) => !show.data.upcoming)} heading="past shows:" />
+        <ShowList
+          shows={shows.filter((show) => !show.upcoming)}
+          heading={data.pastShowsText}
+        />
       ) : (
-        <p>no past shows</p>
+        <p>{data.noPastShowsText}</p>
       )
     }
   </Main>

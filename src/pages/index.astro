@@ -1,13 +1,12 @@
 ---
-import { Image } from "astro:assets";
 import Link from "@components/Link.astro";
 import Layout from "@layouts/Layout.astro";
-import data from "@data/home.json";
-import { getAsset } from "@lib/util";
 import MainFlex from "@layouts/MainFlex.astro";
 import Nav from "@components/Nav.astro";
+import directus, { imgSrc } from "@lib/directus";
+import { readSingleton } from "@directus/sdk";
 
-const image = await getAsset(data.image);
+const home = await directus.request(readSingleton("home"));
 ---
 
 <Layout>
@@ -17,15 +16,12 @@ const image = await getAsset(data.image);
         class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12"
         id="index-title"
       >
-        karolina nocoń
+        {home.heading}
       </h1>
       <a href="/photography" aria-label="photography">
-        <Image
-          src={image.default}
-          alt={data.alt}
-          width={300 * 2}
-          format="webp"
-          quality={90}
+        <img
+          src={imgSrc(home.image, {format: "webp", width: 600, quality: 90})}
+          role="presentation"
           class="mx-auto rounded-full animate-[fadein2_1s_both_paused] w-[300px]"
           id="index-image"
         />

@@ -1,10 +1,11 @@
 ---
-import { render, type CollectionEntry } from "astro:content";
 import { CHUNK_SIZE, getDateStr } from "@lib/util";
 import Spinner from "@components/Spinner.astro";
+import type { DiaryEntry } from "@lib/directus";
+import { Markdown } from "@astropub/md";
 
 interface Props {
-  blogs: CollectionEntry<"diary">[];
+  blogs: DiaryEntry[];
   year?: string;
 }
 const blogs = Astro.props.blogs;
@@ -19,18 +20,20 @@ const shouldFetch = blogs.length > CHUNK_SIZE;
   Error fetching diary entries!
 </div>
 
-<div class="diary-list mx-auto sm:w-narrow flex flex-col gap-32 text-left text-grey-3 mt-16 mb-28" data-year={Astro.props.year}>
+<div
+  class="diary-list mx-auto sm:w-narrow flex flex-col gap-32 text-left text-grey-3 mt-16 mb-28"
+  data-year={Astro.props.year}
+>
   {
     blogs
-      .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
+      .sort((a, b) => b.date.getTime() - a.date.getTime())
       .slice(0, CHUNK_SIZE)
       .map(async (blog) => {
-        const { Content } = await render(blog);
         return (
           <article class="diary-entry text-sm my-prose">
-            <time class="diary-date block text-grey-5 mb-6">{getDateStr(blog.data.date)}</time>
+            <time class="diary-date block text-grey-5 mb-6">{getDateStr(blog.date)}</time>
             <div class="diary-content text-justify">
-              <Content />
+              <Markdown of={blog.body} />
             </div>
           </article>
         );
@@ -73,7 +76,7 @@ const shouldFetch = blogs.length > CHUNK_SIZE;
                 for (let post of data.posts) {
                   newPost = lastPost.cloneNode(true) as HTMLElement;
                   newPost.getElementsByClassName("diary-date")[0].innerHTML = getDateStr(
-                    new Date(post.data.date)
+                    new Date(post.date),
                   );
                   newPost.getElementsByClassName("diary-content")[0].innerHTML = post.body;
                   diaryList.appendChild(newPost);
@@ -84,7 +87,8 @@ const shouldFetch = blogs.length > CHUNK_SIZE;
                   observer.observe(lastPost);
                 }
               })
-              .catch(() => {
+              .catch((e) => {
+                console.error(e);
                 document.getElementsByClassName("diary-fetch-error")[0]?.classList.remove("hidden");
               })
               .finally(() => {

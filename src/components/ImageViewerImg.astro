@@ -1,7 +1,6 @@
 ---
-import { getImage } from "astro:assets";
-import { getAsset } from "@lib/util";
 import Blurhash from "./Blurhash.astro";
+import { imgSrc } from "@lib/directus";
 
 /**
  * Image intended to be used with ImageViewer.
@@ -10,67 +9,37 @@ import Blurhash from "./Blurhash.astro";
  */
 
 interface Props {
-  src: string;
-  alt: string;
+  rawSrc: string;
+  alt?: string;
   width: number;
+  height?: number;
   index: number;
   class?: string;
   buttonClass?: string;
 }
 
-const { src, alt, width, index, buttonClass = "" } = Astro.props;
+const { rawSrc, alt, width, height, index, buttonClass = "" } = Astro.props;
 
-const imgRaw = (await getAsset(src)).default;
-
-const { src: smallSrc } = await getImage({
-  src: imgRaw,
-  alt,
-  width: width * 1.1,
-  aspectRatio: imgRaw.width / imgRaw.height,
-  format: "webp",
-  quality: 90,
-});
-
-const { src: fullSrc } = await getImage({
-  src: imgRaw,
-  alt,
-  width: imgRaw.width,
-  height: imgRaw.height,
-});
-
-if (smallSrc == null || fullSrc == null) {
-  throw new Error("Astro's getImage failed. src is not present.");
-}
-
-const img = {
-  width: imgRaw.width,
-  height: imgRaw.height,
-  src: smallSrc,
-  fullSrc,
-  ogSrc: src,
-  alt,
-};
+const smallSrc = imgSrc(rawSrc, { width: width * 1.1, format: "webp", quality: 90 });
+const fullSrc = imgSrc(rawSrc);
 ---
 
 <button
   class={`img-container relative ${buttonClass}`}
   style={{
     width: `${width}px`,
-    "--aspect-ratio": `${(img.height / img.width) * 100}%`,
   }}
 >
   <img
     data-index={index}
-    data-full-size-src={img.fullSrc}
-    data-width={img.width}
-    data-height={img.height}
+    data-full-size-src={fullSrc}
     loading="lazy"
     class={`img ${Astro.props.class ?? ""}`}
-    src={img.src}
-    alt={img.alt}
+    src={smallSrc}
+    alt={alt}
     width={width}
-    height={Math.floor((width / img.width) * img.height)}
+    height={height}
   />
 
-  <Blurhash src={img.ogSrc} />
+  <Blurhash rawSrc={rawSrc} />
 </button>

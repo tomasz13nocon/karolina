@@ -1,32 +1,31 @@
 ---
-import { Image } from "astro:assets";
 import { Markdown } from "@astropub/md";
 import Layout from "@layouts/Layout.astro";
 import Nav from "@components/Nav.astro";
-import { getAsset } from "@lib/util";
-import data from "@data/about.json";
 import MainFlex from "@layouts/MainFlex.astro";
+import directus, { imgSrc } from "@lib/directus";
+import { readSingleton } from "@directus/sdk";
 
-const image = await getAsset(data.image);
+const data = await directus.request(readSingleton("about"));
 ---
 
 <Layout>
   <MainFlex>
     <Nav />
-    <Image
-      src={image.default}
-      alt={data.alt}
-      width={300 * 2}
-      format="webp"
-      quality={90}
+    <img
+      src={imgSrc(data.image, {format: "webp", width:600, quality:90})}
+      role="presentation"
       class="mx-auto rounded-full w-[300px]"
     />
     <article>
       <section class="text-grey-3 mb-6">
         <h1 class="font-bold tracking-[0.20em] text-xl leading-tight mb-10 text-grey-1">
-          {data.title}
+          {data.heading}
         </h1>
-        <Markdown of={data.content} />
+        <h2>CONTENT 2:</h2>
+        <Markdown of={data.content2} />
+        <h2>CONTENT:</h2>
+        <div set:html={data.content} />
       </section>
       {
         data.contact.map(({ text, isEmail }) => (

@@ -1,26 +1,35 @@
 ---
-import data from "../data/icon.json";
+import directus, { imgSrc } from "../lib/directus";
+import { readSingleton } from "@directus/sdk";
 
 export interface Props {
   title?: string;
 }
 
+const data = await directus.request(readSingleton("global"));
+
 const pathLast = Astro.url.pathname.split("/").slice(-1)[0];
 const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathLast : "");
 ---
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href={data.image} />
+    <link rel="icon" href={imgSrc(data.icon, { width: 32, format: "jpg" })} />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
-    <meta name="description" content="karolina nocoń photography portfolio" />
+    <meta name="description" content={data.description} />
   </head>
   <body class="bg-grey-7 text-grey-1 mx-auto">
     <slot />
+    <div
+      id="copyright"
+      class="absolute top-0 left-0 z-50 px-4 py-2 bg-grey-6 text-grey-1 select-none hidden"
+    >
+      {data.copyrightText}
+    </div>
   </body>
 </html>
 
@@ -34,7 +43,8 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     font-family: "Open Sans";
     font-style: normal;
     font-weight: 400;
-    src: url("/fonts/open-sans-v34-latin_latin-ext-regular.woff2") format("woff2"),
+    src:
+      url("/fonts/open-sans-v34-latin_latin-ext-regular.woff2") format("woff2"),
       url("/fonts/open-sans-v34-latin_latin-ext-regular.woff") format("woff");
   }
 
@@ -43,7 +53,8 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     font-family: "Open Sans";
     font-style: normal;
     font-weight: 500;
-    src: url("/fonts/open-sans-v34-latin_latin-ext-500.woff2") format("woff2"),
+    src:
+      url("/fonts/open-sans-v34-latin_latin-ext-500.woff2") format("woff2"),
       url("/fonts/open-sans-v34-latin_latin-ext-500.woff") format("woff");
   }
 
@@ -52,7 +63,8 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     font-family: "Open Sans";
     font-style: normal;
     font-weight: 700;
-    src: url("/fonts/open-sans-v34-latin_latin-ext-700.woff2") format("woff2"),
+    src:
+      url("/fonts/open-sans-v34-latin_latin-ext-700.woff2") format("woff2"),
       url("/fonts/open-sans-v34-latin_latin-ext-700.woff") format("woff");
   }
 
@@ -88,6 +100,7 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
       font-size: 0.67em;
     }
   }
+
   @layer utilities {
     .transition-1 {
       @apply duration-500 ease-expo;
@@ -110,3 +123,10 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     }
   }
 </style>
+
+<script>
+  import { setupCopyright } from "@lib/copyright";
+
+  setupCopyright();
+</script>
+

@@ -1,26 +1,20 @@
 ---
+import { imgSrc } from "@lib/directus";
 import ImageViewerImg from "./ImageViewerImg.astro";
-
-interface Show {
-  data: {
-    poster: string;
-    alt: string;
-  };
-}
 
 interface Props {
   heading: string;
-  shows: Show[];
+  shows: {poster: string, title: string}[];
 }
 
-const shows = Astro.props.shows.map(show => show.data);
+const shows = Astro.props.shows;
 ---
 
 <h2 class="font-medium block text-base">{Astro.props.heading}</h2>
 <div class="flex flex-wrap gap-20 justify-center">
   {
-    shows.map(({ poster: src, alt }, i) => (
-      <ImageViewerImg src={src} alt={alt} width={300} index={i} />
+  shows.map(({ poster: src, title }, i) => (
+    <ImageViewerImg rawSrc={src} alt=`poster of ${title}` width={300} index={i} />
     ))
   }
 </div>

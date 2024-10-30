@@ -1,3 +1,4 @@
+import { getDiaryEntries } from "@lib/directus";
 import { CHUNK_SIZE } from "@lib/util";
 import type { APIRoute, InferGetStaticParamsType } from "astro";
 import { getCollection } from "astro:content";
@@ -11,18 +12,18 @@ export const GET: APIRoute = async function (context) {
   const chunk = +params.chunk;
   const year = +params.year;
 
-  let posts = await getCollection("diary");
-  posts = posts
-    .filter((post) => new Date(post.data.date).getFullYear() === year)
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  let blogs = await getDiaryEntries(
+    // @ts-expect-error 2353
+    { filter: { "year(date)": { _eq: year } }, sort: "-date" },
+  );
 
-  let chunksMd = posts.slice(chunk * CHUNK_SIZE, chunk * CHUNK_SIZE + CHUNK_SIZE);
+  let chunksMd = blogs.slice(chunk * CHUNK_SIZE, chunk * CHUNK_SIZE + CHUNK_SIZE);
   let chunks = chunksMd.map((chunk) => ({ ...chunk, body: marked(chunk.body) }));
 
   return new Response(
     JSON.stringify({
       posts: chunks,
-      last: chunks[chunks.length - 1].id === posts[posts.length - 1].id,
+      last: chunks[chunks.length - 1].id === blogs[blogs.length - 1].id,
     }),
   );
 };

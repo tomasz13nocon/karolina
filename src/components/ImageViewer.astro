@@ -7,11 +7,15 @@ import {
   SWIPE_BOUNCE,
 } from "../lib/util";
 import ImageViewerBtn from "./ImageViewerBtn.astro";
+import directus from '@lib/directus';
+import { readSingleton } from '@directus/sdk';
 
 interface Props {
   blur?: boolean;
 }
 const { blur } = Astro.props;
+
+const data = await directus.request(readSingleton("global"));
 ---
 
 <!-- Setting both grid and hidden to be able to easily remove hidden -->
@@ -48,7 +52,8 @@ const { blur } = Astro.props;
       <img
         src=""
         alt=""
-        class="mx-auto select-none max-h-screen ease-out-quart"
+        draggable="false"
+        class="copyright-img mx-auto select-none max-h-screen ease-out-quart"
         style={{
           transitionProperty: "object-position",
           transitionDuration: IMAGE_TRANSITION + "ms",
@@ -76,6 +81,7 @@ const { blur } = Astro.props;
     class="select-none blur-img object-cover scale-125 md:scale-[110%] fixed inset-0 overflow-visible blur-xl -z-10 w-screen h-screen transition-opacity opacity-0 hidden"
     style={`transition-duration: ${BLUR_TRANSITION}ms`}
   />
+
 </div>
 
 <script>
@@ -86,6 +92,7 @@ const { blur } = Astro.props;
     SWIPE_BOUNCE,
   } from "@lib/util";
   import { hidingImageViewer } from "@lib/stores";
+import { setupCopyright } from "@lib/copyright";
 
   let imageViewer = document.getElementById("image-viewer") as HTMLElement;
   let imgs = document.querySelectorAll("img.img") as NodeListOf<HTMLImageElement>;
@@ -166,12 +173,14 @@ const { blur } = Astro.props;
     let newCont = cont.cloneNode(true) as HTMLElement;
     let newWrapper = newCont.getElementsByClassName("img-wrapper")[0] as HTMLElement;
     let newImg = newCont.getElementsByTagName("img")[0] as HTMLImageElement;
-    newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);
-    newWrapper.style.maxWidth = imgs[i].dataset.width + "px";
+    // newWrapper.style.aspectRatio = String(+imgs[i].dataset.width! / +imgs[i].dataset.height!);
+    // newWrapper.style.maxWidth = imgs[i].dataset.width + "px";
+    newWrapper.style.maxWidth = "100%";
     newWrapper.style.transform = "translateX(0)";
     newWrapper.style.transitionProperty = "none";
     newImg.src = "";
     newImg.src = imgs[i].dataset.fullSizeSrc!;
+    setupCopyright(newImg);
     cont.insertAdjacentElement("afterend", newCont);
 
     if (direction) {
@@ -213,8 +222,8 @@ const { blur } = Astro.props;
   }
 
   // Setup blurhashes and click events
-  for (let i = 0; i < imgs.length; i++) {
-    imgs[i].addEventListener("click", () => {
+  for (let i = 0; i < imgContainers.length; i++) {
+    imgContainers[i].addEventListener("click", () => {
       for (let blurImg of blurImgs) {
         blurImg.style.transitionProperty = "none";
         blurImg.style.opacity = "0";
@@ -257,7 +266,8 @@ const { blur } = Astro.props;
   imageViewer.addEventListener("click", (e) => {
     const el = e.target as HTMLElement;
     if (!el.matches("img, button, button *")) {
-      hideImageViewer(imageViewer, blurImgs);
+      // Disable hiding on clicking image or background for now
+      // hideImageViewer(imageViewer, blurImgs);
     }
   });
 
