@@ -1,9 +1,9 @@
 ---
-import { getCollection } from "astro:content";
 import DiaryNavList from "./DiaryNavList.astro";
+import { getDiaryEntries } from "@lib/directus";
 
-const blogs = await getCollection("diary");
-const years = [...new Set(blogs.map(blog => blog.data.date.getFullYear()))].reverse();
+const blogs = await getDiaryEntries();
+const years = [...new Set(blogs.map(blog => blog.date.getFullYear()))].reverse();
 ---
 <header class="px-4 items-center">
   <div class="sm:block">

@@ -1,7 +1,6 @@
 import { getDiaryEntries } from "@lib/directus";
 import { CHUNK_SIZE } from "@lib/util";
 import type { APIRoute, InferGetStaticParamsType } from "astro";
-import { getCollection } from "astro:content";
 import { marked } from "marked";
 
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
@@ -37,11 +36,11 @@ interface Chunk {
 
 // generate chunks of diary for each year for infinite scrolling
 export async function getStaticPaths() {
-  const allPosts = await getCollection("diary");
+  const allPosts = await getDiaryEntries();
   const yearPosts: Record<string, number> = {};
 
   for (let post of allPosts) {
-    const year = new Date(post.data.date).getFullYear();
+    const year = new Date(post.date).getFullYear();
     yearPosts[year] = (yearPosts[year] || 0) + 1;
   }
 
