@@ -7,6 +7,8 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "build:preview": "npm run build && sudo cp -r dist /var/www/karolina/previewTEMP && sudo rm -rf /var/www/karolina/preview && sudo mv /var/www/karolina/previewTEMP /var/www/karolina/preview",
+    "build:prod": "npm run build && sudo cp -r dist /var/www/karolina/distTEMP && sudo rm -rf /var/www/karolina/dist && sudo mv /var/www/karolina/distTEMP /var/www/karolina/dist",
     "preview": "astro preview",
     "astro": "astro"
   },

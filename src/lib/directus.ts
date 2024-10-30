@@ -72,10 +72,10 @@ const directus = createDirectus<Schema>("http://localhost:8055").with(rest());
 
 export default directus;
 
-const directusURL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8055/"
-    : "https://karolinanocon.com/directus/";
+let directusURL: string;
+if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
+else if (import.meta.env.MODE === "preview") directusURL = "https://preview.karolinanocon.com/";
+else directusURL = "https://karolinanocon.com/";
 
 const assetsURL = directusURL + "assets/";
 
