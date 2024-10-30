@@ -1,5 +1,4 @@
 ---
-import { Markdown } from "@astropub/md";
 import Layout from "@layouts/Layout.astro";
 import Nav from "@components/Nav.astro";
 import MainFlex from "@layouts/MainFlex.astro";
@@ -22,9 +21,6 @@ const data = await directus.request(readSingleton("about"));
         <h1 class="font-bold tracking-[0.20em] text-xl leading-tight mb-10 text-grey-1">
           {data.heading}
         </h1>
-        <h2>CONTENT 2:</h2>
-        <Markdown of={data.content2} />
-        <h2>CONTENT:</h2>
         <div set:html={data.content} />
       </section>
       {
