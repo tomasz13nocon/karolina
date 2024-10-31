@@ -3,7 +3,7 @@ import Link from "./Link.astro";
 import Socials from "./Socials.astro";
 import { isCurrent } from "@lib/util";
 
-const { exclude = [], include = [], socials = true } = Astro.props;
+const { exclude = [], include = [], socials = true, dark = false } = Astro.props;
 const pages = [
   ["home", "/"],
   ["about", "/about"],
@@ -22,7 +22,7 @@ const pages = [
     {
       pages.map(([name, href]) => (
         <li>
-          <Link href={href}>{name}</Link>
+      <Link dark={dark} href={href}>{name}</Link>
         </li>
       ))
     }

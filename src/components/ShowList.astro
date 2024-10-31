@@ -11,7 +11,7 @@ const shows = Astro.props.shows;
 ---
 
 <h2 class="font-medium block text-base">{Astro.props.heading}</h2>
-<div class="flex flex-wrap gap-20 justify-center">
+<div class="flex gap-20 justify-center lg:flex-wrap flex-wrap-reverse">
   {
   shows.map(({ poster: src, title }, i) => (
     <ImageViewerImg rawSrc={src} alt=`poster of ${title}` width={300} index={i} />

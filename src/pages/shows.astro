@@ -16,26 +16,25 @@ const anyPast = shows.some((show) => !show.upcoming);
 <Layout>
   <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-10 text-center">
     <Nav />
-    {
-      anyUpcoming ? (
-        <ShowList
-          shows={shows.filter((show) => show.upcoming)}
-          heading={data.upcomingShowsText}
-        />
-      ) : (
-        <p>{data.noUpcomingShowsText}</p>
-      )
-    }
-    {
-      anyPast ? (
-        <ShowList
-          shows={shows.filter((show) => !show.upcoming)}
-          heading={data.pastShowsText}
-        />
-      ) : (
-        <p>{data.noPastShowsText}</p>
-      )
-    }
+    <div class="flex flex-col gap-10 text-grey-3">
+      {
+        anyUpcoming ? (
+          <ShowList
+            shows={shows.filter((show) => show.upcoming)}
+            heading={data.upcomingShowsText}
+          />
+        ) : (
+          <p>{data.noUpcomingShowsText}</p>
+        )
+      }
+      {
+        anyPast ? (
+          <ShowList shows={shows.filter((show) => !show.upcoming)} heading={data.pastShowsText} />
+        ) : (
+          <p>{data.noPastShowsText}</p>
+        )
+      }
+    </div>
   </Main>
   <ImageViewer blur />
 </Layout>
