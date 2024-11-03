@@ -17,16 +17,18 @@ const anyPast = shows.some((show) => !show.upcoming);
   <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-10 text-center">
     <Nav />
     <div class="flex flex-col gap-10 text-grey-3">
-      {
+      <div class="flex gap-10 flex-col text-grey-0">
+        {
         anyUpcoming ? (
-          <ShowList
-            shows={shows.filter((show) => show.upcoming)}
-            heading={data.upcomingShowsText}
-          />
+        <ShowList
+          shows={shows.filter((show) => show.upcoming)}
+          heading={data.upcomingShowsText}
+        />
         ) : (
-          <p>{data.noUpcomingShowsText}</p>
+        <p>{data.noUpcomingShowsText}</p>
         )
-      }
+        }
+      </div>
       {
         anyPast ? (
           <ShowList shows={shows.filter((show) => !show.upcoming)} heading={data.pastShowsText} />
