@@ -28,7 +28,7 @@ type ShowsPage = {
 };
 
 type Show = {
-  title: string;
+  title: string; // TODO remove
   poster: string;
   upcoming: boolean;
 };
@@ -75,8 +75,8 @@ const directus = createDirectus<Schema>("http://localhost:8055").with(rest());
 export default directus;
 
 let directusURL: string;
-// if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
-if (import.meta.env.MODE === "development") directusURL = "https://preview.karolinanocon.com/";
+if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
+// if (import.meta.env.MODE === "development") directusURL = "https://preview.karolinanocon.com/";
 else if (import.meta.env.MODE === "preview") directusURL = "https://preview.karolinanocon.com/";
 else directusURL = "https://karolinanocon.com/";
 
