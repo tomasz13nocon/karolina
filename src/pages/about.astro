@@ -1,0 +1,35 @@
+---
+import Layout from "@layouts/Layout.astro";
+import Nav from "@components/Nav.astro";
+import MainFlex from "@layouts/MainFlex.astro";
+import directus, { imgSrc } from "@lib/directus";
+import { readSingleton } from "@directus/sdk";
+
+const data = await directus.request(readSingleton("about"));
+---
+
+<Layout>
+  <MainFlex>
+    <Nav />
+    <img
+      src={imgSrc(data.image, {format: "webp", width:600, quality:90})}
+      role="presentation"
+      class="mx-auto rounded-full w-[300px]"
+    />
+    <article>
+      <section class="text-grey-2 mb-6">
+        <h1 class="font-bold tracking-[0.20em] text-xl leading-tight mb-10 text-grey-1">
+          {data.heading}
+        </h1>
+        <div set:html={data.content} />
+      </section>
+      {
+        data.contact.map(({ text, isEmail }) => (
+          <address class="not-italic mb-4 lg:mb-1 text-grey-0">
+            {isEmail ? <a href={`mailto:${text}`}>{text}</a> : text}
+          </address>
+        ))
+      }
+    </article>
+  </MainFlex>
+</Layout>

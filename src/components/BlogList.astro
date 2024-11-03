@@ -1,0 +1,109 @@
+---
+import { CHUNK_SIZE, getDateStr } from "@lib/util";
+import Spinner from "@components/Spinner.astro";
+import type { DiaryEntry } from "@lib/directus";
+import { Markdown } from "@astropub/md";
+
+interface Props {
+  blogs: DiaryEntry[];
+  year?: string;
+}
+const blogs = Astro.props.blogs;
+const shouldFetch = blogs.length > CHUNK_SIZE;
+---
+
+<div
+  class="should-fetch diary-fetch-error self-center pl-12 pr-16 py-6 fixed top-0 bg-red-200 text-grey-0 hidden"
+  data-should-fetch={shouldFetch}
+>
+  <button class="hide-error-btn absolute -translate-y-1/2 top-1/2 right-6 text-4xl">&times;</button>
+  Error fetching diary entries!
+</div>
+
+<div
+  class="diary-list mx-auto sm:w-narrow flex flex-col gap-32 text-left text-grey-3 mt-16 mb-28"
+  data-year={Astro.props.year}
+>
+  {
+    blogs
+      .sort((a, b) => b.date.getTime() - a.date.getTime())
+      .slice(0, CHUNK_SIZE)
+      .map(async (blog) => {
+        return (
+          <article class="diary-entry text-sm my-prose">
+            <time class="diary-date block text-grey-5 mb-6">{getDateStr(blog.date)}</time>
+            <div class="diary-content text-justify text-[0.95rem] leading-[1.35rem]">
+              <div set:html={blog.body} />
+            </div>
+          </article>
+        );
+      })
+  }
+</div>
+
+<Spinner />
+
+<script>
+  // Infinite scroll
+
+  import { getDateStr } from "@lib/util";
+
+  // Don't fetch if all posts are rendered statically
+  if (
+    (document.getElementsByClassName("should-fetch")[0] as HTMLElement).dataset.shouldFetch ===
+    "true"
+  ) {
+    let fetchCount = 1;
+    let posts = document.getElementsByClassName("diary-entry");
+    let lastPost = posts[posts.length - 1];
+    let diaryList = document.getElementsByClassName("diary-list")[0] as HTMLElement;
+    let spinner = document.getElementsByClassName("diary-spinner")[0];
+    let yearParam = diaryList.dataset.year ?? "";
+    if (yearParam) yearParam += "-";
+
+    if (lastPost && diaryList) {
+      let observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            observer.unobserve(lastPost!);
+            spinner.classList.remove("hidden");
+
+            fetch(`/diary/${yearParam}${fetchCount++}.json?`)
+              .then((resp) => resp.json())
+              .then((data) => {
+                let newPost: HTMLElement;
+
+                for (let post of data.posts) {
+                  newPost = lastPost.cloneNode(true) as HTMLElement;
+                  newPost.getElementsByClassName("diary-date")[0].innerHTML = getDateStr(
+                    new Date(post.date),
+                  );
+                  newPost.getElementsByClassName("diary-content")[0].innerHTML = post.body;
+                  diaryList.appendChild(newPost);
+                }
+
+                if (newPost! && !data.last) {
+                  lastPost = newPost;
+                  observer.observe(lastPost);
+                }
+              })
+              .catch((e) => {
+                console.error(e);
+                document.getElementsByClassName("diary-fetch-error")[0]?.classList.remove("hidden");
+              })
+              .finally(() => {
+                spinner.classList.add("hidden");
+                diaryList.appendChild(spinner);
+              });
+          }
+        });
+      });
+
+      observer.observe(lastPost);
+    }
+  }
+
+  document.getElementsByClassName("hide-error-btn")[0].addEventListener("click", () => {
+    document.getElementsByClassName("diary-fetch-error")[0].classList.add("hidden");
+  });
+</script>

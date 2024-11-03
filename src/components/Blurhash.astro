@@ -1,0 +1,60 @@
+---
+import sharp from "sharp";
+import { rgbaToThumbHash, thumbHashToAverageRGBA } from "thumbhash";
+import { imgSrc } from "@lib/directus";
+
+interface Props {
+  rawSrc: string;
+}
+
+let imageBuffer;
+try {
+  let resp = await fetch(imgSrc(Astro.props.rawSrc, {width:40, height:40}));
+  let buf = await resp.arrayBuffer();
+  imageBuffer = await sharp(buf)
+  .resize({ width: 40, height: 40, fit: "inside" })
+  .raw()
+  .ensureAlpha()
+  .toBuffer({ resolveWithObject: true });
+
+}
+catch(e) {
+  return;
+}
+
+const {
+  data: bufferData,
+  info: { width: hashW, height: hashH },
+} = imageBuffer;
+const thumbhash = rgbaToThumbHash(hashW, hashH, bufferData);
+const rgba = thumbHashToAverageRGBA(thumbhash);
+const hash = Buffer.from(thumbhash).toString("base64");
+---
+
+<canvas
+  data-hash={hash}
+  class="blur-canvas absolute inset-0 -z-10 h-full w-full"
+  style={{
+    backgroundColor: `rgba(${rgba.r * 255}, ${rgba.g * 255}, ${rgba.b * 255}, ${rgba.a * 255})`,
+  }}
+  width={24}
+  height={24}></canvas>
+
+<script>
+  import { thumbHashToRGBA } from "thumbhash";
+
+  const canvases = document.getElementsByClassName(
+    "blur-canvas"
+  ) as HTMLCollectionOf<HTMLCanvasElement>;
+
+  for (let canvas of canvases) {
+    const hash = canvas.getAttribute("data-hash") as string;
+    let b64 = hash;
+    let byteArr = Uint8Array.from(window.atob(b64), (c) => c.charCodeAt(0));
+    const { rgba: pixels, w, h } = thumbHashToRGBA(byteArr);
+    const ctx = canvas.getContext("2d")!;
+    const imageData = ctx.createImageData(w, h);
+    imageData.data.set(pixels);
+    ctx.putImageData(imageData, 0, 0);
+  }
+</script>

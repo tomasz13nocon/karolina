@@ -1,0 +1,39 @@
+---
+import { isCurrent } from "@lib/util";
+import type { HTMLAttributes } from "astro/types";
+
+interface Props extends HTMLAttributes<"a"> {
+  href: string;
+  class?: string;
+  activeClass?: string;
+  light?: boolean;
+  dark?: boolean;
+}
+
+const props = Astro.props;
+const classes = props.class ?? "";
+const activeClasses = props.activeClass ?? "";
+const active = isCurrent(props.href, Astro.url.pathname);
+const light = props.light;
+const dark = props.dark;
+
+let c = [];
+
+if (light) c.push("text-grey-5 hover:text-hover-2");
+else if (dark) c.push("text-grey-2 hover:text-hover");
+else c.push("text-grey-3 hover:text-hover");
+
+if (active) c.push(activeClasses + " pointer-events-none");
+
+c.push(classes);
+
+let cl = c.join(" ");
+---
+
+<a
+  aria-current={active ? "page" : null}
+  class={`overflow-clip relative inline-block tracking-wide font-medium ${cl}`}
+  {...props}
+>
+  <slot />
+</a>

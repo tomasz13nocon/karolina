@@ -1,0 +1,42 @@
+---
+import Nav from "@components/Nav.astro";
+import Layout from "@layouts/Layout.astro";
+import Main from "@layouts/Main.astro";
+import ShowList from "@components/ShowList.astro";
+import ImageViewer from "@components/ImageViewer.astro";
+import directus from "@lib/directus";
+import { readSingleton, readItems } from "@directus/sdk";
+
+const data = await directus.request(readSingleton("shows_page"));
+const shows = await directus.request(readItems("shows"));
+const anyUpcoming = shows.some((show) => show.upcoming);
+const anyPast = shows.some((show) => !show.upcoming);
+---
+
+<Layout>
+  <Main class="sm:!w-auto xl:w-wide overflow-hidden flex flex-col gap-10 text-center">
+    <Nav />
+    <div class="flex flex-col gap-10 text-grey-3">
+      <div class="flex gap-10 flex-col text-grey-0">
+        {
+        anyUpcoming ? (
+        <ShowList
+          shows={shows.filter((show) => show.upcoming)}
+          heading={data.upcomingShowsText}
+        />
+        ) : (
+        <p>{data.noUpcomingShowsText}</p>
+        )
+        }
+      </div>
+      {
+        anyPast ? (
+          <ShowList shows={shows.filter((show) => !show.upcoming)} heading={data.pastShowsText} />
+        ) : (
+          <p>{data.noPastShowsText}</p>
+        )
+      }
+    </div>
+  </Main>
+  <ImageViewer blur />
+</Layout>

@@ -1,0 +1,33 @@
+---
+import BlogList from "@components/BlogList.astro";
+import DiaryNav from "@components/DiaryNav.astro";
+import Layout from "@layouts/Layout.astro";
+import MainFlex from "@layouts/MainFlex.astro";
+import Nav from "@components/Nav.astro";
+import Link from "@components/Link.astro";
+import { getDiaryEntries } from "@lib/directus";
+
+
+export async function getStaticPaths() {
+  let blogs = await getDiaryEntries();
+  const years = [...new Set(blogs.map(blog => blog.date.getFullYear()))];
+  return years.map(year => ({
+    params: { year }, props: { year },
+  }));
+};
+const { year } = Astro.props;
+let blogs = await getDiaryEntries();
+blogs = blogs.filter(blog => blog.date.getFullYear() === year);
+
+---
+
+<Layout title={`karolina nocoń - diary - ${year}`}>
+  <MainFlex class="!w-auto">
+    <div>
+      <Nav include={["/"]} socials={false} />
+      <Link href="/diary" class="mt-4 lg:mt-0">diary</Link>
+    </div>
+    <DiaryNav />
+    <BlogList {blogs} year={year.toString()} />
+  </MainFlex>
+</Layout>

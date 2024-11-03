@@ -1,0 +1,45 @@
+---
+import Blurhash from "./Blurhash.astro";
+import { imgSrc } from "@lib/directus";
+
+/**
+ * Image intended to be used with ImageViewer.
+ * Displays a small, optimized image,
+ * and defines data attributes for ImageViewer for the full size version.
+ */
+
+interface Props {
+  rawSrc: string;
+  alt?: string;
+  width: number;
+  height?: number;
+  index: number;
+  class?: string;
+  buttonClass?: string;
+}
+
+const { rawSrc, alt, width, height, index, buttonClass = "" } = Astro.props;
+
+const smallSrc = imgSrc(rawSrc, { width: width * 1.1, format: "webp", quality: 90 });
+const fullSrc = imgSrc(rawSrc);
+---
+
+<button
+  class={`img-container relative ${buttonClass}`}
+  style={{
+    width: `${width}px`,
+  }}
+>
+  <img
+    data-index={index}
+    data-full-size-src={fullSrc}
+    loading="lazy"
+    class={`img ${Astro.props.class ?? ""}`}
+    src={smallSrc}
+    alt={alt}
+    width={width}
+    height={height}
+  />
+
+  <Blurhash rawSrc={rawSrc} />
+</button>

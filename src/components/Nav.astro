@@ -1,0 +1,37 @@
+---
+import Link from "./Link.astro";
+import Socials from "./Socials.astro";
+import { isCurrent } from "@lib/util";
+
+const { exclude = [], include = [], socials = true, dark = false } = Astro.props;
+const pages = [
+  ["home", "/"],
+  ["about", "/about"],
+  ["photography", "/photography"],
+  ["shows", "/shows"],
+].filter(
+  ([_, href]) =>
+    !isCurrent(href, Astro.url.pathname) &&
+    !exclude.includes(href) &&
+    (include.length === 0 || include.includes(href))
+);
+---
+
+<nav class="text-center">
+  <ul class="flex flex-col gap-4 lg:gap-0">
+    {
+      pages.map(([name, href]) => (
+        <li>
+      <Link dark={dark} href={href}>{name}</Link>
+        </li>
+      ))
+    }
+  </ul>
+  {
+    socials ? (
+      <div class="mt-8 lg:mt-4">
+        <Socials />
+      </div>
+    ) : null
+  }
+</nav>

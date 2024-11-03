@@ -1,0 +1,39 @@
+{
+  "name": "@example/basics",
+  "type": "module",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "build:preview": "MODE=preview npm run build && sudo cp -r dist /var/www/karolina/previewTEMP && sudo rm -rf /var/www/karolina/preview && sudo mv /var/www/karolina/previewTEMP /var/www/karolina/preview",
+    "build:prod": "npm run build && sudo cp -r dist /var/www/karolina/distTEMP && sudo rm -rf /var/www/karolina/dist && sudo mv /var/www/karolina/distTEMP /var/www/karolina/dist",
+    "preview": "astro preview",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@astrojs/tailwind": "^5.1.2",
+    "@astropub/md": "^1.0.0",
+    "@directus/sdk": "^18.0.0",
+    "@iconify-json/ph": "^1.2.1",
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/marked": "^5.0.2",
+    "astro": "^5.0.0-beta.4",
+    "astro-icon": "^1.1.1",
+    "blurhash": "^2.0.5",
+    "fast-blurhash": "^1.1.4",
+    "magic-grid": "github:tomasz13nocon/Magic-Grid",
+    "marked": "^14.1.2",
+    "nanostores": "^0.11.3",
+    "sharp": "^0.33.5",
+    "tailwindcss": "^3.4.13",
+    "thumbhash": "^0.1.1"
+  },
+  "devDependencies": {
+    "@types/sharp": "^0.31.1",
+    "prettier": "^3.3.3",
+    "prettier-plugin-astro": "^0.14.1"
+  },
+  "packageManager": "pnpm@8.6.2+sha512.0e68307be4f7e17afa5186932d74a984f4bba24e21d843e46874041fa8fb512a00936d42cee780743d6740b9162700e766426e721a342db2a7b49fbd079c6551"
+}

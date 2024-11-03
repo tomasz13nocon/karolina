@@ -1,0 +1,19 @@
+---
+import Layout from "@layouts/Layout.astro";
+import MainFlex from "@layouts/MainFlex.astro";
+import Nav from "@components/Nav.astro";
+import DiaryNav from "@components/DiaryNav.astro";
+import BlogList from "@components/BlogList.astro";
+import { getDiaryEntries } from "@lib/directus";
+
+let blogs = await getDiaryEntries();
+---
+
+<Layout>
+  <MainFlex class="!w-auto">
+    <Nav include={["/"]} socials={false} />
+    <DiaryNav />
+    <BlogList {blogs} />
+  </MainFlex>
+</Layout>
+
