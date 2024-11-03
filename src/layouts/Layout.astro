@@ -17,7 +17,48 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
-    <link rel="icon" href={imgSrc(data.icon, { width: 32, format: "jpg" })} />
+
+    <!-- For all browsers -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href={imgSrc(data.icon, { width: 32, format: "png" })}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href={imgSrc(data.icon, { width: 16, format: "png" })}
+    />
+    <!-- For Google and Android -->
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="48x48"
+      href={imgSrc(data.icon, { width: 48, format: "png" })}
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="192x192"
+      href={imgSrc(data.icon, { width: 192, format: "png" })}
+    />
+    <!-- For iPad -->
+    <link
+      rel="apple-touch-icon"
+      type="image/png"
+      sizes="167x167"
+      href={imgSrc(data.icon, { width: 167, format: "png" })}
+    />
+    <!-- For iPhone -->
+    <link
+      rel="apple-touch-icon"
+      type="image/png"
+      sizes="180x180"
+      href={imgSrc(data.icon, { width: 180, format: "png" })}
+    />
+
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={data.description} />
@@ -129,4 +170,3 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
 
   setupCopyright();
 </script>
-
