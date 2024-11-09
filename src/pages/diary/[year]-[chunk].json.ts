@@ -1,7 +1,6 @@
 import { getDiaryEntries } from "@lib/directus";
 import { CHUNK_SIZE } from "@lib/util";
 import type { APIRoute, InferGetStaticParamsType } from "astro";
-import { marked } from "marked";
 
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
@@ -12,12 +11,11 @@ export const GET: APIRoute = async function (context) {
   const year = +params.year;
 
   let blogs = await getDiaryEntries(
-    // @ts-expect-error 2353
+    // @ts-expect-error directus types are bad
     { filter: { "year(date)": { _eq: year } }, sort: "-date" },
   );
 
-  let chunksMd = blogs.slice(chunk * CHUNK_SIZE, chunk * CHUNK_SIZE + CHUNK_SIZE);
-  let chunks = chunksMd.map((chunk) => ({ ...chunk, body: marked(chunk.body) }));
+  let chunks = blogs.slice(chunk * CHUNK_SIZE, chunk * CHUNK_SIZE + CHUNK_SIZE);
 
   return new Response(
     JSON.stringify({
