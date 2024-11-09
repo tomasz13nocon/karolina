@@ -69,14 +69,14 @@ type Schema = {
   diary_entries: DiaryEntry[];
 };
 
-const directus = createDirectus<Schema>("http://localhost:8055").with(rest());
-// const directus = createDirectus<Schema>("https://admin.karolinanocon.com").with(rest());
+// const directus = createDirectus<Schema>("http://localhost:8055").with(rest());
+const directus = createDirectus<Schema>("https://admin.karolinanocon.com").with(rest());
 
 export default directus;
 
 let directusURL: string;
-if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
-// if (import.meta.env.MODE === "development") directusURL = "https://preview.karolinanocon.com/";
+// if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
+if (import.meta.env.MODE === "development") directusURL = "https://preview.karolinanocon.com/";
 else if (import.meta.env.MODE === "preview") directusURL = "https://preview.karolinanocon.com/";
 else directusURL = "https://karolinanocon.com/";
 

@@ -1,6 +1,5 @@
 ---
 import Link from "@components/Link.astro";
-import { getDiaryEntries } from "@lib/directus";
 
 interface Props {
   years: number[];
@@ -8,31 +7,16 @@ interface Props {
 
 const { years } = Astro.props;
 
-let blogs = await getDiaryEntries();
-const postCount: Record<number, number> = {};
-let maxPostCount = 1;
-for (let blog of blogs) {
-  let year = blog.date.getFullYear();
-  // We start at -1 to make it 0 indexed,
-  // so that the font size scales easily between the lower and upper bounds
-  postCount[year] = (postCount[year] ?? -1) + 1;
-
-  if (postCount[year] > maxPostCount) {
-    maxPostCount = postCount[year];
-  }
-}
-
 years.sort();
 ---
 
-<div class={`flex flex-wrap gap-y-4 gap-x-6 lg:gap-x-4 justify-center items-baseline`}>
+<div class={`flex flex-wrap gap-y-4 gap-x-8 lg:gap-x-6 justify-center items-baseline text-3xl`}>
   {
     years.map((year) => (
       <Link
         href={`/diary/${year}`}
         class="sm:mx-0"
         activeClass="!text-grey-2 !font-bold"
-        style={{ fontSize: `${1 + 1.5 * (postCount[year] / maxPostCount)}rem` }}
         light
       >
         {year}
