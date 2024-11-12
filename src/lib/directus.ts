@@ -1,11 +1,14 @@
 import { createDirectus, readItems, rest, type Query } from "@directus/sdk";
 
-type Pages = {};
-
 type Global = {
   icon: string;
   description: string;
   copyrightText: string;
+  homeLinkName: string;
+  aboutLinkName: string;
+  photographyLinkName: string;
+  showsLinkName: string;
+  diaryLinkName: string;
 };
 
 type Home = {
@@ -43,12 +46,19 @@ type Image = {
   height: number;
 };
 
+export type PhotoSubset = {
+  photos: { directus_files_id: Image }[];
+  description: string;
+  magicGrid: boolean;
+};
+
 export type PhotoSet = {
   title: string;
   thumbnail: string;
   dynamicPosition: boolean;
   photos: { directus_files_id: Image }[];
   section: number;
+  subsets: PhotoSubset[];
 };
 
 export type DiaryEntry = {

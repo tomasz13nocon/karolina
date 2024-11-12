@@ -25,7 +25,14 @@ export async function getStaticPaths() {
       fields: [
         "*",
         // @ts-ignore
-        { photos: ["directus_files_id", { directus_files_id: ["id", "width", "height"] }] },
+        {
+          photos: ["directus_files_id", { directus_files_id: ["id", "width", "height"] }],
+          subsets: [
+            "description",
+            "magicGrid",
+            { photos: ["directus_files_id", { directus_files_id: ["id", "width", "height"] }] },
+          ],
+        },
       ],
     }),
   );
@@ -39,6 +46,7 @@ export async function getStaticPaths() {
 }
 
 const { photoSet, sections } = Astro.props;
+console.log(photoSet.subsets);
 ---
 
 <Layout>
@@ -63,7 +71,33 @@ const { photoSet, sections } = Astro.props;
         ))
       }
     </nav>
-    <div id="masonry-container" class="mx-auto w-full" data-dynamic-position={photoSet.dynamicPosition}>
+
+    {
+      photoSet.subsets?.map(({ photos, description, magicGrid }) => (
+          <div class="text-center" set:html={description} />
+          <div
+      class={`${magicGrid ? "masonry-container" : "flex flex-wrap justify-center gap-2"} mx-auto my-8 w-full`}
+            data-dynamic-position={photoSet.dynamicPosition}
+          >
+            {photos.map(({ directus_files_id: { id, width, height } }, i) => (
+              <ImageViewerImg
+                rawSrc={id}
+                width={320}
+                height={320 / (width / height)}
+                index={i}
+        buttonClass=`aspect-ratio-polyfill overflow-clip group inline-block ${magicGrid ? "translate-x-[100vw]" : ""} max-w-[calc(50%-8px)]`
+                class="transition-transform cursor-pointer group-hover:scale-110 duration-300"
+              />
+            ))}
+          </div>
+      ))
+    }
+
+    <div
+      id="masonry-container"
+      class="masonry-container mx-auto w-full"
+      data-dynamic-position={photoSet.dynamicPosition}
+    >
       {
         photoSet.photos.map(({ directus_files_id: { id, width, height } }, i) => (
           <ImageViewerImg
@@ -85,18 +119,20 @@ const { photoSet, sections } = Astro.props;
   import MagicGrid from "magic-grid";
 
   const gridEl = document.getElementById("masonry-container");
+  const gridEls = document.getElementsByClassName("masonry-container");
 
-  console.log(gridEl?.dataset.dynamicPosition);
-
-  let magicGrid = new MagicGrid({
-    container: "#masonry-container",
-    static: true,
-    gutter: 8,
-    useMin: gridEl?.dataset.dynamicPosition === "true",
-  });
-  document.addEventListener("DOMContentLoaded", () => {
-    magicGrid.listen();
-  });
+  for (let el of gridEls) {
+    console.log(el);
+    let magicGrid = new MagicGrid({
+      container: el as HTMLElement,
+      static: true,
+      gutter: 8,
+      useMin: gridEl?.dataset.dynamicPosition === "true",
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+      magicGrid.listen();
+    });
+  }
 
   let imgContainers = document.getElementsByClassName("img-container");
 

@@ -7,6 +7,7 @@ import directus, { imgSrc } from "@lib/directus";
 import { readSingleton } from "@directus/sdk";
 
 const home = await directus.request(readSingleton("home"));
+const global = await directus.request(readSingleton("global"));
 ---
 
 <Layout>
@@ -28,7 +29,7 @@ const home = await directus.request(readSingleton("home"));
       </a>
       <Nav dark />
     </div>
-    <Link href="/diary" light>diary</Link>
+    <Link href="/diary" light class="w-fit block mx-auto px-4">{global.diaryLinkName}</Link>
   </MainFlex>
 </Layout>
 

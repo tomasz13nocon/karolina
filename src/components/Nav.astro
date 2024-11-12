@@ -1,19 +1,23 @@
 ---
+import directus from "@lib/directus";
 import Link from "./Link.astro";
 import Socials from "./Socials.astro";
 import { isCurrent } from "@lib/util";
+import { readSingleton } from "@directus/sdk";
+
+const global = await directus.request(readSingleton("global"));
 
 const { exclude = [], include = [], socials = true, dark = false } = Astro.props;
 const pages = [
-  ["home", "/"],
-  ["about", "/about"],
-  ["photography", "/photography"],
-  ["shows", "/shows"],
+  [global.homeLinkName, "/"],
+  [global.aboutLinkName, "/about"],
+  [global.photographyLinkName, "/photography"],
+  [global.showsLinkName, "/exhibitions"],
 ].filter(
   ([_, href]) =>
     !isCurrent(href, Astro.url.pathname) &&
     !exclude.includes(href) &&
-    (include.length === 0 || include.includes(href))
+    (include.length === 0 || include.includes(href)),
 );
 ---
 
@@ -22,7 +26,9 @@ const pages = [
     {
       pages.map(([name, href]) => (
         <li>
-      <Link dark={dark} href={href}>{name}</Link>
+          <Link dark={dark} href={href}>
+            {name}
+          </Link>
         </li>
       ))
     }
