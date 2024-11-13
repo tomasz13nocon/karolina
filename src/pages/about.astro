@@ -4,13 +4,14 @@ import Nav from "@components/Nav.astro";
 import MainFlex from "@layouts/MainFlex.astro";
 import directus, { imgSrc } from "@lib/directus";
 import { readSingleton } from "@directus/sdk";
+import Socials from "@components/Socials.astro";
 
 const data = await directus.request(readSingleton("about"));
 ---
 
 <Layout>
   <MainFlex>
-    <Nav />
+    <Nav socials={false} />
     <img
       src={imgSrc(data.image, {format: "webp", width:600, quality:90})}
       role="presentation"
@@ -25,11 +26,14 @@ const data = await directus.request(readSingleton("about"));
       </section>
       {
         data.contact.map(({ text, isEmail }) => (
-          <address class="not-italic mb-4 lg:mb-1 text-grey-0">
+          <address class="not-italic font-bold mb-4 lg:mb-1 text-grey-0">
             {isEmail ? <a href={`mailto:${text}`}>{text}</a> : text}
           </address>
         ))
       }
+      <div class="mt-2">
+        <Socials dark />
+      </div>
     </article>
   </MainFlex>
 </Layout>
