@@ -26,7 +26,7 @@ const data = await directus.request(readSingleton("about"));
       </section>
       {
         data.contact.map(({ text, isEmail }) => (
-          <address class="not-italic font-bold mb-4 lg:mb-1 text-grey-0">
+          <address class="not-italic font-bold mb-4 lg:mb-1 text-grey-1">
             {isEmail ? <a href={`mailto:${text}`}>{text}</a> : text}
           </address>
         ))
