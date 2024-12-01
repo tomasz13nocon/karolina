@@ -86,7 +86,7 @@ export default directus;
 
 let directusURL: string;
 // if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
-if (import.meta.env.MODE === "development") directusURL = "https://preview.karolinanocon.com/";
+if (import.meta.env.MODE === "development") directusURL = "https://karolinanocon.com/";
 else if (import.meta.env.MODE === "preview") directusURL = "https://preview.karolinanocon.com/";
 else directusURL = "https://karolinanocon.com/";
 
@@ -98,7 +98,8 @@ export function imgSrc(name: string, options?: Record<string, any>) {
 }
 
 export async function getDiaryEntries(query?: Query<Schema, DiaryEntry>) {
-  let blogs = await directus.request(readItems("diary_entries", query));
+  let blogs = await directus.request(readItems("diary_entries", { limit: -1, ...query }));
+  console.log(blogs.length);
   return blogs.map((blog) => ({
     ...blog,
     date: new Date(blog.date),
