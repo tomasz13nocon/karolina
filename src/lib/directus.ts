@@ -99,7 +99,6 @@ export function imgSrc(name: string, options?: Record<string, any>) {
 
 export async function getDiaryEntries(query?: Query<Schema, DiaryEntry>) {
   let blogs = await directus.request(readItems("diary_entries", query));
-  console.log(blogs.length);
   return blogs.map((blog) => ({
     ...blog,
     date: new Date(blog.date),

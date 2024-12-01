@@ -46,7 +46,6 @@ export async function getStaticPaths() {
 }
 
 const { photoSet, sections } = Astro.props;
-console.log(photoSet.subsets);
 ---
 
 <Layout>
@@ -122,7 +121,6 @@ console.log(photoSet.subsets);
   const gridEls = document.getElementsByClassName("masonry-container");
 
   for (let el of gridEls) {
-    console.log(el);
     let magicGrid = new MagicGrid({
       container: el as HTMLElement,
       static: true,

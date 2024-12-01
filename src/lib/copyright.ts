@@ -12,7 +12,6 @@ export function setupCopyright(imgElement?: HTMLImageElement) {
       e.preventDefault();
       clearTimeout(contextTimeout);
       copyright.classList.remove("hidden");
-      console.log(e);
       copyright.style.transform = `translate(${e.pageX}px, ${e.pageY}px)`;
       contextTimeout = setTimeout(() => {
         copyright.classList.add("hidden");
