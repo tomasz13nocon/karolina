@@ -14,3 +14,4 @@ services:
       DB_CLIENT: "sqlite3"
       DB_FILENAME: "/directus/database/data.db"
       WEBSOCKETS_ENABLED: "true"
+      QUERY_LIMIT_DEFAULT: "-1"
