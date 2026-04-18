@@ -1,4 +1,5 @@
 ---
+import { Font } from "astro:assets";
 import directus, { imgSrc } from "../lib/directus";
 import { readSingleton } from "@directus/sdk";
 
@@ -74,44 +75,15 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
   </body>
 </html>
 
+<Font cssVariable="--font-open-sans" preload />
+
 <style is:global>
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-
-  @font-face {
-    font-display: swap;
-    font-family: "Open Sans";
-    font-style: normal;
-    font-weight: 400;
-    src:
-      url("/fonts/open-sans-v34-latin_latin-ext-regular.woff2") format("woff2"),
-      url("/fonts/open-sans-v34-latin_latin-ext-regular.woff") format("woff");
-  }
-
-  @font-face {
-    font-display: swap;
-    font-family: "Open Sans";
-    font-style: normal;
-    font-weight: 500;
-    src:
-      url("/fonts/open-sans-v34-latin_latin-ext-500.woff2") format("woff2"),
-      url("/fonts/open-sans-v34-latin_latin-ext-500.woff") format("woff");
-  }
-
-  @font-face {
-    font-display: swap;
-    font-family: "Open Sans";
-    font-style: normal;
-    font-weight: 700;
-    src:
-      url("/fonts/open-sans-v34-latin_latin-ext-700.woff2") format("woff2"),
-      url("/fonts/open-sans-v34-latin_latin-ext-700.woff") format("woff");
-  }
+  @import "tailwindcss";
+  @config "../../tailwind.config.cjs";
 
   @layer base {
     html {
-      font-family: "Open Sans", sans-serif;
+      font-family: var(--font-open-sans);
       font-size: 12px;
     }
     h1,
