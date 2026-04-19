@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@astropub/md": "^1.0.0",
-    "@directus/sdk": "^18.0.0",
+    "@directus/sdk": "^21.2.2",
     "@iconify-json/ph": "^1.2.1",
     "@tailwindcss/typography": "^0.5.15",
     "@tailwindcss/vite": "^4.2.2",

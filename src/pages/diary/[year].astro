@@ -13,7 +13,7 @@ export async function getStaticPaths() {
   let blogs = await getDiaryEntries();
   const years = [...new Set(blogs.map(blog => blog.date.getFullYear()))];
   return years.map(year => ({
-    params: { year }, props: { year },
+    params: { year: year.toString() }, props: { year },
   }));
 };
 const { year } = Astro.props;
