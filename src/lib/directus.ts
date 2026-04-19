@@ -56,6 +56,7 @@ export type PhotoSet = {
   title: string;
   thumbnail: string;
   dynamicPosition: boolean;
+  maxColumns?: number;
   photos: { directus_files_id: Image }[];
   section: number;
   subsets: PhotoSubset[];
@@ -92,6 +93,7 @@ else directusURL = "https://karolinanocon.com/";
 
 const assetsURL = directusURL + "assets/";
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function imgSrc(name: string, options?: Record<string, any>) {
   const params = new URLSearchParams(options).toString();
   return assetsURL + name + (params ? "?" + params : "");
