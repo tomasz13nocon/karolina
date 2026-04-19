@@ -7,15 +7,11 @@ import {
   SWIPE_BOUNCE,
 } from "../lib/util";
 import ImageViewerBtn from "./ImageViewerBtn.astro";
-import directus from '@lib/directus';
-import { readSingleton } from '@directus/sdk';
 
 interface Props {
   blur?: boolean;
 }
 const { blur } = Astro.props;
-
-const data = await directus.request(readSingleton("global"));
 ---
 
 <!-- Setting both grid and hidden to be able to easily remove hidden -->
