@@ -5,8 +5,9 @@
       "type": "remote",
       "url": "http://localhost:8055/mcp",
       "enabled": true,
+      "oauth": false,
       "headers": {
-        "Authorization": "Bearer local-directus-mcp-token"
+        "Authorization": "Bearer {env:DIRECTUS_MCP_TOKEN}"
       }
     }
   }
