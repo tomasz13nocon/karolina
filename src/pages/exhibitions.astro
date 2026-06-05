@@ -19,14 +19,14 @@ const anyPast = shows.some((show) => !show.upcoming);
     <div class="flex flex-col gap-10 text-grey-3">
       <div class="flex gap-10 flex-col text-grey-0">
         {
-        anyUpcoming ? (
-        <ShowList
-          shows={shows.filter((show) => show.upcoming)}
-          heading={data.upcomingShowsText}
-        />
-        ) : (
-        <p>{data.noUpcomingShowsText}</p>
-        )
+          anyUpcoming ? (
+            <ShowList
+              shows={shows.filter((show) => show.upcoming)}
+              heading={data.upcomingShowsText}
+            />
+          ) : (
+            <p>{data.noUpcomingShowsText}</p>
+          )
         }
       </div>
       {

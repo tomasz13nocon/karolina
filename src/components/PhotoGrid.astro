@@ -1,0 +1,77 @@
+---
+import ImageViewerImg from "@components/ImageViewerImg.astro";
+import type { Photo } from "@lib/directus";
+
+/**
+ * A grid of photos wired up for ImageViewer. When `magicGrid` is set the images
+ * are laid out with MagicGrid (masonry); otherwise they wrap in a centered flex
+ * row. Used by the photography index and the individual photo-set pages.
+ */
+interface Props {
+  photos: Photo[];
+  magicGrid?: boolean;
+  dynamicPosition?: boolean;
+  maxColumns?: number;
+  class?: string;
+}
+
+const {
+  photos,
+  magicGrid = true,
+  dynamicPosition = false,
+  maxColumns,
+  class: className = "",
+} = Astro.props;
+
+// Junction rows can outlive their file (every file relation is on_delete: SET
+// NULL), so directus_files_id may be null — drop those so we never crash on the
+// destructure or render a broken image.
+const validPhotos = photos.filter(
+  (photo): photo is Photo & { directus_files_id: NonNullable<Photo["directus_files_id"]> } =>
+    photo.directus_files_id != null,
+);
+---
+
+<div
+  class={`${magicGrid ? "masonry-container" : "flex flex-wrap justify-center gap-2"} mx-auto w-full ${className}`}
+  data-dynamic-position={dynamicPosition}
+  data-max-columns={maxColumns}
+>
+  {
+    validPhotos.map(({ directus_files_id: { id, width, height } }, i) => (
+      <ImageViewerImg
+        rawSrc={id}
+        width={320}
+        height={320 / (width / height)}
+        index={i}
+        buttonClass={`aspect-ratio-polyfill overflow-clip group inline-block ${magicGrid ? "translate-x-100vw" : ""} max-w-[calc(50%-8px)]`}
+        class="transition-transform cursor-pointer group-hover:scale-110 duration-300"
+      />
+    ))
+  }
+</div>
+
+<script>
+  import MagicGrid from "magic-grid";
+
+  const gridEls = document.getElementsByClassName(
+    "masonry-container",
+  ) as HTMLCollectionOf<HTMLElement>;
+
+  for (let el of gridEls) {
+    // MagicGrid reads items[0].getBoundingClientRect(), so an empty grid throws.
+    if (el.children.length === 0) continue;
+
+    const maxColumns = parseInt(el.dataset.maxColumns ?? "");
+    const magicGrid = new MagicGrid({
+      container: el,
+      static: true,
+      gutter: 8,
+      useMin: el.dataset.dynamicPosition === "true",
+      maxColumns: isNaN(maxColumns) ? undefined : maxColumns,
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+      magicGrid.listen();
+    });
+  }
+</script>

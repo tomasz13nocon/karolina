@@ -46,8 +46,19 @@ type Image = {
   height: number;
 };
 
+// directus_files_id is the junction's FK to directus_files. Every file relation
+// in this schema is on_delete: SET NULL, so a junction row can outlive its file
+// and arrive here as null — callers must filter/guard before dereferencing.
+export type Photo = {
+  directus_files_id: Image | null;
+};
+
+type Photography = {
+  selectedWorks: Photo[];
+};
+
 export type PhotoSubset = {
-  photos: { directus_files_id: Image }[];
+  photos: Photo[];
   description: string;
   magicGrid: boolean;
 };
@@ -57,7 +68,7 @@ export type PhotoSet = {
   thumbnail: string;
   dynamicPosition: boolean;
   maxColumns?: number;
-  photos: { directus_files_id: Image }[];
+  photos: Photo[];
   section: number;
   subsets: PhotoSubset[];
 };
@@ -75,21 +86,30 @@ type Schema = {
   about: About;
   shows_page: ShowsPage;
   shows: Show[];
+  photography: Photography;
   photo_sections: PhotoSection[];
   photo_sets: PhotoSet[];
   diary_entries: DiaryEntry[];
+  // Declared so the SDK can type nested relational field selection (the M2M
+  // junction + the files collection it points at).
+  photography_files: Photo[];
+  directus_files: Image[];
 };
 
-// const directus = createDirectus<Schema>("http://localhost:8055").with(rest());
-const directus = createDirectus<Schema>("https://admin.karolinanocon.com").with(rest());
+const directus = createDirectus<Schema>(
+  import.meta.env.MODE === "development"
+    ? "http://localhost:8055"
+    : "https://admin.karolinanocon.com",
+).with(rest());
 
 export default directus;
 
 let directusURL: string;
-// if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
-if (import.meta.env.MODE === "development") directusURL = "https://karolinanocon.com/";
+if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
 else if (import.meta.env.MODE === "preview") directusURL = "https://preview.karolinanocon.com/";
 else directusURL = "https://karolinanocon.com/";
+
+console.log(`MODE is ${import.meta.env.MODE}, Using directus assets URL: ${directusURL}`);
 
 const assetsURL = directusURL + "assets/";
 

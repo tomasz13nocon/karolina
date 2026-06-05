@@ -8,17 +8,17 @@ import Link from "@components/Link.astro";
 import directus, { getDiaryEntries } from "@lib/directus";
 import { readSingleton } from "@directus/sdk";
 
-
 export async function getStaticPaths() {
   let blogs = await getDiaryEntries();
-  const years = [...new Set(blogs.map(blog => blog.date.getFullYear()))];
-  return years.map(year => ({
-    params: { year: year.toString() }, props: { year },
+  const years = [...new Set(blogs.map((blog) => blog.date.getFullYear()))];
+  return years.map((year) => ({
+    params: { year: year.toString() },
+    props: { year },
   }));
-};
+}
 const { year } = Astro.props;
 let blogs = await getDiaryEntries();
-blogs = blogs.filter(blog => blog.date.getFullYear() === year);
+blogs = blogs.filter((blog) => blog.date.getFullYear() === year);
 
 const global = await directus.request(readSingleton("global"));
 ---

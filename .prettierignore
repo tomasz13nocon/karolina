@@ -1,0 +1,28 @@
+node_modules/
+dist/
+.astro/
+.opencode/
+
+# Documentation and content exports
+*.md
+docs/
+directus/
+
+# Environment and logs
+.env
+.env.*
+*.log
+
+# Binary/media assets
+*.avif
+*.jpg
+*.jpeg
+*.png
+*.webp
+*.gif
+*.ico
+*.pdf
+*.woff
+*.woff2
+*.ttf
+*.otf

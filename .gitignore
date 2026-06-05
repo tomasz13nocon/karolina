@@ -24,4 +24,6 @@ pnpm-debug.log*
 todo
 TODO
 
-directus/
+directus/*
+!directus/schema/
+!directus/schema/snapshot.yaml

@@ -13,7 +13,7 @@ const data = await directus.request(readSingleton("about"));
   <MainFlex>
     <Nav socials={false} />
     <img
-      src={imgSrc(data.image, {format: "webp", width:600, quality:90})}
+      src={imgSrc(data.image, { format: "webp", width: 600, quality: 90 })}
       role="presentation"
       class="mx-auto rounded-full w-[300px]"
     />

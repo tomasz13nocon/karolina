@@ -13,15 +13,12 @@ const global = await directus.request(readSingleton("global"));
 <Layout>
   <MainFlex class="min-h-screen">
     <div class="flex flex-col gap-mid">
-      <h1
-        class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12"
-        id="index-title"
-      >
+      <h1 class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12" id="index-title">
         {home.heading}
       </h1>
       <a href="/photography" aria-label="photography">
         <img
-          src={imgSrc(home.image, {format: "webp", width: 600, quality: 90})}
+          src={imgSrc(home.image, { format: "webp", width: 600, quality: 90 })}
           role="presentation"
           class="mx-auto rounded-full animate-[fadein2_1s_both_paused] w-[300px]"
           id="index-image"

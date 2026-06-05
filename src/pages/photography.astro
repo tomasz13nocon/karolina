@@ -1,51 +1,31 @@
 ---
-import Blurhash from "@components/Blurhash.astro";
+import ImageViewer from "@components/ImageViewer.astro";
 import Nav from "@components/Nav.astro";
+import PhotoGrid from "@components/PhotoGrid.astro";
+import PhotoSetNav from "@components/PhotoSetNav.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
-import { toUrl } from "@lib/util";
-import directus, { imgSrc } from "@lib/directus";
-import { readItems } from "@directus/sdk";
+import directus from "@lib/directus";
+import { readItems, readSingleton } from "@directus/sdk";
 
-const sections = await directus.request(
-  readItems("photo_sections", { fields: ["photoSets", { photoSets: ["*"] }] }),
-);
+// The two reads are independent — run them concurrently.
+const [sections, photography] = await Promise.all([
+  directus.request(readItems("photo_sections", { fields: ["photoSets", { photoSets: ["*"] }] })),
+  directus.request(
+    readSingleton("photography", {
+      fields: [{ selectedWorks: [{ directus_files_id: ["id", "width", "height"] }] }],
+    }),
+  ),
+]);
+const selectedWorks = photography.selectedWorks ?? [];
 ---
 
 <Layout>
-  <Main class="w-full sm:!w-auto overflow-hidden flex flex-col gap-16 justify-items-center">
+  <Main class="w-full sm:!w-auto xl:w-wide overflow-hidden flex flex-col justify-items-center">
     <Nav />
-    {
-      sections.map(({ photoSets }) => (
-        <ul class="flex flex-wrap justify-center max-w-[min(1000px,100%)] gap-4 lg:gap-2 mx-auto mb-16 sm:mb-8">
-          {photoSets!.map(({ title, thumbnail }) => (
-            <li class="max-w-full">
-              <a
-                href={"/photography/" + toUrl(title)}
-                class="max-w-full w-[26rem] aspect-ratio-polyfill flex items-center justify-center relative overflow-clip group"
-                style={{
-                  "--aspect-ratio": `${(1 / 2.6) * 100}%`,
-                }}
-                aria-labelledby="#photo-set-title"
-              >
-                <img
-                  src={imgSrc(thumbnail, { width: 312, height: 120, format: "webp", quality: 90 })}
-                  alt={title + " set thumbnail"}
-                  class="absolute w-full duration-500 ease-expo"
-                />
-                <Blurhash rawSrc={thumbnail} />
-                <div class="absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100" />
-                <span
-                  id="photo-set-title"
-                  class="z-10 text-grey-7 tracking-[0.2em] text-lg font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.55em]"
-                >
-                  {title}
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      ))
-    }
+    <PhotoSetNav photoSetGroups={sections.map(({ photoSets }) => photoSets ?? [])} />
+
+    <PhotoGrid photos={selectedWorks} dynamicPosition />
   </Main>
+  <ImageViewer />
 </Layout>

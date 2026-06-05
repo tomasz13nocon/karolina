@@ -1,0 +1,4 @@
+[mcp_servers.directus]
+url = "http://localhost:8055/mcp"
+http_headers = { Authorization = "Bearer local-directus-mcp-token" }
+tool_timeout_sec = 120

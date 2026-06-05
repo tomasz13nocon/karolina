@@ -10,15 +10,12 @@ const { years } = Astro.props;
 years.sort();
 ---
 
-<div class={`flex flex-wrap gap-y-4 gap-x-8 lg:gap-x-6 justify-center items-baseline text-[1.3333333rem]`}>
+<div
+  class={`flex flex-wrap gap-y-4 gap-x-8 lg:gap-x-6 justify-center items-baseline text-[1.3333333rem]`}
+>
   {
     years.map((year) => (
-      <Link
-        href={`/diary/${year}`}
-        class="sm:mx-0"
-        activeClass="!text-grey-2 !font-bold"
-        light
-      >
+      <Link href={`/diary/${year}`} class="sm:mx-0" activeClass="!text-grey-2 !font-bold" light>
         {year}
       </Link>
     ))

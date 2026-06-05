@@ -9,16 +9,14 @@ interface Props {
 
 let imageBuffer;
 try {
-  let resp = await fetch(imgSrc(Astro.props.rawSrc, {width:40, height:40}));
+  let resp = await fetch(imgSrc(Astro.props.rawSrc, { width: 40, height: 40 }));
   let buf = await resp.arrayBuffer();
   imageBuffer = await sharp(buf)
-  .resize({ width: 40, height: 40, fit: "inside" })
-  .raw()
-  .ensureAlpha()
-  .toBuffer({ resolveWithObject: true });
-
-}
-catch(_) {
+    .resize({ width: 40, height: 40, fit: "inside" })
+    .raw()
+    .ensureAlpha()
+    .toBuffer({ resolveWithObject: true });
+} catch (_) {
   return;
 }
 
@@ -44,7 +42,7 @@ const hash = Buffer.from(thumbhash).toString("base64");
   import { thumbHashToRGBA } from "thumbhash";
 
   const canvases = document.getElementsByClassName(
-    "blur-canvas"
+    "blur-canvas",
   ) as HTMLCollectionOf<HTMLCanvasElement>;
 
   for (let canvas of canvases) {

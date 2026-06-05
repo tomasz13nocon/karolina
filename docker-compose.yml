@@ -1,12 +1,13 @@
 services:
   directus:
-    image: directus/directus:11.1.1
+    image: directus/directus:11.17.4
     ports:
       - 8055:8055
     volumes:
       - ./directus/database:/directus/database
       - ./directus/uploads:/directus/uploads
       - ./directus/extensions:/directus/extensions
+      - ./directus/schema:/directus/schema
     environment:
       SECRET: "fdsfas89435hj3kh#h"
       ADMIN_EMAIL: "tomasz13nocon@gmail.com"
