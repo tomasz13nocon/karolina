@@ -11,7 +11,7 @@ export default [
   ...ts.configs.recommended,
   ...eslintPluginAstro.configs.recommended,
   prettier,
-  globalIgnores(["dist/", "tailwind.config.cjs", "src/env.d.ts", ".astro/"]),
+  globalIgnores(["dist/", "src/env.d.ts", ".astro/"]),
   {
     languageOptions: {
       globals: {

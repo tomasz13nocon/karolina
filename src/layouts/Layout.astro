@@ -2,6 +2,7 @@
 import { Font } from "astro:assets";
 import directus, { imgSrc } from "../lib/directus";
 import { readSingleton } from "@directus/sdk";
+import "../global.css";
 
 export interface Props {
   title?: string;
@@ -76,66 +77,6 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
 </html>
 
 <Font cssVariable="--font-open-sans" preload />
-
-<style is:global>
-  @import "tailwindcss";
-  @config "../../tailwind.config.cjs";
-
-  @layer base {
-    html {
-      font-family: var(--font-open-sans);
-      font-size: 12px;
-    }
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-weight: bold;
-    }
-    h1 {
-      font-size: 2.4em;
-    }
-    h2 {
-      font-size: 1.5em;
-    }
-    h3 {
-      font-size: 1.17em;
-    }
-    h4 {
-      font-size: 1em;
-    }
-    h5 {
-      font-size: 0.83em;
-    }
-    h6 {
-      font-size: 0.67em;
-    }
-  }
-
-  @layer utilities {
-    .transition-1 {
-      @apply duration-500 ease-expo;
-    }
-    .text-hover {
-      @apply text-grey-0;
-    }
-    .text-hover-2 {
-      @apply text-grey-3;
-    }
-    .aspect-ratio-polyfill:before {
-      float: left;
-      padding-top: var(--aspect-ratio);
-      content: "";
-    }
-    .aspect-ratio-polyfill:after {
-      display: block;
-      content: "";
-      clear: both;
-    }
-  }
-</style>
 
 <script>
   import { setupCopyright } from "@lib/copyright";
