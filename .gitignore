@@ -25,5 +25,7 @@ todo
 TODO
 
 directus/*
+!directus/migrations/
+!directus/migrations/*.js
 !directus/schema/
 !directus/schema/snapshot.yaml

@@ -1,31 +1,43 @@
 ---
 import Link from "@components/Link.astro";
-import type { PhotoSet } from "@lib/directus";
+import PhotoSetPopover from "@components/PhotoSetPopover.astro";
+import type { PhotoSection, PhotoSet } from "@lib/directus";
 import { toUrl } from "@lib/util";
 
 interface Props {
-  photoSetGroups: PhotoSet[][];
+  photoSections: PhotoSection[];
+  photoSetPopoverVariant?: "list" | "thumbnails" | "proofs";
 }
 
-const { photoSetGroups } = Astro.props;
+const { photoSections, photoSetPopoverVariant = "list" } = Astro.props;
+
+function photoSetHref(photoSet: PhotoSet) {
+  return "/photography/" + toUrl(photoSet.title);
+}
 ---
 
 <nav class="mt-12 lg:mt-8 mb-16">
   {
-    photoSetGroups.map((photoSets) => (
-      <ul class="flex flex-wrap justify-center">
-        {photoSets.map((photoSet) => (
-          <li class="inline-block">
-            <Link
-              href={"/photography/" + toUrl(photoSet.title)}
-              class="px-4 pb-4 lg:px-2 group"
-              activeClass="!tracking-[0.55em] !font-bold px-6"
-            >
-              {photoSet.title}
-            </Link>
-          </li>
-        ))}
-      </ul>
-    ))
+    photoSections.map(({ label, displayMode, photoSets }) => {
+      const sets = photoSets ?? [];
+
+      return displayMode === "dropdown" ? (
+        <PhotoSetPopover label={label} photoSets={sets} variant={photoSetPopoverVariant} />
+      ) : (
+        <ul class="flex flex-wrap justify-center">
+          {sets.map((photoSet) => (
+            <li class="inline-block">
+              <Link
+                href={photoSetHref(photoSet)}
+                class="px-4 pb-4 lg:px-2 group"
+                activeClass="!tracking-[0.55em] !font-bold px-6"
+              >
+                {photoSet.title}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      );
+    })
   }
 </nav>

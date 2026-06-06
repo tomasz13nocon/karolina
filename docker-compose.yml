@@ -7,6 +7,7 @@ services:
       - ./directus/database:/directus/database
       - ./directus/uploads:/directus/uploads
       - ./directus/extensions:/directus/extensions
+      - ./directus/migrations:/directus/migrations
       - ./directus/schema:/directus/schema
     environment:
       SECRET: "fdsfas89435hj3kh#h"
@@ -14,5 +15,6 @@ services:
       ADMIN_PASSWORD: "qweqwe"
       DB_CLIENT: "sqlite3"
       DB_FILENAME: "/directus/database/data.db"
+      MIGRATIONS_PATH: "/directus/migrations"
       WEBSOCKETS_ENABLED: "true"
       QUERY_LIMIT_DEFAULT: -1

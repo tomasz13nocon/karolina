@@ -36,8 +36,12 @@ type Show = {
   upcoming: boolean;
 };
 
-type PhotoSection = {
-  photoSets: PhotoSet[];
+export type PhotoSection = {
+  id: number;
+  sort: number | null;
+  label: string | null;
+  displayMode: "links" | "dropdown";
+  photoSets: PhotoSet[] | null;
 };
 
 type Image = {
@@ -58,17 +62,21 @@ type Photography = {
 };
 
 export type PhotoSubset = {
-  photos: Photo[];
+  photos: Photo[] | null;
   description: string;
   magicGrid: boolean;
 };
 
 export type PhotoSet = {
+  id: number;
+  sort: number | null;
   title: string;
+  description: string | null;
   thumbnail: string;
+  magicGrid: boolean;
   dynamicPosition: boolean;
   maxColumns?: number;
-  photos: Photo[];
+  photos: Photo[] | null;
   section: number;
   subsets: PhotoSubset[];
 };
