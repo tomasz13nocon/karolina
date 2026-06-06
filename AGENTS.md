@@ -6,6 +6,9 @@ This is an Astro site backed by Directus content. Page routes live in `src/pages
 
 Directus schema workflow is described in `docs/directus.md`.
 
+DO NOT edit the directus schema snapshot in `directus/schema/snapshot.yaml` directly!
+You can edit the model via directus MCP, then export the schema.
+
 ## Build, Test, and Development Commands
 
 - `npm run check`: runs Astro validation, TypeScript (`tsc --noEmit`), ESLint, and prettier.
