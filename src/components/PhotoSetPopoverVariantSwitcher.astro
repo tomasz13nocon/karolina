@@ -1,0 +1,76 @@
+---
+const variants = [
+  { value: "list", label: "Line" },
+  { value: "thumbnails", label: "Tab" },
+  { value: "proofs", label: "Proofs" },
+];
+---
+
+<aside
+  class="fixed bottom-4 right-4 z-50 border border-grey-5 bg-white/90 px-3 py-2 text-[0.65rem] shadow-xl backdrop-blur-sm"
+  aria-label="Photo set popover variant switcher"
+  data-photo-set-variant-switcher
+>
+  <p class="mb-2 uppercase tracking-[0.32em] text-grey-2">popover</p>
+  <div class="flex gap-1">
+    {
+      variants.map(({ value, label }) => (
+        <button
+          type="button"
+          class="border border-grey-5 px-2 py-1 uppercase tracking-[0.2em] text-grey-2 transition-colors hover:border-grey-2 hover:text-grey-0"
+          data-photo-set-variant-option={value}
+          aria-pressed="false"
+        >
+          {label}
+        </button>
+      ))
+    }
+  </div>
+</aside>
+
+<script>
+  const variantKey = "photoSetPopoverVariant";
+  const variants = ["list", "thumbnails", "proofs"] as const;
+  type Variant = (typeof variants)[number];
+  const buttons = document.querySelectorAll<HTMLButtonElement>("[data-photo-set-variant-option]");
+
+  const isVariant = (value: string | null): value is Variant => {
+    return variants.includes(value as Variant);
+  };
+
+  const getVariant = (): Variant => {
+    const rootVariant = document.documentElement.dataset.photoSetPopoverVariant ?? null;
+    if (isVariant(rootVariant)) return rootVariant;
+
+    const savedVariant = localStorage.getItem(variantKey);
+    return isVariant(savedVariant) ? savedVariant : "proofs";
+  };
+
+  const setVariant = (variant: Variant) => {
+    document.documentElement.dataset.photoSetPopoverVariant = variant;
+    localStorage.setItem(variantKey, variant);
+
+    for (const button of buttons) {
+      button.setAttribute("aria-pressed", String(button.dataset.photoSetVariantOption === variant));
+    }
+
+    window.dispatchEvent(new CustomEvent("photoSetPopoverVariantChange"));
+  };
+
+  setVariant(getVariant());
+
+  for (const button of buttons) {
+    button.addEventListener("click", () => {
+      const variant = button.dataset.photoSetVariantOption ?? null;
+      if (isVariant(variant)) setVariant(variant);
+    });
+  }
+</script>
+
+<style>
+  [data-photo-set-variant-option][aria-pressed="true"] {
+    border-color: var(--color-grey-1);
+    background: var(--color-grey-0);
+    color: white;
+  }
+</style>

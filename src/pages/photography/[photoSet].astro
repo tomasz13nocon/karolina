@@ -5,6 +5,7 @@ import ImageViewer from "@components/ImageViewer.astro";
 import Main from "@layouts/Main.astro";
 import { toUrl } from "@lib/util";
 import PhotoSetNav from "@components/PhotoSetNav.astro";
+import PhotoSetPopoverVariantSwitcher from "@components/PhotoSetPopoverVariantSwitcher.astro";
 import PhotoGrid from "@components/PhotoGrid.astro";
 import directus, { type PhotoSection, type PhotoSet } from "@lib/directus";
 import { readItems } from "@directus/sdk";
@@ -62,6 +63,7 @@ const photoSetPopoverVariant = "proofs";
     />
   </Main>
   <ImageViewer />
+  <PhotoSetPopoverVariantSwitcher />
 </Layout>
 
 <style>
