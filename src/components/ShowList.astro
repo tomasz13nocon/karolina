@@ -3,7 +3,7 @@ import ImageViewerImg from "./ImageViewerImg.astro";
 
 interface Props {
   heading: string;
-  shows: { poster: string; title: string }[];
+  shows: { poster: string; title?: string | null; description?: string | null }[];
 }
 
 const shows = Astro.props.shows;
@@ -12,8 +12,20 @@ const shows = Astro.props.shows;
 <h2 class="font-medium block text-base">{Astro.props.heading}</h2>
 <div class="mx-auto flex max-w-[calc(900px+10rem)] flex-wrap justify-center gap-20">
   {
-    shows.map(({ poster: src, title }, i) => (
-      <ImageViewerImg rawSrc={src} alt={title ? `poster of ${title}` : ""} width={300} index={i} />
+    shows.map(({ poster: src, title, description }, i) => (
+      <ImageViewerImg
+        rawSrc={src}
+        alt={title ? `poster of ${title}` : ""}
+        width={300}
+        index={i}
+        buttonClass="group cursor-pointer overflow-hidden"
+      >
+        {description ? (
+          <div class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-y-auto bg-black/75 p-6 text-left text-sm leading-relaxed text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+            <div class="prose prose-invert max-w-none" set:html={description} />
+          </div>
+        ) : null}
+      </ImageViewerImg>
     ))
   }
 </div>

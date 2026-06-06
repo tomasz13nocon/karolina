@@ -31,9 +31,10 @@ type ShowsPage = {
 };
 
 type Show = {
-  title: string; // TODO remove
+  title?: string | null; // TODO remove
   poster: string;
   upcoming: boolean;
+  description: string | null;
 };
 
 export type PhotoSection = {
