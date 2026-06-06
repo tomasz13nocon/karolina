@@ -43,6 +43,9 @@ Use `--dry-run` first to inspect the planned changes. Schema snapshots promote
 collections, fields, relations, and related Directus configuration; they do not
 replace production content.
 
+Note: collections' `preview_url` is carried in the snapshot — retarget it to the
+prod base before exporting (see `docs/live-preview.md`).
+
 After the schema is applied, run Directus migrations for content transformations:
 
 ```bash

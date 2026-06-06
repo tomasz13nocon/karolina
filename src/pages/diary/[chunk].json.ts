@@ -2,6 +2,12 @@ import { getDiaryEntries } from "@lib/directus";
 import { CHUNK_SIZE } from "@lib/util";
 import type { APIRoute, InferGetStaticParamsType } from "astro";
 
+// Prerendered (static) even in the server-rendered preview build: these are
+// infinite-scroll pagination chunks, and as on-demand routes the `[chunk]` and
+// `[year]-[chunk]` shapes collide (e.g. /diary/2026-0.json would match [chunk]
+// with chunk="2026-0"). Prerendering keeps them as exact files, as in prod.
+export const prerender = true;
+
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
 // get the posts for the current chunk

@@ -18,3 +18,7 @@ services:
       MIGRATIONS_PATH: "/directus/migrations"
       WEBSOCKETS_ENABLED: "true"
       QUERY_LIMIT_DEFAULT: -1
+      # Allow the Studio's Live Preview pane to iframe the preview frontend.
+      # Without this, Directus's default CSP (child-src 'self' blob:) blocks it.
+      # Lists both origins so the same value works locally and on the prod server.
+      CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC: "'self' blob: http://localhost:4322 https://preview.karolinanocon.com"

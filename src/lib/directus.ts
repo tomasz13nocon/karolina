@@ -105,22 +105,24 @@ type Schema = {
   directus_files: Image[];
 };
 
-const directus = createDirectus<Schema>(
-  import.meta.env.MODE === "development"
-    ? "http://localhost:8055"
-    : "https://admin.karolinanocon.com",
-).with(rest());
+// Which Directus instance the frontend reads from — decoupled from the render
+// mode and set per machine/deploy in .env, so a local build never hits prod.
+// Defaults to the local instance; the prod/preview server sets this to the live
+// instance (https://admin.karolinanocon.com) in .env.production.
+const DIRECTUS_URL = import.meta.env.PUBLIC_DIRECTUS_URL ?? "http://localhost:8055";
+
+// Assets are served straight from the Directus instance by default. The public
+// static build overrides this with the cached front (PUBLIC_ASSETS_URL) for
+// performance; the preview build leaves it direct so image edits show live.
+const ASSETS_URL = import.meta.env.PUBLIC_ASSETS_URL ?? DIRECTUS_URL;
+
+const directus = createDirectus<Schema>(DIRECTUS_URL).with(rest());
 
 export default directus;
 
-let directusURL: string;
-if (import.meta.env.MODE === "development") directusURL = "http://localhost:8055/";
-else if (import.meta.env.MODE === "preview") directusURL = "https://preview.karolinanocon.com/";
-else directusURL = "https://karolinanocon.com/";
+const assetsURL = ASSETS_URL.replace(/\/+$/, "") + "/assets/";
 
-console.log(`MODE is ${import.meta.env.MODE}, Using directus assets URL: ${directusURL}`);
-
-const assetsURL = directusURL + "assets/";
+console.log(`Directus data: ${DIRECTUS_URL} | assets: ${assetsURL}`);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function imgSrc(name: string, options?: Record<string, any>) {
@@ -134,4 +136,29 @@ export async function getDiaryEntries(query?: Query<Schema, DiaryEntry>) {
     ...blog,
     date: new Date(blog.date),
   }));
+}
+
+// Shared by photography/[photoSet].astro for both getStaticPaths (static build)
+// and the request-time fallback (SSR preview). Kept here, not in the page body,
+// because getStaticPaths runs in an isolated context where only imports — not
+// the component's local declarations — are in scope.
+export async function getPhotoSetsAndSections() {
+  const [photoSets, sections] = await Promise.all([
+    directus.request(
+      readItems("photo_sets", {
+        fields: [
+          "*",
+          { photos: ["directus_files_id", { directus_files_id: ["id", "width", "height"] }] },
+        ],
+      }),
+    ),
+    directus.request(
+      readItems("photo_sections", {
+        fields: ["id", "label", "displayMode", { photoSets: ["*"] }],
+        sort: ["sort"],
+        deep: { photoSets: { _sort: ["sort"] } },
+      }),
+    ),
+  ]);
+  return { photoSets, sections };
 }

@@ -2,6 +2,11 @@ import { getDiaryEntries } from "@lib/directus";
 import { CHUNK_SIZE } from "@lib/util";
 import type { APIRoute, InferGetStaticParamsType } from "astro";
 
+// Prerendered (static) even in the server-rendered preview build — see the note
+// in [chunk].json.ts. The diary page itself stays server-rendered, so the first
+// (visible) chunk is live; deeper infinite-scroll chunks come from these files.
+export const prerender = true;
+
 type Params = InferGetStaticParamsType<typeof getStaticPaths>;
 
 // get the posts for the current chunk and year

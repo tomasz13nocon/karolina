@@ -17,7 +17,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/about
       singleton: true
       sort: 2
       sort_field: null
@@ -41,7 +41,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/diary
       singleton: true
       sort: 5
       sort_field: null
@@ -65,7 +65,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/diary
       singleton: false
       sort: 1
       sort_field: null
@@ -89,7 +89,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/
       singleton: true
       sort: 1
       sort_field: null
@@ -113,7 +113,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/
       singleton: true
       sort: 1
       sort_field: null
@@ -159,7 +159,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/photography
       singleton: false
       sort: 1
       sort_field: sort
@@ -187,7 +187,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/photography/{{id}}
       singleton: false
       sort: 1
       sort_field: null
@@ -283,7 +283,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/photography
       singleton: true
       sort: 4
       sort_field: null
@@ -331,7 +331,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/exhibitions
       singleton: false
       sort: 1
       sort_field: sort
@@ -355,7 +355,7 @@ collections:
       icon: null
       item_duplication_fields: null
       note: null
-      preview_url: null
+      preview_url: https://preview.karolinanocon.com/exhibitions
       singleton: true
       sort: 3
       sort_field: null

@@ -2,6 +2,7 @@ node_modules/
 dist/
 .astro/
 .opencode/
+.claude/
 
 # Documentation and content exports
 *.md

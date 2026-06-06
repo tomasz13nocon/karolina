@@ -16,7 +16,9 @@ export async function getStaticPaths() {
     props: { year },
   }));
 }
-const { year } = Astro.props;
+// Static builds get `year` from getStaticPaths props; the server-rendered
+// preview build resolves it from the URL param instead.
+const year = Astro.props.year ?? Number(Astro.params.year);
 let blogs = await getDiaryEntries();
 blogs = blogs.filter((blog) => blog.date.getFullYear() === year);
 
