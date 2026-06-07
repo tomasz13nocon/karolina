@@ -10,9 +10,9 @@ services:
       - ./directus/migrations:/directus/migrations
       - ./directus/schema:/directus/schema
     environment:
-      SECRET: "fdsfas89435hj3kh#h"
-      ADMIN_EMAIL: "tomasz13nocon@gmail.com"
-      ADMIN_PASSWORD: "qweqwe"
+      SECRET: ${DIRECTUS_SECRET}
+      ADMIN_EMAIL: ${DIRECTUS_ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${DIRECTUS_ADMIN_PASSWORD}
       DB_CLIENT: "sqlite3"
       DB_FILENAME: "/directus/database/data.db"
       MIGRATIONS_PATH: "/directus/migrations"
@@ -22,3 +22,65 @@ services:
       # Without this, Directus's default CSP (child-src 'self' blob:) blocks it.
       # Lists both origins so the same value works locally and on the prod server.
       CONTENT_SECURITY_POLICY_DIRECTIVES__FRAME_SRC: "'self' blob: http://localhost:4322 https://preview.karolinanocon.com"
+      # Expose WEBHOOK_TOKEN to flows so the Publish flow can authenticate to the
+      # build-hook via {{ $env.WEBHOOK_TOKEN }} (allow-list gates which vars flows see).
+      FLOWS_ENV_ALLOW_LIST: "WEBHOOK_TOKEN"
+      WEBHOOK_TOKEN: ${WEBHOOK_TOKEN}
+    healthcheck:
+      # Gate dependents until Directus is actually serving (the preview builds at
+      # start and fetches from it). node is present in the image; fetch is global.
+      test:
+        [
+          "CMD",
+          "node",
+          "-e",
+          "fetch('http://127.0.0.1:8055/server/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+    restart: unless-stopped
+
+  preview:
+    build: . # shared image (see Dockerfile); preview just overrides command + env
+    image: karolina-app
+    command: sh -c "npm run build && node ./dist/server/entry.mjs"
+    environment:
+      # PUBLIC_* are inlined by Vite during the build, which runs at container
+      # start — on the compose network, so directus:8055 resolves.
+      MODE: preview
+      PUBLIC_VISUAL_EDITING: "true"
+      PUBLIC_DIRECTUS_URL: "http://directus:8055"
+      PUBLIC_ASSETS_URL: "https://preview.karolinanocon.com"
+      PUBLIC_DIRECTUS_STUDIO_URL: "https://admin.karolinanocon.com"
+      HOST: "0.0.0.0"
+      PORT: "4322"
+    ports:
+      - 4322:4322
+    depends_on:
+      directus:
+        condition: service_healthy
+    profiles: [deploy] # not started by a plain `docker compose up` (dev = Directus only)
+    restart: unless-stopped
+
+  build-hook:
+    build: . # same shared image
+    image: karolina-app
+    command: node webhook-server.js
+    environment:
+      WEBHOOK_TOKEN: ${WEBHOOK_TOKEN}
+      DIRECTUS_TOKEN: ${DIRECTUS_TOKEN}
+      # Server-side data source for the build, over the compose network.
+      PUBLIC_DIRECTUS_URL: "http://directus:8055"
+    volumes:
+      # The built static site lands here on the host; point nginx's root at
+      # /srv/karolina/site/current (an atomic symlink the build flips).
+      - /srv/karolina/site:/out
+    depends_on:
+      directus:
+        condition: service_healthy
+    profiles: [deploy]
+    restart: unless-stopped
+    # No published port — only the directus container reaches it, at
+    # http://build-hook:5123 over the internal network.

@@ -7,23 +7,18 @@ without a rebuild.
 
 ## Prod server topology
 
-Not visible from the repo — you'd have to read the server's nginx config:
+The stack (Directus + the SSR `preview` container + the `build-hook`) and how prod
+is built and served live in `docs/deploy.md`. Preview-specific:
 
-- **Directus runs on the prod server at `localhost:8055`.** Both vhosts proxy
-  `/assets/` to it; that's how images load from the site's own origin.
-- `karolinanocon.com` → static files in `/var/www/karolina/dist` (`build:prod`
-  deploys there).
-- `preview.karolinanocon.com` → nginx proxies `/` to the SSR Node process and
-  keeps the `/assets/` proxy. The process runs the `build:preview` bundle
-  (`dist/server/entry.mjs`) via systemd **from the repo checkout** (so
-  `node_modules` resolves) — `build:preview` does not copy anywhere. Deploying
-  preview = `build:preview` + restart, on code changes only.
+- `preview.karolinanocon.com` is the `preview` compose service. nginx proxies `/`
+  → `localhost:4322` (the SSR server) and `/assets/` → Directus (`localhost:8055`),
+  which is how images load from the site's own origin.
+- It builds at container start with `MODE=preview` + the preview `PUBLIC_*` (set in
+  `docker-compose.yml`), reading data from `directus:8055` on the compose network.
 
-Because Directus is co-located, **data** is read from `PUBLIC_DIRECTUS_URL`
-(default `localhost:8055`) everywhere; **assets** come from `PUBLIC_ASSETS_URL`,
-set per build (`build:prod` → `karolinanocon.com`, `build:preview` →
-`preview.karolinanocon.com`), which the browser hits and nginx proxies to
-Directus.
+**Data** is read from `PUBLIC_DIRECTUS_URL`; **assets** from `PUBLIC_ASSETS_URL`
+(`preview.karolinanocon.com` for preview, `karolinanocon.com` for prod) — the
+browser hits that and nginx proxies it to Directus.
 
 ## Dev
 
@@ -50,13 +45,13 @@ Click-to-edit overlays in the Studio's Visual Editor, layered on this SSR previe
 library never patches the DOM). Editable elements carry a `data-directus` string
 from `setAttr` (see `src/lib/visualEditing.ts`).
 
-Two env vars, set by the preview build scripts:
+Two env vars, set on the `preview` service (`docker-compose.yml`):
 
 - `PUBLIC_DIRECTUS_STUDIO_URL` — the **browser-facing** Studio origin the preview
   (in the Studio iframe) postMessages to. NOT `PUBLIC_DIRECTUS_URL`, the
-  server-side data URL the browser can't reach in prod. `build:preview` sets it to
-  `https://admin.karolinanocon.com`; defaults to `http://localhost:8055`, which is
-  right for `preview:local`.
+  server-side data URL the browser can't reach in prod. The `preview` service sets
+  it to `https://admin.karolinanocon.com`; defaults to `http://localhost:8055`,
+  which is right for `preview:local`.
 - `PUBLIC_VISUAL_EDITING` — gates the `apply()` script in `Layout.astro`. Unset in
   the prod static build, so Rollup drops the dynamic import and the library never
   ships. `setAttr`'s attributes still render in prod, but inert.

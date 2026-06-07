@@ -8,10 +8,7 @@
     "check": "astro check && tsc --noEmit && eslint . && prettier . --check",
     "fmt": "prettier . --write",
     "build": "astro build",
-    "build:preview": "PUBLIC_ASSETS_URL=https://preview.karolinanocon.com PUBLIC_DIRECTUS_STUDIO_URL=https://admin.karolinanocon.com PUBLIC_VISUAL_EDITING=true MODE=preview npm run build",
-    "build:prod": "PUBLIC_ASSETS_URL=https://karolinanocon.com npm run build && sudo cp -r dist /var/www/karolina/distTEMP && sudo rm -rf /var/www/karolina/dist && sudo mv /var/www/karolina/distTEMP /var/www/karolina/dist",
-    "start:preview": "HOST=127.0.0.1 PORT=4322 node ./dist/server/entry.mjs",
-    "preview:local": "PUBLIC_VISUAL_EDITING=true MODE=preview npm run build && npm run start:preview",
+    "preview:local": "PUBLIC_VISUAL_EDITING=true MODE=preview npm run build && HOST=127.0.0.1 PORT=4322 node ./dist/server/entry.mjs",
     "preview": "astro preview",
     "astro": "astro"
   },
