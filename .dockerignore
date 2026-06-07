@@ -1,0 +1,9 @@
+node_modules
+dist
+.git
+.astro
+# Directus state (db, uploads) — the frontend build fetches content over HTTP,
+# it never reads these, and uploads is large.
+directus
+*.log
+.env
