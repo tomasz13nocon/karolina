@@ -31,7 +31,7 @@ type ShowsPage = {
 };
 
 type Show = {
-  title?: string | null; // TODO remove
+  id: number;
   poster: string;
   upcoming: boolean;
   description: string | null;

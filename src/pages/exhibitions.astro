@@ -5,12 +5,16 @@ import Main from "@layouts/Main.astro";
 import ShowList from "@components/ShowList.astro";
 import ImageViewer from "@components/ImageViewer.astro";
 import directus from "@lib/directus";
+import { setAttr, SINGLETON } from "@lib/visualEditing";
 import { readSingleton, readItems } from "@directus/sdk";
 
 const data = await directus.request(readSingleton("shows_page"));
 const shows = await directus.request(readItems("shows"));
 const anyUpcoming = shows.some((show) => show.upcoming);
 const anyPast = shows.some((show) => !show.upcoming);
+
+const showsPageAttr = (field: string) =>
+  setAttr({ collection: "shows_page", item: SINGLETON, fields: [field], mode: "popover" });
 ---
 
 <Layout>
@@ -23,17 +27,22 @@ const anyPast = shows.some((show) => !show.upcoming);
             <ShowList
               shows={shows.filter((show) => show.upcoming)}
               heading={data.upcomingShowsText}
+              headingAttr={showsPageAttr("upcomingShowsText")}
             />
           ) : (
-            <p>{data.noUpcomingShowsText}</p>
+            <p data-directus={showsPageAttr("noUpcomingShowsText")}>{data.noUpcomingShowsText}</p>
           )
         }
       </div>
       {
         anyPast ? (
-          <ShowList shows={shows.filter((show) => !show.upcoming)} heading={data.pastShowsText} />
+          <ShowList
+            shows={shows.filter((show) => !show.upcoming)}
+            heading={data.pastShowsText}
+            headingAttr={showsPageAttr("pastShowsText")}
+          />
         ) : (
-          <p>{data.noPastShowsText}</p>
+          <p data-directus={showsPageAttr("noPastShowsText")}>{data.noPastShowsText}</p>
         )
       }
     </div>

@@ -3,16 +3,18 @@ import directus from "@lib/directus";
 import Link from "./Link.astro";
 import Socials from "./Socials.astro";
 import { isCurrent } from "@lib/util";
+import { setAttr, SINGLETON } from "@lib/visualEditing";
 import { readSingleton } from "@directus/sdk";
 
 const global = await directus.request(readSingleton("global"));
 
 const { exclude = [], include = [], socials = true, dark = false } = Astro.props;
+// Third tuple element is the `global` field backing the link name, for visual editing.
 const pages = [
-  [global.homeLinkName, "/"],
-  [global.aboutLinkName, "/about"],
-  [global.photographyLinkName, "/photography"],
-  [global.showsLinkName, "/exhibitions"],
+  [global.homeLinkName, "/", "homeLinkName"],
+  [global.aboutLinkName, "/about", "aboutLinkName"],
+  [global.photographyLinkName, "/photography", "photographyLinkName"],
+  [global.showsLinkName, "/exhibitions", "showsLinkName"],
 ].filter(
   ([_, href]) =>
     !isCurrent(href, Astro.url.pathname) &&
@@ -24,9 +26,18 @@ const pages = [
 <nav class="text-center">
   <ul class="flex flex-col gap-4 lg:gap-0">
     {
-      pages.map(([name, href]) => (
+      pages.map(([name, href, field]) => (
         <li>
-          <Link dark={dark} href={href}>
+          <Link
+            dark={dark}
+            href={href}
+            data-directus={setAttr({
+              collection: "global",
+              item: SINGLETON,
+              fields: [field],
+              mode: "popover",
+            })}
+          >
             {name}
           </Link>
         </li>

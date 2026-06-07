@@ -2,6 +2,7 @@
 import { CHUNK_SIZE, getDateStr } from "@lib/util";
 import Spinner from "@components/Spinner.astro";
 import type { DiaryEntry } from "@lib/directus";
+import { setAttr } from "@lib/visualEditing";
 
 interface Props {
   blogs: DiaryEntry[];
@@ -29,7 +30,15 @@ const shouldFetch = blogs.length > CHUNK_SIZE;
       .slice(0, CHUNK_SIZE)
       .map(async (blog) => {
         return (
-          <article class="diary-entry text-sm my-prose">
+          <article
+            class="diary-entry text-sm my-prose"
+            data-directus={setAttr({
+              collection: "diary_entries",
+              item: blog.id,
+              fields: ["title", "body", "date"],
+              mode: "drawer",
+            })}
+          >
             <time class="diary-date block text-grey-5 mb-6">{getDateStr(blog.date)}</time>
             <div class="diary-content text-justify text-[0.95rem] leading-[1.35rem]">
               <div set:html={blog.body} />
@@ -74,6 +83,10 @@ const shouldFetch = blogs.length > CHUNK_SIZE;
 
                 for (let post of data.posts) {
                   newPost = lastPost.cloneNode(true) as HTMLElement;
+                  // Clones inherit the first entry's data-directus; drop it so
+                  // these deep-scroll entries aren't mis-tagged as that item.
+                  // (apply() scans once at load, so clones are never editable.)
+                  newPost.removeAttribute("data-directus");
                   newPost.getElementsByClassName("diary-date")[0].innerHTML = getDateStr(
                     new Date(post.date),
                   );

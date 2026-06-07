@@ -2,6 +2,7 @@
 import Link from "@components/Link.astro";
 import PhotoSetPopover from "@components/PhotoSetPopover.astro";
 import type { PhotoSection, PhotoSet } from "@lib/directus";
+import { setAttr } from "@lib/visualEditing";
 import { toUrl } from "@lib/util";
 
 interface Props {
@@ -31,6 +32,12 @@ function photoSetHref(photoSet: PhotoSet) {
                 href={photoSetHref(photoSet)}
                 class="px-4 pb-4 lg:px-2 group"
                 activeClass="!tracking-[0.55em] !font-bold px-6"
+                data-directus={setAttr({
+                  collection: "photo_sets",
+                  item: photoSet.id,
+                  fields: ["title"],
+                  mode: "popover",
+                })}
               >
                 {photoSet.title}
               </Link>

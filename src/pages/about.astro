@@ -3,6 +3,7 @@ import Layout from "@layouts/Layout.astro";
 import Nav from "@components/Nav.astro";
 import MainFlex from "@layouts/MainFlex.astro";
 import directus, { imgSrc } from "@lib/directus";
+import { setAttr, SINGLETON } from "@lib/visualEditing";
 import { readSingleton } from "@directus/sdk";
 import Socials from "@components/Socials.astro";
 
@@ -16,13 +17,35 @@ const data = await directus.request(readSingleton("about"));
       src={imgSrc(data.image, { format: "webp", width: 600, quality: 90 })}
       role="presentation"
       class="mx-auto rounded-full w-[300px]"
+      data-directus={setAttr({
+        collection: "about",
+        item: SINGLETON,
+        fields: ["image"],
+        mode: "modal",
+      })}
     />
     <article>
       <section class="text-grey-2 mb-6">
-        <h1 class="font-bold tracking-[0.20em] text-xl leading-tight mb-10 text-grey-1">
+        <h1
+          class="font-bold tracking-[0.20em] text-xl leading-tight mb-10 text-grey-1"
+          data-directus={setAttr({
+            collection: "about",
+            item: SINGLETON,
+            fields: ["heading"],
+            mode: "popover",
+          })}
+        >
           {data.heading}
         </h1>
-        <div set:html={data.content} />
+        <div
+          set:html={data.content}
+          data-directus={setAttr({
+            collection: "about",
+            item: SINGLETON,
+            fields: ["content"],
+            mode: "drawer",
+          })}
+        />
       </section>
       {
         data.contact.map(({ text, isEmail }) => (

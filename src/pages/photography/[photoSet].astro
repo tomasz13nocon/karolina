@@ -8,6 +8,7 @@ import PhotoSetNav from "@components/PhotoSetNav.astro";
 import PhotoSetPopoverVariantSwitcher from "@components/PhotoSetPopoverVariantSwitcher.astro";
 import PhotoGrid from "@components/PhotoGrid.astro";
 import { getPhotoSetsAndSections, type PhotoSection, type PhotoSet } from "@lib/directus";
+import { setAttr } from "@lib/visualEditing";
 
 interface Props {
   photoSet: PhotoSet;
@@ -46,7 +47,20 @@ const photoSetPopoverVariant = "proofs";
     <Nav />
     <PhotoSetNav photoSections={sections} photoSetPopoverVariant={photoSetPopoverVariant} />
 
-    {photoSet.description ? <div class="text-center mb-8" set:html={photoSet.description} /> : null}
+    {
+      photoSet.description ? (
+        <div
+          class="text-center mb-8"
+          set:html={photoSet.description}
+          data-directus={setAttr({
+            collection: "photo_sets",
+            item: photoSet.id,
+            fields: ["description"],
+            mode: "drawer",
+          })}
+        />
+      ) : null
+    }
 
     <PhotoGrid
       photos={photoSet.photos ?? []}

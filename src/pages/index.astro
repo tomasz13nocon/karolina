@@ -4,6 +4,7 @@ import Layout from "@layouts/Layout.astro";
 import MainFlex from "@layouts/MainFlex.astro";
 import Nav from "@components/Nav.astro";
 import directus, { imgSrc } from "@lib/directus";
+import { setAttr, SINGLETON } from "@lib/visualEditing";
 import { readSingleton } from "@directus/sdk";
 
 const home = await directus.request(readSingleton("home"));
@@ -13,7 +14,16 @@ const global = await directus.request(readSingleton("global"));
 <Layout>
   <MainFlex class="min-h-screen">
     <div class="flex flex-col gap-mid">
-      <h1 class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12" id="index-title">
+      <h1
+        class="font-normal tracking-[0.30em] text-3xl leading-tight mt-12"
+        id="index-title"
+        data-directus={setAttr({
+          collection: "home",
+          item: SINGLETON,
+          fields: ["heading"],
+          mode: "popover",
+        })}
+      >
         {home.heading}
       </h1>
       <a href="/photography" aria-label="photography">
@@ -22,11 +32,27 @@ const global = await directus.request(readSingleton("global"));
           role="presentation"
           class="mx-auto rounded-full animate-[fadein2_1s_both_paused] w-[300px]"
           id="index-image"
+          data-directus={setAttr({
+            collection: "home",
+            item: SINGLETON,
+            fields: ["image"],
+            mode: "modal",
+          })}
         />
       </a>
       <Nav dark />
     </div>
-    <Link href="/diary" light class="w-fit block mx-auto px-4">{global.diaryLinkName}</Link>
+    <Link
+      href="/diary"
+      light
+      class="w-fit block mx-auto px-4"
+      data-directus={setAttr({
+        collection: "global",
+        item: SINGLETON,
+        fields: ["diaryLinkName"],
+        mode: "popover",
+      })}>{global.diaryLinkName}</Link
+    >
   </MainFlex>
 </Layout>
 

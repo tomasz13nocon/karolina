@@ -42,3 +42,33 @@ to prod**, or localhost test URLs get committed and pushed to prod by
 ```bash
 python3 scripts/set-preview-urls.py https://preview.karolinanocon.com
 ```
+
+## Visual editing
+
+Click-to-edit overlays in the Studio's Visual Editor, layered on this SSR preview:
+`apply()` opens the editor and `onSaved → location.reload()` shows the change (the
+library never patches the DOM). Editable elements carry a `data-directus` string
+from `setAttr` (see `src/lib/visualEditing.ts`).
+
+Two env vars, set by the preview build scripts:
+
+- `PUBLIC_DIRECTUS_STUDIO_URL` — the **browser-facing** Studio origin the preview
+  (in the Studio iframe) postMessages to. NOT `PUBLIC_DIRECTUS_URL`, the
+  server-side data URL the browser can't reach in prod. `build:preview` sets it to
+  `https://admin.karolinanocon.com`; defaults to `http://localhost:8055`, which is
+  right for `preview:local`.
+- `PUBLIC_VISUAL_EDITING` — gates the `apply()` script in `Layout.astro`. Unset in
+  the prod static build, so Rollup drops the dynamic import and the library never
+  ships. `setAttr`'s attributes still render in prod, but inert.
+
+**`visual_editor_urls` lives in `directus_settings`, NOT the schema snapshot** — so
+it's per-instance and must be set on each Directus separately (Settings → Visual
+Editor, or PATCH `/settings`): prod → `https://preview.karolinanocon.com`, local →
+`http://localhost:4322`. Without it the module won't load the preview. This is
+distinct from the per-collection `preview_url` above (which drives the side-panel
+Live Preview and *is* in the snapshot).
+
+Not editable, by design: deep-scroll diary clones (cloned from prerendered JSON
+after `apply()` has scanned), dropdown photo-set-group labels (hidden popovers),
+and relational fields (about `contact`, photography `selectedWorks`, photo-set
+images).

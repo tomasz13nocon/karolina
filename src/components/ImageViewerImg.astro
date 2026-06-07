@@ -16,9 +16,11 @@ interface Props {
   index: number;
   class?: string;
   buttonClass?: string;
+  /** `data-directus` string from setAttr, marking the image editable in the Studio. */
+  editAttr?: string;
 }
 
-const { rawSrc, alt, width, height, index, buttonClass = "" } = Astro.props;
+const { rawSrc, alt, width, height, index, buttonClass = "", editAttr } = Astro.props;
 
 const smallSrc = imgSrc(rawSrc, { width: width * 1.1, format: "webp", quality: 90 });
 const fullSrc = imgSrc(rawSrc);
@@ -29,6 +31,7 @@ const fullSrc = imgSrc(rawSrc);
   style={{
     width: `${width}px`,
   }}
+  data-directus={editAttr}
 >
   <img
     data-index={index}
