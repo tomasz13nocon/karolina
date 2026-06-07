@@ -25,8 +25,6 @@ set per build (`build:prod` → `karolinanocon.com`, `build:preview` →
 `preview.karolinanocon.com`), which the browser hits and nginx proxies to
 Directus.
 
-(Exact nginx/systemd blocks: `docs/server-migration.md`, while it exists.)
-
 ## Dev
 
 `npm run preview:local` builds the SSR bundle and serves it on `:4322` against
