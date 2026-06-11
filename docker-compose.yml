@@ -1,6 +1,6 @@
 services:
   directus:
-    image: directus/directus:11.17.4
+    image: directus/directus:12.0.0
     ports:
       - 8055:8055
     volumes:
@@ -26,15 +26,25 @@ services:
       # build-hook via {{ $env.WEBHOOK_TOKEN }} (allow-list gates which vars flows see).
       FLOWS_ENV_ALLOW_LIST: "WEBHOOK_TOKEN"
       WEBHOOK_TOKEN: ${WEBHOOK_TOKEN}
+      # v12 flipped the default to false; prod nginx proxies
+      # admin.karolinanocon.com -> :8055, so trust X-Forwarded-For or
+      # rate limiting / access logs attribute every request to the proxy.
+      IP_TRUST_PROXY: "true"
+      # v12 warns when PUBLIC_URL isn't a full URL and uses it for generated
+      # links. Prod sets DIRECTUS_PUBLIC_URL=https://admin.karolinanocon.com
+      # in .env; the default covers local dev.
+      PUBLIC_URL: ${DIRECTUS_PUBLIC_URL:-http://localhost:8055}
     healthcheck:
       # Gate dependents until Directus is actually serving (the preview builds at
       # start and fetches from it). node is present in the image; fetch is global.
+      # /server/ping, not /server/health: v12 returns 404 on /server/health
+      # for unauthenticated requests.
       test:
         [
           "CMD",
           "node",
           "-e",
-          "fetch('http://127.0.0.1:8055/server/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+          "fetch('http://127.0.0.1:8055/server/ping').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
         ]
       interval: 10s
       timeout: 5s
