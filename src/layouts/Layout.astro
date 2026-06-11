@@ -65,6 +65,8 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={data.description} />
+
+    <Font cssVariable="--font-open-sans" preload />
   </head>
   <body class="bg-grey-7 text-grey-1 mx-auto">
     <slot />
@@ -80,29 +82,27 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     >
       {data.copyrightText}
     </div>
+
+    <script>
+      import { setupCopyright } from "@lib/copyright";
+
+      setupCopyright();
+    </script>
+
+    <script>
+      // Click-to-edit overlays inside the Directus Studio Visual Editor. The dynamic
+      // import is gated on PUBLIC_VISUAL_EDITING so the prod static build (flag
+      // unset) dead-code-eliminates it and never ships the library. The iframe check
+      // skips it on direct visits to the preview host — apply()'s connect handshake
+      // would otherwise log a benign cross-origin postMessage warning.
+      if (import.meta.env.PUBLIC_VISUAL_EDITING === "true" && window.self !== window.top) {
+        import("@directus/visual-editing").then(({ apply }) => {
+          apply({
+            directusUrl: import.meta.env.PUBLIC_DIRECTUS_STUDIO_URL ?? "http://localhost:8055",
+            onSaved: () => location.reload(),
+          });
+        });
+      }
+    </script>
   </body>
 </html>
-
-<Font cssVariable="--font-open-sans" preload />
-
-<script>
-  import { setupCopyright } from "@lib/copyright";
-
-  setupCopyright();
-</script>
-
-<script>
-  // Click-to-edit overlays inside the Directus Studio Visual Editor. The dynamic
-  // import is gated on PUBLIC_VISUAL_EDITING so the prod static build (flag
-  // unset) dead-code-eliminates it and never ships the library. The iframe check
-  // skips it on direct visits to the preview host — apply()'s connect handshake
-  // would otherwise log a benign cross-origin postMessage warning.
-  if (import.meta.env.PUBLIC_VISUAL_EDITING === "true" && window.self !== window.top) {
-    import("@directus/visual-editing").then(({ apply }) => {
-      apply({
-        directusUrl: import.meta.env.PUBLIC_DIRECTUS_STUDIO_URL ?? "http://localhost:8055",
-        onSaved: () => location.reload(),
-      });
-    });
-  }
-</script>

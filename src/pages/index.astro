@@ -54,19 +54,19 @@ const global = await directus.request(readSingleton("global"));
       })}>{global.diaryLinkName}</Link
     >
   </MainFlex>
-</Layout>
 
-<script>
-  let img = document.getElementById("index-image") as HTMLImageElement;
+  <script>
+    let img = document.getElementById("index-image") as HTMLImageElement;
 
-  if (img.complete) {
-    img.style.animationPlayState = "running";
-  } else {
-    img.addEventListener("load", () => {
+    if (img.complete) {
       img.style.animationPlayState = "running";
-    });
-  }
-</script>
+    } else {
+      img.addEventListener("load", () => {
+        img.style.animationPlayState = "running";
+      });
+    }
+  </script>
+</Layout>
 
 <style>
   @keyframes fadein2 {
