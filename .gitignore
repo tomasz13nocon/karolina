@@ -29,3 +29,5 @@ directus/*
 !directus/migrations/*.js
 !directus/schema/
 !directus/schema/snapshot.yaml
+
+.claude/worktrees
