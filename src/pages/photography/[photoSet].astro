@@ -47,10 +47,17 @@ const photoSetPopoverVariant = "popup";
     <Nav />
     <PhotoSetNav photoSections={sections} photoSetPopoverVariant={photoSetPopoverVariant} />
 
+    <PhotoGrid
+      photos={photoSet.photos ?? []}
+      magicGrid={photoSet.magicGrid}
+      dynamicPosition={photoSet.dynamicPosition}
+      maxColumns={photoSet.maxColumns}
+    />
+
     {
       photoSet.description ? (
         <div
-          class="text-center mb-8"
+          class="text-center mt-8"
           set:html={photoSet.description}
           data-directus={setAttr({
             collection: "photo_sets",
@@ -61,13 +68,6 @@ const photoSetPopoverVariant = "popup";
         />
       ) : null
     }
-
-    <PhotoGrid
-      photos={photoSet.photos ?? []}
-      magicGrid={photoSet.magicGrid}
-      dynamicPosition={photoSet.dynamicPosition}
-      maxColumns={photoSet.maxColumns}
-    />
   </Main>
   <ImageViewer />
   <PhotoSetPopoverVariantSwitcher />
