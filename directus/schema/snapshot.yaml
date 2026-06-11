@@ -1,5 +1,5 @@
 version: 1
-directus: 11.17.4
+directus: 12.0.0
 vendor: sqlite
 collections:
   - collection: about
@@ -8,6 +8,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: about
       color: null
@@ -21,6 +22,7 @@ collections:
       singleton: true
       sort: 2
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -32,6 +34,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: diary
       color: null
@@ -45,6 +48,7 @@ collections:
       singleton: true
       sort: 5
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -56,6 +60,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: diary_entries
       color: null
@@ -69,6 +74,7 @@ collections:
       singleton: false
       sort: 1
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -80,6 +86,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: global
       color: null
@@ -93,6 +100,7 @@ collections:
       singleton: true
       sort: 1
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -104,6 +112,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: home
       color: null
@@ -117,6 +126,7 @@ collections:
       singleton: true
       sort: 1
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -128,6 +138,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: pages
       color: null
@@ -141,6 +152,7 @@ collections:
       singleton: false
       sort: 2
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -150,6 +162,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: photo_sections
       color: null
@@ -163,6 +176,7 @@ collections:
       singleton: false
       sort: 1
       sort_field: sort
+      status: active
       translations:
         - language: en-US
           plural: photo set groups
@@ -178,6 +192,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: photo_sets
       color: null
@@ -191,6 +206,7 @@ collections:
       singleton: false
       sort: 1
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -202,6 +218,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: photo_sets_files
       color: null
@@ -215,65 +232,19 @@ collections:
       singleton: false
       sort: 3
       sort_field: sort
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
     schema:
       name: photo_sets_files
-  - collection: photo_subsets
-    meta:
-      accountability: all
-      archive_app_filter: true
-      archive_field: null
-      archive_value: null
-      collapse: open
-      collection: photo_subsets
-      color: null
-      display_template: '{{label}}'
-      group: null
-      hidden: false
-      icon: null
-      item_duplication_fields: null
-      note: null
-      preview_url: null
-      singleton: false
-      sort: null
-      sort_field: null
-      translations: null
-      unarchive_value: null
-      versioning: false
-    schema:
-      name: photo_subsets
-  - collection: photo_subsets_files
-    meta:
-      accountability: all
-      archive_app_filter: true
-      archive_field: null
-      archive_value: null
-      collapse: open
-      collection: photo_subsets_files
-      color: null
-      display_template: null
-      group: null
-      hidden: true
-      icon: import_export
-      item_duplication_fields: null
-      note: null
-      preview_url: null
-      singleton: false
-      sort: null
-      sort_field: null
-      translations: null
-      unarchive_value: null
-      versioning: false
-    schema:
-      name: photo_subsets_files
   - collection: photography
     meta:
       accountability: all
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: photography
       color: null
@@ -287,6 +258,7 @@ collections:
       singleton: true
       sort: 4
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -298,6 +270,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: photography_files
       color: null
@@ -311,6 +284,7 @@ collections:
       singleton: false
       sort: null
       sort_field: sort
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -322,6 +296,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: shows
       color: null
@@ -335,6 +310,7 @@ collections:
       singleton: false
       sort: 1
       sort_field: sort
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -346,6 +322,7 @@ collections:
       archive_app_filter: true
       archive_field: null
       archive_value: null
+      autosave_revision_interval: null
       collapse: open
       collection: shows_page
       color: null
@@ -359,6 +336,7 @@ collections:
       singleton: true
       sort: 3
       sort_field: null
+      status: active
       translations: null
       unarchive_value: null
       versioning: false
@@ -501,6 +479,26 @@ fields:
       note: null
       options:
         customSyntax: null
+        toolbar:
+          - bold
+          - italic
+          - underline
+          - h1
+          - h2
+          - h3
+          - alignleft
+          - aligncenter
+          - alignright
+          - numlist
+          - bullist
+          - removeformat
+          - blockquote
+          - customLink
+          - customImage
+          - customMedia
+          - hr
+          - fullscreen
+          - code
       readonly: false
       required: false
       searchable: true
@@ -718,7 +716,27 @@ fields:
       hidden: false
       interface: input-rich-text-html
       note: null
-      options: null
+      options:
+        toolbar:
+          - bold
+          - italic
+          - underline
+          - h1
+          - h2
+          - h3
+          - alignleft
+          - aligncenter
+          - alignright
+          - numlist
+          - bullist
+          - removeformat
+          - blockquote
+          - customLink
+          - customImage
+          - customMedia
+          - hr
+          - fullscreen
+          - code
       readonly: false
       required: false
       searchable: true
@@ -1754,36 +1772,6 @@ fields:
       foreign_key_table: null
       foreign_key_column: null
   - collection: photo_sets
-    field: subsets
-    type: alias
-    meta:
-      collection: photo_sets
-      conditions: null
-      display: null
-      display_options: null
-      field: subsets
-      group: null
-      hidden: false
-      interface: list-o2m
-      note: null
-      options:
-        fields:
-          - id
-          - label
-        layout: table
-        limit: 100
-        template: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 7
-      special:
-        - o2m
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-  - collection: photo_sets
     field: maxColumns
     type: integer
     meta:
@@ -1836,7 +1824,27 @@ fields:
       hidden: false
       interface: input-rich-text-html
       note: Optional public text rendered above this photo set.
-      options: null
+      options:
+        toolbar:
+          - bold
+          - italic
+          - underline
+          - h1
+          - h2
+          - h3
+          - alignleft
+          - aligncenter
+          - alignright
+          - numlist
+          - bullist
+          - removeformat
+          - blockquote
+          - customLink
+          - customImage
+          - customMedia
+          - hr
+          - fullscreen
+          - code
       readonly: false
       required: false
       searchable: true
@@ -2064,473 +2072,6 @@ fields:
       has_auto_increment: false
       foreign_key_table: null
       foreign_key_column: null
-  - collection: photo_subsets
-    field: id
-    type: integer
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: id
-      group: null
-      hidden: true
-      interface: input
-      note: null
-      options: null
-      readonly: true
-      required: false
-      searchable: true
-      sort: 1
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: id
-      table: photo_subsets
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: false
-      is_unique: false
-      is_indexed: false
-      is_primary_key: true
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: true
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: photo_subsets
-    field: photos
-    type: alias
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: photos
-      group: null
-      hidden: false
-      interface: files
-      note: null
-      options:
-        folder: 8897af71-d63c-41f1-ae74-91e4032fe484
-        limit: 500
-      readonly: false
-      required: false
-      searchable: true
-      sort: 5
-      special:
-        - files
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-  - collection: photo_subsets
-    field: description
-    type: text
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: description
-      group: null
-      hidden: false
-      interface: input-rich-text-html
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 3
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: description
-      table: photo_subsets
-      data_type: text
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: photo_subsets
-    field: photo_set_id
-    type: integer
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: photo_set_id
-      group: null
-      hidden: true
-      interface: select-dropdown-m2o
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 6
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: photo_set_id
-      table: photo_subsets
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: photo_sets
-      foreign_key_column: id
-  - collection: photo_subsets
-    field: sort
-    type: integer
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: sort
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 7
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: sort
-      table: photo_subsets
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: photo_subsets
-    field: label
-    type: string
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: label
-      group: null
-      hidden: false
-      interface: input
-      note: only for display in admin interface
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 2
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: label
-      table: photo_subsets
-      data_type: varchar
-      default_value: null
-      max_length: 255
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: photo_subsets
-    field: magicGrid
-    type: boolean
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: magicGrid
-      group: null
-      hidden: false
-      interface: boolean
-      note: Disable when photos have the same height and need to be centered
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 4
-      special:
-        - cast-boolean
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: magicGrid
-      table: photo_subsets
-      data_type: boolean
-      default_value: true
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: photo_subsets
-    field: sort_subsets
-    type: integer
-    meta:
-      collection: photo_subsets
-      conditions: null
-      display: null
-      display_options: null
-      field: sort_subsets
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 8
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: sort_subsets
-      table: photo_subsets
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: photo_subsets_files
-    field: id
-    type: integer
-    meta:
-      collection: photo_subsets_files
-      conditions: null
-      display: null
-      display_options: null
-      field: id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 1
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: id
-      table: photo_subsets_files
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: false
-      is_unique: false
-      is_indexed: false
-      is_primary_key: true
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: true
-      foreign_key_table: null
-      foreign_key_column: null
-  - collection: photo_subsets_files
-    field: photo_subsets_id
-    type: integer
-    meta:
-      collection: photo_subsets_files
-      conditions: null
-      display: null
-      display_options: null
-      field: photo_subsets_id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 2
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: photo_subsets_id
-      table: photo_subsets_files
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: photo_subsets
-      foreign_key_column: id
-  - collection: photo_subsets_files
-    field: directus_files_id
-    type: string
-    meta:
-      collection: photo_subsets_files
-      conditions: null
-      display: null
-      display_options: null
-      field: directus_files_id
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 3
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: directus_files_id
-      table: photo_subsets_files
-      data_type: char
-      default_value: null
-      max_length: 36
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: directus_files
-      foreign_key_column: id
-  - collection: photo_subsets_files
-    field: sort
-    type: integer
-    meta:
-      collection: photo_subsets_files
-      conditions: null
-      display: null
-      display_options: null
-      field: sort
-      group: null
-      hidden: true
-      interface: null
-      note: null
-      options: null
-      readonly: false
-      required: false
-      searchable: true
-      sort: 4
-      special: null
-      translations: null
-      validation: null
-      validation_message: null
-      width: full
-    schema:
-      name: sort
-      table: photo_subsets_files
-      data_type: integer
-      default_value: null
-      max_length: null
-      numeric_precision: null
-      numeric_scale: null
-      is_nullable: true
-      is_unique: false
-      is_indexed: false
-      is_primary_key: false
-      is_generated: false
-      generation_expression: null
-      has_auto_increment: false
-      foreign_key_table: null
-      foreign_key_column: null
   - collection: photography
     field: id
     type: integer
@@ -2705,7 +2246,7 @@ fields:
     schema:
       name: directus_files_id
       table: photography_files
-      data_type: varchar
+      data_type: char
       default_value: null
       max_length: 36
       numeric_precision: null
@@ -2934,7 +2475,27 @@ fields:
       hidden: false
       interface: input-rich-text-html
       note: Optional public text rendered on the poster hover scrim.
-      options: null
+      options:
+        toolbar:
+          - bold
+          - italic
+          - underline
+          - h1
+          - h2
+          - h3
+          - alignleft
+          - aligncenter
+          - alignright
+          - numlist
+          - bullist
+          - removeformat
+          - blockquote
+          - customLink
+          - customImage
+          - customMedia
+          - hr
+          - fullscreen
+          - code
       readonly: false
       required: false
       searchable: true
@@ -3166,12 +2727,48 @@ systemFields:
     field: timestamp
     schema:
       is_indexed: true
+  - collection: directus_oauth_clients
+    field: date_created
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_codes
+    field: expires_at
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_codes
+    field: used_at
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_consents
+    field: client
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: code_hash
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: expires_at
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: previous_session
+    schema:
+      is_indexed: true
+  - collection: directus_oauth_tokens
+    field: session
+    schema:
+      is_indexed: true
   - collection: directus_revisions
     field: activity
     schema:
       is_indexed: true
   - collection: directus_revisions
     field: parent
+    schema:
+      is_indexed: true
+  - collection: directus_sessions
+    field: oauth_client
     schema:
       is_indexed: true
 relations:
@@ -3318,69 +2915,6 @@ relations:
       table: photo_sets_files
       column: photo_sets_id
       foreign_key_table: photo_sets
-      foreign_key_column: id
-      constraint_name: null
-      on_update: NO ACTION
-      on_delete: SET NULL
-  - collection: photo_subsets
-    field: photo_set_id
-    related_collection: photo_sets
-    meta:
-      junction_field: null
-      many_collection: photo_subsets
-      many_field: photo_set_id
-      one_allowed_collections: null
-      one_collection: photo_sets
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: subsets
-      sort_field: sort_subsets
-    schema:
-      table: photo_subsets
-      column: photo_set_id
-      foreign_key_table: photo_sets
-      foreign_key_column: id
-      constraint_name: null
-      on_update: NO ACTION
-      on_delete: SET NULL
-  - collection: photo_subsets_files
-    field: directus_files_id
-    related_collection: directus_files
-    meta:
-      junction_field: photo_subsets_id
-      many_collection: photo_subsets_files
-      many_field: directus_files_id
-      one_allowed_collections: null
-      one_collection: directus_files
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: null
-      sort_field: null
-    schema:
-      table: photo_subsets_files
-      column: directus_files_id
-      foreign_key_table: directus_files
-      foreign_key_column: id
-      constraint_name: null
-      on_update: NO ACTION
-      on_delete: SET NULL
-  - collection: photo_subsets_files
-    field: photo_subsets_id
-    related_collection: photo_subsets
-    meta:
-      junction_field: directus_files_id
-      many_collection: photo_subsets_files
-      many_field: photo_subsets_id
-      one_allowed_collections: null
-      one_collection: photo_subsets
-      one_collection_field: null
-      one_deselect_action: nullify
-      one_field: photos
-      sort_field: sort
-    schema:
-      table: photo_subsets_files
-      column: photo_subsets_id
-      foreign_key_table: photo_subsets
       foreign_key_column: id
       constraint_name: null
       on_update: NO ACTION

@@ -62,12 +62,6 @@ type Photography = {
   selectedWorks: Photo[];
 };
 
-export type PhotoSubset = {
-  photos: Photo[] | null;
-  description: string;
-  magicGrid: boolean;
-};
-
 export type PhotoSet = {
   id: number;
   sort: number | null;
@@ -79,7 +73,6 @@ export type PhotoSet = {
   maxColumns?: number;
   photos: Photo[] | null;
   section: number;
-  subsets: PhotoSubset[];
 };
 
 export type DiaryEntry = {
