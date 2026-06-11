@@ -1,8 +1,8 @@
 ---
 const variants = [
-  { value: "list", label: "Line" },
-  { value: "thumbnails", label: "Tab" },
-  { value: "proofs", label: "Proofs" },
+  { value: "popup", label: "Popup" },
+  { value: "inline", label: "Inline" },
+  { value: "stagger", label: "Stagger" },
 ];
 ---
 
@@ -30,7 +30,7 @@ const variants = [
 
 <script>
   const variantKey = "photoSetPopoverVariant";
-  const variants = ["list", "thumbnails", "proofs"] as const;
+  const variants = ["popup", "inline", "stagger"] as const;
   type Variant = (typeof variants)[number];
   const buttons = document.querySelectorAll<HTMLButtonElement>("[data-photo-set-variant-option]");
 
@@ -43,7 +43,7 @@ const variants = [
     if (isVariant(rootVariant)) return rootVariant;
 
     const savedVariant = localStorage.getItem(variantKey);
-    return isVariant(savedVariant) ? savedVariant : "proofs";
+    return isVariant(savedVariant) ? savedVariant : "popup";
   };
 
   const setVariant = (variant: Variant) => {

@@ -7,10 +7,10 @@ import { toUrl } from "@lib/util";
 
 interface Props {
   photoSections: PhotoSection[];
-  photoSetPopoverVariant?: "list" | "thumbnails" | "proofs";
+  photoSetPopoverVariant?: "popup" | "inline" | "stagger";
 }
 
-const { photoSections, photoSetPopoverVariant = "list" } = Astro.props;
+const { photoSections, photoSetPopoverVariant = "popup" } = Astro.props;
 
 function photoSetHref(photoSet: PhotoSet) {
   return "/photography/" + toUrl(photoSet.title);

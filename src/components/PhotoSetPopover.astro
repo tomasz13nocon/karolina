@@ -1,10 +1,9 @@
 ---
-import Blurhash from "@components/Blurhash.astro";
 import Link from "@components/Link.astro";
-import { imgSrc, type PhotoSet } from "@lib/directus";
+import { type PhotoSet } from "@lib/directus";
 import { isCurrent, toUrl } from "@lib/util";
 
-type PopoverVariant = "list" | "thumbnails" | "proofs";
+type PopoverVariant = "popup" | "inline" | "stagger";
 
 interface Props {
   label: string | null;
@@ -12,9 +11,8 @@ interface Props {
   variant?: PopoverVariant;
 }
 
-const { label, photoSets, variant = "list" } = Astro.props;
+const { label, photoSets, variant = "popup" } = Astro.props;
 const pathname = Astro.url.pathname;
-const normalizedLabel = label ?? "selected projects";
 
 function photoSetHref(photoSet: PhotoSet) {
   return "/photography/" + toUrl(photoSet.title);
@@ -43,18 +41,13 @@ const active = photoSets.some(isActive);
 
   <div class="absolute top-full z-20 w-max" data-photo-set-popover>
     <ul
-      class="t-dropdown popover-menu-list flex flex-col items-stretch gap-1 bg-white px-5 pb-4 pt-3 shadow-xl"
+      class="t-dropdown popover-menu-popup flex flex-col items-stretch gap-1 bg-white px-5 pb-4 pt-3 shadow-xl"
       data-origin="top-center"
-      data-photo-set-popover-variant="list"
+      data-photo-set-popover-variant="popup"
       aria-hidden="true"
       hidden
       data-photo-set-dropdown-menu
     >
-      <li
-        class="mb-1 border-b border-grey-5/70 pb-2 text-center text-[0.65rem] uppercase tracking-[0.35em] text-grey-2"
-      >
-        {normalizedLabel}
-      </li>
       {
         photoSets.map((photoSet) => (
           <li class="text-center">
@@ -69,138 +62,52 @@ const active = photoSets.some(isActive);
         ))
       }
     </ul>
+  </div>
 
+  <div class="popover-flow">
     <ul
-      class="t-dropdown popover-menu-thumbnails flex flex-col gap-2 bg-white p-2 shadow-xl"
-      data-origin="top-center"
-      data-photo-set-popover-variant="thumbnails"
+      class="popover-menu-flow popover-menu-inline flex flex-col items-stretch gap-1 px-5"
+      data-photo-set-popover-variant="inline"
       aria-hidden="true"
       hidden
       data-photo-set-dropdown-menu
     >
-      <li
-        class="px-2 pb-1 pt-0.5 text-center text-[0.65rem] uppercase tracking-[0.35em] text-grey-2"
-      >
-        {normalizedLabel}
-      </li>
       {
-        photoSets.map((photoSet) => {
-          const href = photoSetHref(photoSet);
-          const active = isActive(photoSet);
-
-          return (
-            <li class="max-w-full">
-              <a
-                href={href}
-                aria-current={active ? "page" : null}
-                class:list={[
-                  "max-w-full w-56 aspect-ratio-polyfill flex items-center justify-center relative overflow-clip group",
-                  active && "pointer-events-none",
-                ]}
-                style={{
-                  "--aspect-ratio": `${(1 / 2.6) * 100}%`,
-                }}
-              >
-                <img
-                  src={imgSrc(photoSet.thumbnail, {
-                    width: 280,
-                    height: 108,
-                    format: "webp",
-                    quality: 90,
-                  })}
-                  alt={photoSet.title + " set thumbnail"}
-                  class="absolute inset-0 h-full w-full object-cover duration-500 ease-expo"
-                />
-                <Blurhash rawSrc={photoSet.thumbnail} />
-                <div
-                  class:list={[
-                    "absolute inset-0 bg-black/60 opacity-0 transition-opacity duration-500 ease-expo group-hover:opacity-100",
-                    active && "opacity-100",
-                  ]}
-                />
-                <span
-                  class:list={[
-                    "z-10 text-grey-7 tracking-[0.2em] text-sm font-medium drop-shadow-text-1 duration-500 ease-expo transition-all group-hover:tracking-[0.5em]",
-                    active && "!tracking-[0.5em] font-bold",
-                  ]}
-                >
-                  {photoSet.title}
-                </span>
-              </a>
-            </li>
-          );
-        })
+        photoSets.map((photoSet) => (
+          <li class="text-center">
+            <Link
+              href={photoSetHref(photoSet)}
+              class="px-4 lg:px-2 group"
+              activeClass="!tracking-[0.55em] !font-bold px-6"
+            >
+              {photoSet.title}
+            </Link>
+          </li>
+        ))
       }
     </ul>
+  </div>
 
+  <div class="popover-flow popover-flow-stagger">
     <ul
-      class="t-dropdown popover-menu-proofs grid grid-cols-2 gap-px bg-black p-px shadow-2xl"
-      data-origin="top-center"
-      data-photo-set-popover-variant="proofs"
+      class="popover-menu-flow popover-menu-stagger flex flex-col items-stretch gap-1 px-5"
+      data-photo-set-popover-variant="stagger"
       aria-hidden="true"
       hidden
       data-photo-set-dropdown-menu
     >
-      <li
-        class="col-span-2 bg-black px-3 py-2 text-center text-[0.6rem] uppercase tracking-[0.42em] text-grey-5"
-      >
-        {normalizedLabel} / {String(photoSets.length).padStart(2, "0")} sets
-      </li>
       {
-        photoSets.map((photoSet, index) => {
-          const href = photoSetHref(photoSet);
-          const active = isActive(photoSet);
-          const spansBothColumns = photoSets.length % 2 === 1 && index === photoSets.length - 1;
-
-          return (
-            <li class:list={[spansBothColumns && "col-span-2"]}>
-              <a
-                href={href}
-                aria-current={active ? "page" : null}
-                class:list={[
-                  "group relative flex h-28 w-36 isolate items-center justify-center overflow-clip bg-black text-grey-7",
-                  spansBothColumns && "w-full",
-                  active && "pointer-events-none",
-                ]}
-              >
-                <img
-                  src={imgSrc(photoSet.thumbnail, {
-                    width: spansBothColumns ? 360 : 180,
-                    height: 140,
-                    format: "webp",
-                    quality: 90,
-                  })}
-                  alt={photoSet.title + " set thumbnail"}
-                  class="absolute inset-0 h-full w-full object-cover grayscale opacity-45 transition-all duration-700 ease-expo group-hover:scale-110 group-hover:opacity-100"
-                />
-                <Blurhash rawSrc={photoSet.thumbnail} />
-                <div
-                  class:list={[
-                    "absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-white/10 transition-opacity duration-700 ease-expo group-hover:opacity-75",
-                    active && "opacity-75",
-                  ]}
-                />
-                <span class="absolute left-2 top-2 text-[0.65rem] font-medium tracking-[0.35em] text-grey-5 opacity-70">
-                  {String(index + 1).padStart(2, "0")}
-                </span>
-                <span
-                  class:list={[
-                    "absolute inset-x-2 bottom-4 text-center text-[0.7rem] font-medium uppercase tracking-[0.25em] text-grey-7 drop-shadow-text-1 transition-all duration-700 ease-expo group-hover:tracking-[0.55em]",
-                    active && "!tracking-[0.55em] font-bold",
-                  ]}
-                >
-                  {photoSet.title}
-                </span>
-                <span
-                  class:list={[
-                    "absolute inset-x-4 bottom-3 h-px origin-left scale-x-0 bg-grey-7 transition-transform duration-700 ease-expo group-hover:scale-x-100",
-                    active && "scale-x-100",
-                  ]}
-                />
-              </a>
-            </li>
-          );
-        })
+        photoSets.map((photoSet, index) => (
+          <li class="t-stagger-line text-center" style={`--stagger-index: ${index}`}>
+            <Link
+              href={photoSetHref(photoSet)}
+              class="px-4 lg:px-2 group"
+              activeClass="!tracking-[0.55em] !font-bold px-6"
+            >
+              {photoSet.title}
+            </Link>
+          </li>
+        ))
       }
     </ul>
   </div>
@@ -213,6 +120,14 @@ const active = photoSets.some(isActive);
     --dropdown-pre-scale: 0.97;
     --dropdown-closing-scale: 0.99;
     --dropdown-ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+    --stagger-dur: 500ms;
+    --stagger-distance: 12px;
+    --stagger-stagger: 40ms;
+    --stagger-blur: 5px;
+    --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --stagger-expand-dur: 350ms;
+    --stagger-lead: 0ms;
   }
 
   .t-dropdown {
@@ -226,7 +141,7 @@ const active = photoSets.some(isActive);
       opacity var(--dropdown-open-dur) var(--dropdown-ease);
   }
 
-  .popover-menu-list::before {
+  .popover-menu-popup::before {
     content: "";
     position: absolute;
     left: 50%;
@@ -236,27 +151,32 @@ const active = photoSets.some(isActive);
     background: color-mix(in srgb, var(--color-grey-3) 70%, transparent);
   }
 
-  .popover-menu-thumbnails::before {
-    content: "";
-    position: absolute;
-    left: 50%;
-    top: -0.42rem;
-    height: 0.85rem;
-    width: 0.85rem;
-    background: white;
-    box-shadow: -2px -2px 8px rgba(0, 0, 0, 0.04);
-    transform: translateX(-50%) rotate(45deg);
+  .popover-menu-flow {
+    min-height: 0;
+    overflow: hidden;
   }
 
-  .popover-menu-proofs::before {
+  /* While the wrapper row is mid-expansion the menu is shorter than its
+     content; without this the flex items compress to fit and visibly spread
+     back apart as the space opens. Keeping them at natural size means the
+     expansion only ever clips — content never reflows. */
+  .popover-menu-flow > li,
+  .popover-menu-inline::before {
+    flex-shrink: 0;
+  }
+
+  /* The inline menu's content is deliberately not animated — no fade or
+     scale, only the wrapper's height expansion reveals it — so the connector
+     line and text stay rock-steady. The connector is drawn as flow content
+     instead of an absolutely positioned overhang, so it survives the flow
+     wrapper's overflow clipping. */
+  .popover-menu-inline::before {
     content: "";
-    position: absolute;
-    left: 50%;
-    top: -1.15rem;
-    height: 1.15rem;
-    width: 2px;
-    background: black;
-    transform: translateX(-50%);
+    align-self: center;
+    height: 1rem;
+    width: 1px;
+    margin-bottom: 0.5rem;
+    background: color-mix(in srgb, var(--color-grey-3) 70%, transparent);
   }
 
   .t-dropdown[data-origin="top-right"] {
@@ -294,8 +214,103 @@ const active = photoSets.some(isActive);
       opacity var(--dropdown-close-dur) var(--dropdown-ease);
   }
 
+  /* In-flow menus expand in page flow: the wrapper's grid row grows from
+     0fr to 1fr, smoothly pushing the content below it down. */
+  .popover-flow {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows var(--dropdown-open-dur) var(--dropdown-ease);
+  }
+
+  .popover-flow:has(> .is-open) {
+    grid-template-rows: 1fr;
+  }
+
+  .popover-flow:has(> .is-closing) {
+    transition-duration: var(--dropdown-close-dur);
+  }
+
+  .popover-flow > .is-closing {
+    pointer-events: none;
+  }
+
+  /* The stagger wrapper's expansion is shorter and more front-loaded than
+     the line reveals, so the lines mostly play out in already-open space —
+     revealing them at the moving clip edge makes the two motions fight,
+     which reads as a bounce. Raise --stagger-lead to hold the lines back
+     further if the expansion ever needs to be slower. */
+  .popover-flow-stagger {
+    transition-duration: var(--stagger-expand-dur);
+  }
+
+  .popover-flow-stagger:has(> .is-closing) {
+    transition-duration: 200ms;
+  }
+
+  .popover-menu-stagger {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 200ms var(--stagger-ease);
+  }
+
+  /* No connector line here; the margin gives the first line headroom to
+     drop into without its ascenders clipping at the menu's top edge. */
+  .popover-menu-stagger > li:first-child {
+    margin-top: 0.75rem;
+  }
+
+  .popover-menu-stagger.is-open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .popover-menu-stagger.is-closing {
+    opacity: 0;
+    transition: opacity 200ms ease;
+  }
+
+  /* Lines start translated up + blurred + invisible and settle downward —
+     the same direction the expanding space moves, so the two motions read
+     as one (sliding up against the downward expansion reads as a bounce).
+     .is-open on the menu flips them to their resting state, each line held
+     back by its index so the eye lands on the first line first. */
+  .t-stagger-line {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--stagger-distance)));
+    filter: blur(var(--stagger-blur));
+    transition:
+      opacity var(--stagger-dur) var(--stagger-ease),
+      transform var(--stagger-dur) var(--stagger-ease),
+      filter var(--stagger-dur) var(--stagger-ease);
+    transition-delay: calc(var(--stagger-lead) + var(--stagger-stagger) * var(--stagger-index, 0));
+    will-change: transform, opacity, filter;
+  }
+
+  .popover-menu-stagger.is-open .t-stagger-line {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  /* Exit decouples from the stagger: same fade for every line, no Y return,
+     no blur — the disappearance reads as a single quiet fade instead of a
+     reverse reveal. */
+  .popover-menu-stagger.is-closing .t-stagger-line {
+    opacity: 0;
+    transform: translateY(0);
+    filter: blur(0);
+    transition:
+      opacity 200ms ease,
+      transform 0s linear,
+      filter 0s linear;
+    transition-delay: 0s;
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .t-dropdown {
+    .t-dropdown,
+    .popover-flow,
+    .popover-menu-stagger,
+    .t-stagger-line {
       transition: none !important;
     }
   }
@@ -303,10 +318,10 @@ const active = photoSets.some(isActive);
 
 <script>
   const variantKey = "photoSetPopoverVariant";
-  const variants = ["list", "thumbnails", "proofs"] as const;
+  const variants = ["popup", "inline", "stagger"] as const;
   type Variant = (typeof variants)[number];
   const dropdowns = document.querySelectorAll<HTMLElement>("[data-photo-set-dropdown]");
-  const closeDuration = 150;
+  const closeDuration = 200;
 
   const isVariant = (value: string | null): value is Variant => {
     return variants.includes(value as Variant);
@@ -320,7 +335,7 @@ const active = photoSets.some(isActive);
     if (isVariant(savedVariant)) return savedVariant;
 
     const fallbackVariant = fallback ?? null;
-    return isVariant(fallbackVariant) ? fallbackVariant : "list";
+    return isVariant(fallbackVariant) ? fallbackVariant : "popup";
   };
 
   if (!isVariant(document.documentElement.dataset.photoSetPopoverVariant ?? null)) {
@@ -359,8 +374,14 @@ const active = photoSets.some(isActive);
     };
 
     const positionPopover = (activeMenu = getActiveMenu()) => {
+      if (!popover.contains(activeMenu)) return;
       popover.style.left = `${Math.round((dropdown.offsetWidth - activeMenu.offsetWidth) / 2)}px`;
     };
+
+    // Forces a style/layout pass so the just-unhidden menu's start state is
+    // committed before is-open lands — otherwise both changes can collapse
+    // into one recalc and the open transitions never play.
+    const forceReflow = (el: HTMLElement) => el.offsetHeight;
 
     const open = () => {
       const activeMenu = getActiveMenu();
@@ -371,6 +392,7 @@ const active = photoSets.some(isActive);
       positionPopover(activeMenu);
       activeMenu.setAttribute("aria-hidden", "false");
       activeMenu.classList.remove("is-closing");
+      forceReflow(activeMenu);
       button.setAttribute("aria-expanded", "false");
       requestAnimationFrame(() => {
         button.setAttribute("aria-expanded", "true");

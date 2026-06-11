@@ -39,7 +39,7 @@ if (!photoSet) {
   photoSet = data.photoSets.find((set) => toUrl(set.title) === param || String(set.id) === param);
   if (!photoSet) return new Response(null, { status: 404 });
 }
-const photoSetPopoverVariant = "proofs";
+const photoSetPopoverVariant = "popup";
 ---
 
 <Layout>
