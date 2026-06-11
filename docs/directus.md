@@ -15,16 +15,23 @@ stay ignored.
 
 2. Change the data model in local Directus.
 
-3. Export the schema snapshot:
+3. Retarget collections' `preview_url` to the prod base — it is carried in the
+   snapshot (see `docs/live-preview.md`):
+
+   ```bash
+   python3 scripts/set-preview-urls.py https://preview.karolinanocon.com
+   ```
+
+4. Export the schema snapshot:
 
    ```bash
    docker compose exec directus npx directus schema snapshot /directus/schema/snapshot.yaml
    ```
 
-4. If content records must be transformed after the schema changes, add a
+5. If content records must be transformed after the schema changes, add a
    Directus custom migration in `directus/migrations/`.
 
-5. Commit `directus/schema/snapshot.yaml`, any migration files, and app code
+6. Commit `directus/schema/snapshot.yaml`, any migration files, and app code
    changes that depend on them.
 
 ## Applying Schema Elsewhere
@@ -42,9 +49,6 @@ docker compose exec directus npx directus schema apply --yes /directus/schema/sn
 Use `--dry-run` first to inspect the planned changes. Schema snapshots promote
 collections, fields, relations, and related Directus configuration; they do not
 replace production content.
-
-Note: collections' `preview_url` is carried in the snapshot — retarget it to the
-prod base before exporting (see `docs/live-preview.md`).
 
 After the schema is applied, run Directus migrations for content transformations:
 
