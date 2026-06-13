@@ -15,12 +15,8 @@ stay ignored.
 
 2. Change the data model in local Directus.
 
-3. Retarget collections' `preview_url` to the prod base — it is carried in the
-   snapshot (see `docs/live-preview.md`):
-
-   ```bash
-   python3 scripts/set-preview-urls.py https://preview.karolinanocon.com
-   ```
+3. Retarget `preview_url` to the prod base before exporting (it rides in the
+   snapshot) — command and rationale in `docs/live-preview.md`.
 
 4. Export the schema snapshot:
 
@@ -33,6 +29,19 @@ stay ignored.
 
 6. Commit `directus/schema/snapshot.yaml`, any migration files, and app code
    changes that depend on them.
+
+## TypeScript types
+
+The SDK schema passed to `createDirectus<Schema>()` in `src/lib/directus.ts` is
+hand-maintained — Directus has no TS type generation yet
+([directus#24866](https://github.com/directus/directus/discussions/24866)). Update
+it whenever the data model changes.
+
+Being manual, it drifts easily: omitting the M2M junction/relation collections
+breaks nested `fields` typing in the SDK. If it gets painful,
+[`directus-sdk-typegen`](https://github.com/bryantgillespie/directus-sdk-typegen)
+or [`directus-typeforge`](https://github.com/StephenGunn/directus-typeforge)
+generate it from a live instance or the snapshot.
 
 ## Applying Schema Elsewhere
 

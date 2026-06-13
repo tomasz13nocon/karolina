@@ -7,18 +7,15 @@ without a rebuild.
 
 ## Prod server topology
 
-The stack (Directus + the SSR `preview` container + the `build-hook`) and how prod
-is built and served live in `docs/deploy.md`. Preview-specific:
+The stack and nginx routing (including the `/assets/` → Directus proxy that serves
+images same-origin) live in `docs/deploy.md`. Preview-specific:
 
-- `preview.karolinanocon.com` is the `preview` compose service. nginx proxies `/`
-  → `localhost:4322` (the SSR server) and `/assets/` → Directus (`localhost:8055`),
-  which is how images load from the site's own origin.
-- It builds at container start with `MODE=preview` + the preview `PUBLIC_*` (set in
-  `docker-compose.yml`), reading data from `directus:8055` on the compose network.
-
-**Data** is read from `PUBLIC_DIRECTUS_URL`; **assets** from `PUBLIC_ASSETS_URL`
-(`preview.karolinanocon.com` for preview, `karolinanocon.com` for prod) — the
-browser hits that and nginx proxies it to Directus.
+- The `preview` service builds at container start with `MODE=preview` and the
+  preview `PUBLIC_*` (`docker-compose.yml`), reading data from `directus:8055` on
+  the compose network.
+- **Data** comes from `PUBLIC_DIRECTUS_URL`; **assets** from `PUBLIC_ASSETS_URL`
+  (`preview.karolinanocon.com` for preview, `karolinanocon.com` for prod) — the
+  browser hits that origin and nginx proxies it to Directus.
 
 ## Dev
 

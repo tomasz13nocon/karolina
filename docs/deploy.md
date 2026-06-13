@@ -46,9 +46,10 @@ It does the same build + atomic publish.
 ## nginx (host)
 
 ```nginx
-root /srv/karolina/site/current;            # karolinanocon.com (static)
-# admin.karolinanocon.com   -> proxy_pass http://localhost:8055
-# preview.karolinanocon.com -> proxy_pass http://localhost:4322
+root /srv/karolina/site/current;             # karolinanocon.com (static)
+# admin.karolinanocon.com    -> proxy_pass http://localhost:8055   (Directus)
+# preview.karolinanocon.com  -> proxy_pass http://localhost:4322   (SSR preview)
+#   except /assets/          -> proxy_pass http://localhost:8055   (so images load same-origin)
 ```
 
 The first publish must run before `current` exists for nginx to serve.
