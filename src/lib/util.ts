@@ -5,7 +5,7 @@ export const CHUNK_SIZE = 10;
 export const SWIPE_BOUNCE = 200;
 
 export function toUrl(str: string) {
-  return encodeURIComponent(str.toLowerCase().replaceAll(" ", "-"));
+  return str.toLowerCase().replaceAll(" ", "-");
 }
 
 export function isCurrent(href: string, pathname: string) {
