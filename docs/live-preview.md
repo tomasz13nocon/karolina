@@ -54,11 +54,13 @@ Two env vars, set on the `preview` service (`docker-compose.yml`):
   ships. `setAttr`'s attributes still render in prod, but inert.
 
 **`visual_editor_urls` lives in `directus_settings`, NOT the schema snapshot** — so
-it's per-instance and must be set on each Directus separately (Settings → Visual
-Editor, or PATCH `/settings`): prod → `https://preview.karolinanocon.com`, local →
-`http://localhost:4322`. Without it the module won't load the preview. This is
-distinct from the per-collection `preview_url` above (which drives the side-panel
-Live Preview and *is* in the snapshot).
+it's per-instance and must be set on each Directus separately: prod →
+`https://preview.karolinanocon.com`, local → `http://localhost:4322`. Without it
+the module won't load the preview. This is distinct from the per-collection
+`preview_url` above (which drives the side-panel Live Preview and *is* in the
+snapshot). `set-preview-urls.py` retargets **both** in one run (origin-swapped the
+same way), so the localhost/prod commands above also fix the Visual Editor URL — no
+need to edit Settings → Visual Editor by hand.
 
 Not editable, by design: deep-scroll diary clones (cloned from prerendered JSON
 after `apply()` has scanned), dropdown photo-set-group labels (hidden popovers),

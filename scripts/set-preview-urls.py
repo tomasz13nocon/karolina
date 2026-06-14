@@ -1,10 +1,15 @@
 #!/usr/bin/env python3
 """Retarget Directus Live Preview URLs to a new base origin.
 
-Only the origin (scheme://host:port) is swapped; each collection's PATH is read
-back from Directus and preserved — the paths are defined once in Directus (and
-carried in the schema snapshot), never hardcoded here. So this stays correct as
-routes change, and works for any collection that has a preview URL.
+Only the origin (scheme://host:port) is swapped; each PATH is read back from
+Directus and preserved — the paths are defined once in Directus, never hardcoded
+here. So this stays correct as routes change, and works for any collection that
+has a preview URL.
+
+Retargets two separate settings:
+  - per-collection `preview_url` (lives in the schema snapshot), and
+  - the Visual Editor URLs (`visual_editor_urls` in directus_settings, which is
+    per-instance and NOT in the snapshot — so it must be set on each Directus).
 
 `preview_url` is environment-specific but lives in the schema snapshot, so:
   - for local iframe testing:  scripts/set-preview-urls.py http://localhost:4322
@@ -34,11 +39,26 @@ def call(method, path, body=None):
     return json.load(urllib.request.urlopen(req))
 
 
+def retarget(url):
+    parts = urlsplit(url)
+    return urlunsplit((target.scheme, target.netloc, parts.path, parts.query, parts.fragment))
+
+
+# Per-collection Live Preview URLs (in the schema snapshot).
 for col in call("GET", "/collections")["data"]:
     current = (col.get("meta") or {}).get("preview_url")
     if not current:
         continue
-    parts = urlsplit(current)
-    new = urlunsplit((target.scheme, target.netloc, parts.path, parts.query, parts.fragment))
+    new = retarget(current)
     call("PATCH", f"/collections/{col['collection']}", {"meta": {"preview_url": new}})
     print(f"{col['collection']:16} {new}")
+
+# Visual Editor URLs (in directus_settings, per-instance — not the snapshot).
+urls = call("GET", "/settings?fields=visual_editor_urls")["data"].get("visual_editor_urls") or []
+for entry in urls:
+    if entry.get("url"):
+        entry["url"] = retarget(entry["url"])
+if urls:
+    call("PATCH", "/settings", {"visual_editor_urls": urls})
+    for entry in urls:
+        print(f"{'visual_editor':16} {entry.get('url')}")
