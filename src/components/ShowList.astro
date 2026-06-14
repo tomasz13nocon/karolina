@@ -31,7 +31,7 @@ const shows = Astro.props.shows;
         })}
       >
         {description ? (
-          <div class="pointer-events-none absolute inset-0 flex items-center justify-center overflow-y-auto bg-black/75 p-6 text-left text-sm leading-relaxed text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+          <div class="show-scrim pointer-events-none absolute inset-0 flex items-center justify-center overflow-y-auto bg-black/75 p-6 text-left text-sm leading-relaxed text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100 group-[.scrim-active]:opacity-100">
             <div class="prose prose-invert max-w-none" set:html={description} />
           </div>
         ) : null}
@@ -39,3 +39,20 @@ const shows = Astro.props.shows;
     ))
   }
 </div>
+
+<script>
+  // Hover simulation for touch devices: Tailwind gates `group-hover` behind
+  // `@media (hover: hover)`, so on touch-only devices the description scrim
+  // never shows. Mirror hover with touch — visible while the finger is engaged
+  // (during a press-and-hold or a tap-and-scroll), fading out on release.
+  for (const scrim of document.querySelectorAll<HTMLElement>(".show-scrim")) {
+    const button = scrim.closest("button");
+    if (!button) continue;
+    button.addEventListener("touchstart", () => button.classList.add("scrim-active"), {
+      passive: true,
+    });
+    const hide = () => button.classList.remove("scrim-active");
+    button.addEventListener("touchend", hide);
+    button.addEventListener("touchcancel", hide);
+  }
+</script>
