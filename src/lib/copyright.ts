@@ -12,7 +12,18 @@ export function setupCopyright(imgElement?: HTMLImageElement) {
       e.preventDefault();
       clearTimeout(contextTimeout);
       copyright.classList.remove("hidden");
-      copyright.style.transform = `translate(${e.pageX}px, ${e.pageY}px)`;
+
+      const margin = 8;
+      const { offsetWidth: w, offsetHeight: h } = copyright;
+      // Grow toward whichever side has more room: when the pointer is past the
+      // horizontal midpoint, anchor the box's right edge to it and grow left.
+      let x = e.clientX > window.innerWidth / 2 ? e.clientX - w : e.clientX;
+      let y = e.clientY;
+      // Clamp fully inside the viewport so the box can never push the page wider.
+      x = Math.max(margin, Math.min(x, window.innerWidth - w - margin));
+      y = Math.max(margin, Math.min(y, window.innerHeight - h - margin));
+      copyright.style.transform = `translate(${x}px, ${y}px)`;
+
       contextTimeout = setTimeout(() => {
         copyright.classList.add("hidden");
       }, 3000);

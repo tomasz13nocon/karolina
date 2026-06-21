@@ -72,7 +72,7 @@ const title = Astro.props.title ?? "karolina nocoń" + (pathLast ? " - " + pathL
     <slot />
     <div
       id="copyright"
-      class="absolute top-0 left-0 z-50 px-4 py-2 bg-grey-6 text-grey-1 select-none hidden"
+      class="fixed top-0 left-0 z-50 px-4 py-2 bg-grey-6 text-grey-1 select-none hidden"
       data-directus={setAttr({
         collection: "global",
         item: SINGLETON,
