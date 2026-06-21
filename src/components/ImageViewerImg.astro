@@ -18,9 +18,11 @@ interface Props {
   buttonClass?: string;
   /** `data-directus` string from setAttr, marking the image editable in the Studio. */
   editAttr?: string;
+  /** Opt out of the right-click/press copyright overlay (see lib/copyright.ts). */
+  noCopyright?: boolean;
 }
 
-const { rawSrc, alt, width, height, index, buttonClass = "", editAttr } = Astro.props;
+const { rawSrc, alt, width, height, index, buttonClass = "", editAttr, noCopyright } = Astro.props;
 
 const smallSrc = imgSrc(rawSrc, { width: width * 1.1, format: "webp", quality: 90 });
 const fullSrc = imgSrc(rawSrc);
@@ -36,6 +38,7 @@ const fullSrc = imgSrc(rawSrc);
   <img
     data-index={index}
     data-full-size-src={fullSrc}
+    data-no-copyright={noCopyright ? "" : undefined}
     loading="lazy"
     class={`img ${Astro.props.class ?? ""}`}
     src={smallSrc}

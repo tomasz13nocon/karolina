@@ -10,6 +10,10 @@ export function setupCopyright(imgElement?: HTMLImageElement) {
     img.draggable = false;
     img.oncontextmenu = (e) => {
       e.preventDefault();
+      // Exhibition list posters opt out of the overlay via data-no-copyright —
+      // they already reveal a description scrim on hover/press. We still block
+      // the native menu (above) and dragging, just skip showing the box.
+      if (img.dataset.noCopyright !== undefined) return;
       clearTimeout(contextTimeout);
       copyright.classList.remove("hidden");
 

@@ -22,6 +22,7 @@ const shows = Astro.props.shows;
         alt={title ? `poster of ${title}` : ""}
         width={300}
         index={i}
+        noCopyright
         buttonClass="group cursor-pointer overflow-hidden"
         editAttr={setAttr({
           collection: "shows",
