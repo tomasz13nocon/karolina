@@ -113,14 +113,36 @@ const directus = createDirectus<Schema>(DIRECTUS_URL).with(rest());
 
 export default directus;
 
-const assetsURL = ASSETS_URL.replace(/\/+$/, "") + "/assets/";
+// Absolute assets base. Used by server-side fetches of an asset (e.g. blurhash
+// generation in Blurhash.astro), where a relative URL has no origin to resolve
+// against, and as the browser base for static/preview builds.
+const serverAssetsURL = ASSETS_URL.replace(/\/+$/, "") + "/assets/";
 
-console.log(`Directus data: ${DIRECTUS_URL} | assets: ${assetsURL}`);
+// Browser-facing assets base (what ends up in <img>/<link>). In `astro dev` we
+// route through the same-origin dev proxy (see astro.config.mjs) so the site
+// works from any device — e.g. a phone on the LAN — without hardcoding a host.
+// Builds keep the absolute origin so the proxy is never relied on at runtime.
+const browserAssetsURL = import.meta.env.DEV ? "/dir-assets/" : serverAssetsURL;
+
+console.log(`Directus data: ${DIRECTUS_URL} | assets: ${browserAssetsURL}`);
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function imgSrc(name: string, options?: Record<string, any>) {
+function buildSrc(base: string, name: string, options?: Record<string, any>) {
   const params = new URLSearchParams(options).toString();
-  return assetsURL + name + (params ? "?" + params : "");
+  return base + name + (params ? "?" + params : "");
+}
+
+// URL for an asset as loaded by the browser (goes into <img>/<link>).
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function imgSrc(name: string, options?: Record<string, any>) {
+  return buildSrc(browserAssetsURL, name, options);
+}
+
+// URL for an asset fetched on the server (SSR/build), e.g. blurhash generation.
+// Always absolute since there's no page origin to resolve a relative path.
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function imgSrcServer(name: string, options?: Record<string, any>) {
+  return buildSrc(serverAssetsURL, name, options);
 }
 
 export async function getDiaryEntries(query?: Query<Schema, DiaryEntry>) {

@@ -1,7 +1,7 @@
 ---
 import sharp from "sharp";
 import { rgbaToThumbHash, thumbHashToAverageRGBA } from "thumbhash";
-import { imgSrc } from "@lib/directus";
+import { imgSrcServer } from "@lib/directus";
 
 interface Props {
   rawSrc: string;
@@ -9,7 +9,7 @@ interface Props {
 
 let imageBuffer;
 try {
-  let resp = await fetch(imgSrc(Astro.props.rawSrc, { width: 40, height: 40 }));
+  let resp = await fetch(imgSrcServer(Astro.props.rawSrc, { width: 40, height: 40 }));
   let buf = await resp.arrayBuffer();
   imageBuffer = await sharp(buf)
     .resize({ width: 40, height: 40, fit: "inside" })
