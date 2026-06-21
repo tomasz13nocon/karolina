@@ -17,7 +17,7 @@ const { blur } = Astro.props;
 <!-- Setting both grid and hidden to be able to easily remove hidden -->
 <div
   id="image-viewer"
-  class={`z-20 w-screen h-screen max-w-full max-h-full fixed top-0 left-0 opacity-0 transition-opacity
+  class={`z-20 w-screen h-screen max-w-full max-h-full fixed top-0 left-0 opacity-0 transition-opacity touch-none overscroll-none
   grid hidden grid-rows-[fit-content(100%)_1fr] grid-cols-[fit-content(100%)_1fr_fit-content(100%)] items-center
   ${blur ? "text-white" : "text-grey-4 bg-grey-7"}`}
   style={{ transitionDuration: IMAGE_VIEWER_TRANSITION + "ms" }}
@@ -101,6 +101,11 @@ const { blur } = Astro.props;
   }
   let fetchingImgs = 0;
   let currentIndex = 0;
+  // Pinch-zoom / pan state for the mobile fullscreen viewer.
+  let scale = 1,
+    panX = 0,
+    panY = 0,
+    multiTouched = false;
 
   if (!imageViewer) throw new Error("Expected element with id 'image-viewer' to exist");
   if (imgs.length !== imgContainers.length)
@@ -130,6 +135,7 @@ const { blur } = Astro.props;
         blurImg.classList.add("hidden");
       }
       hidingImageViewer.set(false);
+      document.documentElement.style.overflow = "";
     }, IMAGE_VIEWER_TRANSITION);
   }
 
@@ -163,6 +169,10 @@ const { blur } = Astro.props;
       throw new Error("Expected full-size-src to be non empty");
     }
     currentIndex = i;
+    scale = 1;
+    panX = 0;
+    panY = 0;
+    multiTouched = false;
     let conts = imageViewer.getElementsByClassName("img-viewer-container");
     let cont = conts[conts.length - 1] as HTMLElement;
     let newCont = cont.cloneNode(true) as HTMLElement;
@@ -225,6 +235,7 @@ const { blur } = Astro.props;
         blurImg.classList.remove("hidden");
       }
       imageViewer.classList.remove("hidden");
+      document.documentElement.style.overflow = "hidden";
       raf(() => {
         imageViewer.style.opacity = "1";
       });
@@ -266,17 +277,131 @@ const { blur } = Astro.props;
     }
   });
 
-  // Swipe
+  // Swipe + pinch-zoom
   const threshold = 80;
+  const MAX_SCALE = 4;
   let touchstartX: number, touchendX: number;
   let conts = imageViewer.getElementsByClassName("img-wrapper") as HTMLCollectionOf<HTMLElement>;
   let leftEnd = imageViewer.getElementsByClassName("left-end-indicator")[0] as HTMLElement;
   let rightEnd = imageViewer.getElementsByClassName("right-end-indicator")[0] as HTMLElement;
+
+  // Gesture baseline, re-captured whenever the active touch count changes.
+  let gScale = 1,
+    gCx = 0,
+    gCy = 0,
+    gUx = 0,
+    gUy = 0,
+    gDist = 0,
+    gW0 = 0,
+    gH0 = 0;
+
+  const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+  const dist = (a: Touch, b: Touch) => Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+  const midX = (a: Touch, b: Touch) => (a.clientX + b.clientX) / 2;
+  const midY = (a: Touch, b: Touch) => (a.clientY + b.clientY) / 2;
+  const wrapper = () => conts[conts.length - 1];
+
+  // Keep the image from panning past its own edges into empty space.
+  function clampPan() {
+    const maxX = Math.max(0, ((scale - 1) * gW0) / 2);
+    const maxY = Math.max(0, ((scale - 1) * gH0) / 2);
+    panX = clamp(panX, -maxX, maxX);
+    panY = clamp(panY, -maxY, maxY);
+  }
+
+  function renderZoom(animate: boolean) {
+    const w = wrapper();
+    w.style.transitionProperty = animate ? "transform" : "none";
+    w.style.transform =
+      scale === 1 && panX === 0 && panY === 0
+        ? "translateX(0)"
+        : `translate(${panX}px, ${panY}px) scale(${scale})`;
+  }
+
+  // Re-derive the focal point + bounds from the wrapper's current on-screen box.
+  function baseline(touches: TouchList) {
+    gScale = scale;
+    const rect = wrapper().getBoundingClientRect();
+    // transform-origin is the wrapper's center; scaling leaves the center fixed,
+    // so the untransformed center is the current center minus the applied pan.
+    gCx = rect.left + rect.width / 2 - panX;
+    gCy = rect.top + rect.height / 2 - panY;
+    gW0 = rect.width / scale;
+    gH0 = rect.height / scale;
+    let fx: number, fy: number;
+    if (touches.length >= 2) {
+      gDist = dist(touches[0], touches[1]);
+      fx = midX(touches[0], touches[1]);
+      fy = midY(touches[0], touches[1]);
+    } else {
+      gDist = 0;
+      fx = touches[0].clientX;
+      fy = touches[0].clientY;
+    }
+    // Image-space coordinate currently sitting under the focal point.
+    gUx = (fx - gCx - panX) / scale;
+    gUy = (fy - gCy - panY) / scale;
+  }
+
   imageViewer.addEventListener("touchstart", (e) => {
-    touchstartX = e.changedTouches[0].screenX;
+    if (e.touches.length >= 2) {
+      multiTouched = true;
+      if (scale === 1) {
+        panX = 0;
+        panY = 0;
+      }
+      wrapper().style.transitionProperty = "none";
+      wrapper().style.transform =
+        scale === 1 ? "translateX(0)" : `translate(${panX}px, ${panY}px) scale(${scale})`;
+      baseline(e.touches);
+    } else {
+      touchstartX = e.changedTouches[0].clientX;
+      if (scale > 1) {
+        wrapper().style.transitionProperty = "none";
+        baseline(e.touches);
+      }
+    }
   });
+
+  imageViewer.addEventListener(
+    "touchmove",
+    (e) => {
+      if (e.touches.length >= 2) {
+        // Pinch: scale toward the finger midpoint, keeping its image point fixed.
+        e.preventDefault();
+        if (gDist > 0)
+          scale = clamp((gScale * dist(e.touches[0], e.touches[1])) / gDist, 1, MAX_SCALE);
+        panX = midX(e.touches[0], e.touches[1]) - gCx - scale * gUx;
+        panY = midY(e.touches[0], e.touches[1]) - gCy - scale * gUy;
+        clampPan();
+        renderZoom(false);
+      } else if (e.touches.length === 1 && scale > 1) {
+        // One-finger pan while zoomed in.
+        e.preventDefault();
+        panX = e.touches[0].clientX - gCx - scale * gUx;
+        panY = e.touches[0].clientY - gCy - scale * gUy;
+        clampPan();
+        renderZoom(false);
+      } else {
+        // Not zoomed: single-finger swipe to navigate.
+        let translate = e.changedTouches[0].clientX - touchstartX;
+        if (currentIndex === 0 && translate > 0) {
+          translate *= 0.2;
+          leftEnd.style.opacity = String(Math.min(1, translate / 100));
+          leftEnd.style.transform = `translateX(-50%) scaleX(${1 + translate / 30})`;
+        }
+        if (currentIndex === imgs.length - 1 && translate < 0) {
+          translate *= 0.2;
+          rightEnd.style.opacity = String(Math.min(1, -translate / 100));
+          rightEnd.style.transform = `translateX(50%) scaleX(${1 - translate / 30})`;
+        }
+        wrapper().style.transform = `translateX(${translate * 0.5}px)`;
+      }
+    },
+    { passive: false },
+  );
+
   imageViewer.addEventListener("touchend", (e) => {
-    touchendX = e.changedTouches[0].screenX;
     leftEnd.style.transitionProperty = "opacity";
     leftEnd.style.opacity = "0";
     setTimeout(() => {
@@ -287,21 +412,27 @@ const { blur } = Astro.props;
     setTimeout(() => {
       rightEnd.style.transitionProperty = "none";
     }, SWIPE_BOUNCE);
+
+    if (multiTouched || scale > 1) {
+      if (e.touches.length === 0) {
+        // Gesture fully released: snap back to fit if barely/not zoomed.
+        multiTouched = false;
+        if (scale <= 1) {
+          scale = 1;
+          panX = 0;
+          panY = 0;
+          renderZoom(true);
+          setTimeout(() => (wrapper().style.transitionProperty = "none"), SWIPE_BOUNCE);
+        }
+      } else {
+        // Touch count changed (e.g. pinch -> single-finger pan): re-baseline.
+        baseline(e.touches);
+      }
+      return;
+    }
+
+    touchendX = e.changedTouches[0].clientX;
     handleGesture();
-  });
-  imageViewer.addEventListener("touchmove", (e) => {
-    let translate = e.changedTouches[0].screenX - touchstartX;
-    if (currentIndex === 0 && translate > 0) {
-      translate *= 0.2;
-      leftEnd.style.opacity = String(Math.min(1, translate / 100));
-      leftEnd.style.transform = `translateX(-50%) scaleX(${1 + translate / 30})`;
-    }
-    if (currentIndex === imgs.length - 1 && translate < 0) {
-      translate *= 0.2;
-      rightEnd.style.opacity = String(Math.min(1, -translate / 100));
-      rightEnd.style.transform = `translateX(50%) scaleX(${1 - translate / 30})`;
-    }
-    conts[conts.length - 1].style.transform = `translateX(${translate * 0.5}px)`;
   });
 
   function handleGesture() {
@@ -310,9 +441,9 @@ const { blur } = Astro.props;
     } else if (touchendX > touchstartX + threshold && currentIndex > 0) {
       switchLeft();
     } else {
-      conts[conts.length - 1].style.transitionProperty = "transform";
-      conts[conts.length - 1].style.transform = "translateX(0)";
-      setTimeout(() => (conts[conts.length - 1].style.transitionProperty = "none"), SWIPE_BOUNCE);
+      wrapper().style.transitionProperty = "transform";
+      wrapper().style.transform = "translateX(0)";
+      setTimeout(() => (wrapper().style.transitionProperty = "none"), SWIPE_BOUNCE);
     }
   }
 </script>
