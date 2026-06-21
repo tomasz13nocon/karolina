@@ -3,7 +3,6 @@ import ImageViewer from "@components/ImageViewer.astro";
 import Nav from "@components/Nav.astro";
 import PhotoGrid from "@components/PhotoGrid.astro";
 import PhotoSetNav from "@components/PhotoSetNav.astro";
-import PhotoSetPopoverVariantSwitcher from "@components/PhotoSetPopoverVariantSwitcher.astro";
 import Layout from "@layouts/Layout.astro";
 import Main from "@layouts/Main.astro";
 import directus from "@lib/directus";
@@ -25,16 +24,14 @@ const [sections, photography] = await Promise.all([
   ),
 ]);
 const selectedWorks = photography.selectedWorks ?? [];
-const photoSetPopoverVariant = "popup";
 ---
 
 <Layout>
   <Main class="w-full sm:!w-auto xl:w-wide flex flex-col justify-items-center">
     <Nav />
-    <PhotoSetNav photoSections={sections} photoSetPopoverVariant={photoSetPopoverVariant} />
+    <PhotoSetNav photoSections={sections} />
 
     <PhotoGrid photos={selectedWorks} dynamicPosition />
   </Main>
   <ImageViewer />
-  <PhotoSetPopoverVariantSwitcher />
 </Layout>

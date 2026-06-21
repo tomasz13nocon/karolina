@@ -1,16 +1,15 @@
 ---
 import Link from "@components/Link.astro";
-import PhotoSetPopover from "@components/PhotoSetPopover.astro";
+import PhotoSetDropdown from "@components/PhotoSetDropdown.astro";
 import type { PhotoSection, PhotoSet } from "@lib/directus";
 import { setAttr } from "@lib/visualEditing";
 import { toUrl } from "@lib/util";
 
 interface Props {
   photoSections: PhotoSection[];
-  photoSetPopoverVariant?: "popup" | "inline" | "stagger";
 }
 
-const { photoSections, photoSetPopoverVariant = "popup" } = Astro.props;
+const { photoSections } = Astro.props;
 
 function photoSetHref(photoSet: PhotoSet) {
   return "/photography/" + toUrl(photoSet.title);
@@ -23,7 +22,7 @@ function photoSetHref(photoSet: PhotoSet) {
       const sets = photoSets ?? [];
 
       return displayMode === "dropdown" ? (
-        <PhotoSetPopover label={label} photoSets={sets} variant={photoSetPopoverVariant} />
+        <PhotoSetDropdown label={label} photoSets={sets} />
       ) : (
         <ul class="flex flex-wrap justify-center">
           {sets.map((photoSet) => (

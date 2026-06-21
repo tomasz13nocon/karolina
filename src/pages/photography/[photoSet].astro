@@ -5,7 +5,6 @@ import ImageViewer from "@components/ImageViewer.astro";
 import Main from "@layouts/Main.astro";
 import { toUrl } from "@lib/util";
 import PhotoSetNav from "@components/PhotoSetNav.astro";
-import PhotoSetPopoverVariantSwitcher from "@components/PhotoSetPopoverVariantSwitcher.astro";
 import PhotoGrid from "@components/PhotoGrid.astro";
 import { getPhotoSetsAndSections, type PhotoSection, type PhotoSet } from "@lib/directus";
 import { setAttr } from "@lib/visualEditing";
@@ -39,13 +38,12 @@ if (!photoSet) {
   photoSet = data.photoSets.find((set) => toUrl(set.title) === param || String(set.id) === param);
   if (!photoSet) return new Response(null, { status: 404 });
 }
-const photoSetPopoverVariant = "popup";
 ---
 
 <Layout>
   <Main class="sm:!w-auto xl:w-wide">
     <Nav />
-    <PhotoSetNav photoSections={sections} photoSetPopoverVariant={photoSetPopoverVariant} />
+    <PhotoSetNav photoSections={sections} />
 
     <PhotoGrid
       photos={photoSet.photos ?? []}
@@ -70,7 +68,6 @@ const photoSetPopoverVariant = "popup";
     }
   </Main>
   <ImageViewer />
-  <PhotoSetPopoverVariantSwitcher />
 </Layout>
 
 <style>
