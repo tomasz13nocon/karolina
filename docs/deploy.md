@@ -26,6 +26,17 @@ docker compose --profile deploy up -d --build
 Secrets come from a root `.env` (see `.env.example`): `DIRECTUS_SECRET`,
 `DIRECTUS_ADMIN_*`, `WEBHOOK_TOKEN`, `DIRECTUS_TOKEN`.
 
+## Deploying code changes
+
+```bash
+git pull
+docker compose --profile deploy up -d --build
+```
+
+The app code is baked into the `preview`/`build-hook` image (`Dockerfile` `COPY . .`);
+`--build` rebuilds it from the pulled source. `directus` has no `build` and is
+unaffected. Trigger a Publish afterward to regenerate the static site.
+
 ## Publishing
 
 Clicking **Publish** in the Studio runs a flow that POSTs to the `build-hook` over
@@ -33,7 +44,7 @@ the internal compose network. The hook builds the static site into the
 `/srv/karolina/site` volume and atomically flips the `current` symlink to the new
 release, then notifies the editor's Studio bell.
 
-### Manual deploy
+### Manual publish
 
 Run the build script in the container:
 
