@@ -9,7 +9,20 @@ export function toUrl(str: string) {
 }
 
 export function isCurrent(href: string, pathname: string) {
-  return href === pathname || href + "/" === pathname;
+  // Astro.url.pathname percent-encodes non-ASCII path segments (URL semantics),
+  // whereas hrefs built via toUrl() carry the raw decoded slug. Compare on a
+  // decoded basis so non-ASCII titles (e.g. CJK) match their own page instead
+  // of failing the exact-string check and never registering as current.
+  const decode = (s: string) => {
+    try {
+      return decodeURIComponent(s);
+    } catch {
+      return s;
+    }
+  };
+  const a = decode(href);
+  const b = decode(pathname);
+  return a === b || a + "/" === b;
 }
 
 export function getDateStr(date: Date) {
