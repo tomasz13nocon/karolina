@@ -479,10 +479,16 @@ fields:
       note: null
       options:
         customSyntax: null
+        tinymceOverrides:
+          font_size_formats: >-
+            10px 11px 12px 13px 14px 15px 16px 18px 20px 22px 24px 28px 32px
+            48px 64px
+          font_size_input_default_unit: px
         toolbar:
           - bold
           - italic
           - underline
+          - fontsize
           - h1
           - h2
           - h3
@@ -491,6 +497,8 @@ fields:
           - alignright
           - numlist
           - bullist
+          - forecolor
+          - backcolor
           - removeformat
           - blockquote
           - customLink
@@ -717,10 +725,16 @@ fields:
       interface: input-rich-text-html
       note: null
       options:
+        tinymceOverrides:
+          font_size_formats: >-
+            10px 11px 12px 13px 14px 15px 16px 18px 20px 22px 24px 28px 32px
+            48px 64px
+          font_size_input_default_unit: px
         toolbar:
           - bold
           - italic
           - underline
+          - fontsize
           - h1
           - h2
           - h3
@@ -729,6 +743,8 @@ fields:
           - alignright
           - numlist
           - bullist
+          - forecolor
+          - backcolor
           - removeformat
           - blockquote
           - customLink
@@ -1798,7 +1814,7 @@ fields:
       name: maxColumns
       table: photo_sets
       data_type: integer
-      default_value: null
+      default_value: 4
       max_length: null
       numeric_precision: null
       numeric_scale: null
@@ -1825,10 +1841,16 @@ fields:
       interface: input-rich-text-html
       note: Optional public text rendered above this photo set.
       options:
+        tinymceOverrides:
+          font_size_formats: >-
+            10px 11px 12px 13px 14px 15px 16px 18px 20px 22px 24px 28px 32px
+            48px 64px
+          font_size_input_default_unit: px
         toolbar:
           - bold
           - italic
           - underline
+          - fontsize
           - h1
           - h2
           - h3
@@ -1837,6 +1859,8 @@ fields:
           - alignright
           - numlist
           - bullist
+          - forecolor
+          - backcolor
           - removeformat
           - blockquote
           - customLink
@@ -2476,10 +2500,16 @@ fields:
       interface: input-rich-text-html
       note: Optional public text rendered on the poster hover scrim.
       options:
+        tinymceOverrides:
+          font_size_formats: >-
+            10px 11px 12px 13px 14px 15px 16px 18px 20px 22px 24px 28px 32px
+            48px 64px
+          font_size_input_default_unit: px
         toolbar:
           - bold
           - italic
           - underline
+          - fontsize
           - h1
           - h2
           - h3
@@ -2488,6 +2518,8 @@ fields:
           - alignright
           - numlist
           - bullist
+          - forecolor
+          - backcolor
           - removeformat
           - blockquote
           - customLink
