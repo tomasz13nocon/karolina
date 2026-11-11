@@ -41,7 +41,7 @@ unaffected. Trigger a Publish afterward to regenerate the static site.
 
 Clicking **Publish** in the Studio runs a flow that POSTs to the `build-hook` over
 the internal compose network. The hook builds the static site into the
-`/srv/karolina/site` volume and atomically flips the `current` symlink to the new
+`/var/www/karolina` volume and atomically flips the `current` symlink to the new
 release, then notifies the editor's Studio bell.
 
 ### Manual publish
@@ -57,7 +57,7 @@ It does the same build + atomic publish.
 ## nginx (host)
 
 ```nginx
-root /srv/karolina/site/current;             # karolinanocon.com (static)
+root /var/www/karolina/current;              # karolinanocon.com (static)
 # admin.karolinanocon.com    -> proxy_pass http://localhost:8055   (Directus)
 # preview.karolinanocon.com  -> proxy_pass http://localhost:4322   (SSR preview)
 #   except /assets/          -> proxy_pass http://localhost:8055   (so images load same-origin)

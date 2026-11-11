@@ -85,8 +85,8 @@ services:
       PUBLIC_DIRECTUS_URL: "http://directus:8055"
     volumes:
       # The built static site lands here on the host; point nginx's root at
-      # /srv/karolina/site/current (an atomic symlink the build flips).
-      - /srv/karolina/site:/out
+      # /var/www/karolina/current (an atomic symlink the build flips).
+      - /var/www/karolina:/out
     depends_on:
       directus:
         condition: service_healthy
