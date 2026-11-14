@@ -28,14 +28,13 @@ Secrets come from a root `.env` (see `.env.example`): `DIRECTUS_SECRET`,
 
 ## Deploying code changes
 
-```bash
-git pull
-docker compose --profile deploy up -d --build
-```
+Push to the `production` branch (`git push origin master:production`). GitHub Actions runs the
+checks, then the server's `/srv/ops/bin/deploy karolina`, which checks out `production` and runs
+`scripts/deploy.sh`: rebuild, publish, health check. The log is in the Actions run.
 
 The app code is baked into the `preview`/`build-hook` image (`Dockerfile` `COPY . .`);
 `--build` rebuilds it from the pulled source. `directus` has no `build` and is
-unaffected. Trigger a Publish afterward to regenerate the static site.
+unaffected. `scripts/deploy.sh` also runs a publish, so the static site is rebuilt too.
 
 ## Publishing
 
