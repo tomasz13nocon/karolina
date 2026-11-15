@@ -1,11 +1,13 @@
 #!/usr/bin/env bash
-# Deploy a frontend CODE change to prod. Run by the server's /srv/ops/bin/deploy
-# after it checked out the `production` branch (deploy = push to `production`).
+# Production deploy of a frontend CODE change: rebuild the image, recreate
+# preview + build-hook, publish the static site, check that everything answers.
+# Run it in a checkout of the commit to deploy.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
 
-docker compose --profile deploy up -d --build # rebuild image, recreate preview + build-hook
+docker compose --profile deploy build --pull # rebuild the image, on the newest patch of its node base image
+docker compose --profile deploy up -d        # recreate preview + build-hook
 docker compose exec -T build-hook bash scripts/build-prod.sh # build + flip `current`, output inline
 
 # Health check. preview builds the site when it starts, hence the long retry.
